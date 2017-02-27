@@ -24,7 +24,6 @@ public class EnterLocationsFragment extends DialogFragment {
         // Empty constructor is required for DialogFragment
         // Make sure not to add arguments to the constructor
         // Use `newInstance` instead as shown below
-        System.out.println("Random thing");
     }
 
     public static EnterLocationsFragment newInstance(String title) {
