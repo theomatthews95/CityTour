@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">City Tour</string>
+    <string name="action_settings">Settings</string>
+    <string name="see_sights">I want to see the sights!</string>
+    <string name="favourites">Favourites</string>
+    <string name="itinerary">Itinerary</string>
+    <string name="postcard">Postcard</string>
+    <string name="currency_exchange">Currency Exchange</string>
+    <string name="title_activity_navigation_draw">City Tour</string>
+    <string name="currency_flag">Currency flag</string>
+    <string name="pound_sterling">£ Pound Sterling</string>
+    <string name="us_dollar">$ US Dollar</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

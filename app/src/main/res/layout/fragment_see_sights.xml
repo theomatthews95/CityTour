@@ -1,0 +1,116 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.admin123.citytour.Fragments.SeeSightsFragment"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/custom_border">
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="What area?"
+                android:textSize="50dp"
+                android:gravity="center"/>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/what_area_button"
+                    android:layout_width="270dp"
+                    android:layout_height="40dp"
+                    android:text="Button"
+                    android:drawableRight="@drawable/ic_navigate_next_black_24dp"
+                    android:background="@drawable/custom_button"
+                    />
+            </FrameLayout>
+        </LinearLayout>
+
+        <!--Layer for padding-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/custom_border"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="What type?"
+                android:textSize="50dp"
+                android:gravity="center"/>
+            <Button
+                android:layout_width="270dp"
+                android:layout_height="40dp"
+                android:text="Select site type"
+                android:drawableRight="@drawable/ic_navigate_next_black_24dp"
+                android:background="@drawable/custom_button"
+                />
+        </LinearLayout>
+
+        <!--Layer for padding-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/custom_border">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Filter by?"
+                android:textSize="50dp"
+                android:gravity="center"/>
+            <Button
+                android:layout_width="270dp"
+                android:layout_height="40dp"
+                android:text="Select sorting"
+                android:drawableRight="@drawable/ic_navigate_next_black_24dp"
+                android:background="@drawable/custom_button"
+                />
+        </LinearLayout>
+
+        <!--Layer for padding-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/search_map"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:drawableRight="@drawable/ic_search_black_24dp"
+            android:background="@drawable/custom_button"
+            android:paddingRight="10dp"
+            android:onClick="launchMaps"
+            />
+    </LinearLayout>

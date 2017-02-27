@@ -1,0 +1,94 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.admin123.citytour.Fragments.PostcardFragment">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_postcard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        tools:context="com.example.admin123.citytour.PostcardFragment">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:src="@drawable/birmingham_new_street"
+                />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="Upload your own photo"
+                android:drawableRight="@drawable/ic_menu_camera"
+                android:paddingRight="20dp"
+                android:background="@drawable/custom_button"/>
+
+        </LinearLayout>
+
+        <!--Layer for padding-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/postcard_message"
+            android:layout_width="fill_parent"
+            android:layout_height="125dp"
+            android:paddingLeft="5dp"
+            android:hint="Enter your message"
+            android:textStyle="italic"
+            android:inputType="text"
+            android:background="@drawable/text_box_style"/>
+
+        <!--Layer for padding-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Preview Postcard"
+            android:drawableRight="@drawable/preview_icon_small"
+            android:paddingRight="20dp"
+            android:background="@drawable/custom_button"/>
+
+        <!--Layer for padding-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Share"
+            android:textSize="40dp"
+            android:drawableRight="@drawable/ic_menu_share"
+            android:paddingRight="30dp"
+            android:background="@drawable/custom_button"/>
+    </LinearLayout>
+
+</FrameLayout>
