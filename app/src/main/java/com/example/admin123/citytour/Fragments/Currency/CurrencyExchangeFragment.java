@@ -87,6 +87,7 @@ public class CurrencyExchangeFragment extends Fragment implements ChooseCurrency
         View v = inflater.inflate(R.layout.fragment_currency_exchange, container, false);
         Button convertCurrencyButton = (Button)v.findViewById(R.id.calculateExchange);
         final EditText TopET = (EditText) v.findViewById(R.id.top_currency_value);
+        TopET.setInputType(0x00002002);
         final TextView BottomET = (TextView) v.findViewById(R.id.bottom_currency_value);
 
 
