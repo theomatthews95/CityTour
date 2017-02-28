@@ -130,6 +130,14 @@ public class CurrencyExchangeFragment extends Fragment implements ChooseCurrency
                 showDialog(false);
             }
         });
+
+        Button swapCurrenciesButton = (Button) v.findViewById(R.id.swapCurrencies);
+        swapCurrenciesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchCurrencies(convertFrom, convertTo);
+            }
+        });
         return v;
     }
 
@@ -179,6 +187,11 @@ public class CurrencyExchangeFragment extends Fragment implements ChooseCurrency
         String title = flagsTreeMap.firstEntry().getKey();
         convertToButton.setBackground(getResources().getDrawable(flag));
         convertToTextView.setText(title);
+    }
+
+    public void switchCurrencies(String currentConvertFrom, String currentConvertTo){
+        setConvertTo(currentConvertFrom);
+        setConvertFrom(currentConvertTo);
     }
 
     /**

@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.admin123.citytour.Fragments.Currency.CurrencyExchangeFragment">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:id="@+id/activity_currency_exchange"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,8 +29,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/text_box_style">
+                android:orientation="vertical">
                 <TextView
                     android:id="@+id/convertFromTextView"
                     android:layout_width="wrap_content"
@@ -64,19 +62,46 @@
             android:id="@+id/exchangeResult">
         </LinearLayout>
 
-        <Button
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:background="@drawable/currency_exchange_big"
-            android:id="@+id/calculateExchange"
-            />
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Convert"
-            />
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/swap"
+                    android:id="@+id/swapCurrencies"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Swap"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <Button
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:background="@drawable/currency_exchange_big"
+                    android:id="@+id/calculateExchange"
+                    />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Convert"
+                    />
+            </LinearLayout>
+        </LinearLayout>
         <!--Layer for padding-->
         <LinearLayout
             android:layout_width="wrap_content"
@@ -95,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/text_box_style">
+                >
                 <TextView
                     android:id="@+id/convertToTextView"
                     android:layout_width="wrap_content"
