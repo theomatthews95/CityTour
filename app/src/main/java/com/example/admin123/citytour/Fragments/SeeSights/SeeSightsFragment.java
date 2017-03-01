@@ -1,4 +1,4 @@
-package com.example.admin123.citytour.Fragments;
+package com.example.admin123.citytour.Fragments.SeeSights;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.admin123.citytour.Fragments.GmapFragment;
 import com.example.admin123.citytour.R;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,11 +23,11 @@ import com.example.admin123.citytour.R;
  * Use the {@link SeeSightsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SeeSightsFragment extends Fragment implements View.OnClickListener {
+public class SeeSightsFragment extends Fragment implements View.OnClickListener, SearchTypeDialogFragment.OnSetSearchLocationTypeFromListener {
 
 
     private OnFragmentInteractionListener mListener;
-
+    private String searchLocationType;
 
     // TODO: Rename and change types and number of parameters
     public static SeeSightsFragment newInstance() {
@@ -47,14 +50,26 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_see_sights, container, false);
+
+        // Configure what area is search
         Button mWhatArea = (Button) v.findViewById(R.id.what_area_button);
         mWhatArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                EnterLocationsFragment dialog = EnterLocationsFragment.newInstance();
+                SearchAreaDialogFragment dialog = SearchAreaDialogFragment.newInstance("Search area");
                 dialog.show(getFragmentManager(), "fragmentDialog");
             }
         });
+
+        // Configure what type of location is being searched for
+        Button mWhatType = (Button) v.findViewById(R.id.what_type_button);
+        mWhatType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                showLocationTypeDialog();
+            }
+        });
+
         Button mSearch = (Button) v.findViewById(R.id.search_map);
         mSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +124,21 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener 
      * >Communicating with Other Fragments</a> for more information.
      */
 
+    //Set the search location type
+    public void setSearchLocationType(ArrayList<SearchTypeItem> searchLocationTypeArray){
+        String searchLocationType="";
+        for(int i = 0; i<searchLocationTypeArray.size(); i++){
+            searchLocationType = searchLocationType+"|"+searchLocationTypeArray.get(i).getSearchValue();
+        }
+        this.searchLocationType = searchLocationType;
+        System.out.println(searchLocationType);
+    }
 
+    public void showLocationTypeDialog(){
+        SearchTypeDialogFragment dialog = SearchTypeDialogFragment.newInstance("Point of interest type");
+        dialog.setTargetFragment(this, 0);
+        dialog.show(getFragmentManager(), "fragmentDialog");
+    }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

@@ -1,4 +1,4 @@
-package com.example.admin123.citytour.Fragments.Currency;
+package com.example.admin123.citytour.Fragments.SeeSights;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.admin123.citytour.Fragments.Currency.ListHashmapAdapter;
 import com.example.admin123.citytour.R;
 
 import java.util.HashMap;
@@ -21,14 +22,13 @@ import java.util.HashMap;
  * Created by theom on 10/02/2017.
  */
 
-public class ChooseCurrencyDialog extends DialogFragment {
+public class SearchAreaDialogFragment extends DialogFragment {
 
     private EditText mEditText;
-    HashMap<String, String> currenciesCodeMap = new HashMap<String, String>();
-    ListHashmapAdapter listAdapter;
-    ListView listView;
+    private HashMap<String, String> currenciesCodeMap = new HashMap<String, String>();
+    private ListHashmapAdapter listAdapter;
+    private ListView listView;
 
-    //Interfaces to send data back to CurrencyExchangeFragment
     public interface OnSetConvertFromListener {
         public void setConvertFrom(String conversion);
     }
@@ -36,7 +36,7 @@ public class ChooseCurrencyDialog extends DialogFragment {
         public void setConvertTo(String conversion);
     }
 
-    public ChooseCurrencyDialog() {
+    public SearchAreaDialogFragment() {
         // Empty constructor is required for DialogFragment
         // Make sure not to add arguments to the constructor
         // Use `newInstance` instead as shown below
@@ -46,11 +46,10 @@ public class ChooseCurrencyDialog extends DialogFragment {
         currenciesCodeMap.put("€ Euros", "EUR");
     }
 
-    public static ChooseCurrencyDialog newInstance(String title, boolean isConvertFrom) {
-        ChooseCurrencyDialog dialog = new ChooseCurrencyDialog();
+    public static SearchAreaDialogFragment newInstance(String title) {
+        SearchAreaDialogFragment dialog = new SearchAreaDialogFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
-        args.putBoolean("isConvertFrom", isConvertFrom);
         dialog.setArguments(args);
         return dialog;
     }
@@ -61,7 +60,7 @@ public class ChooseCurrencyDialog extends DialogFragment {
         return inflater.inflate(R.layout.fragment_list_dialog, null);
     }
 
-   @Override
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         View v = getActivity().getLayoutInflater().inflate(R.layout.fragment_list_dialog, null);
@@ -71,25 +70,25 @@ public class ChooseCurrencyDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getArguments().getString("title")).setView(v);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-           @Override
-           public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-               switch (position){
-                   default:
-                       boolean isConvertFrom = getArguments().getBoolean("isConvertFrom");
-                       System.out.println(listAdapter.getItem(position).getValue());
-                       if (isConvertFrom == true) {
-                           OnSetConvertFromListener callback = (OnSetConvertFromListener) getTargetFragment();
-                           callback.setConvertFrom(listAdapter.getItem(position).getValue());
-                       }else{
-                           OnSetConvertToListener callback = (OnSetConvertToListener) getTargetFragment();
-                           callback.setConvertTo(listAdapter.getItem(position).getValue());
-                       }
-                       break;
-               }
-               //Code to close the dialog after selection
-               dismiss();
-           }
-       });
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                switch (position){
+                    default:
+                        boolean isConvertFrom = getArguments().getBoolean("isConvertFrom");
+                        System.out.println(listAdapter.getItem(position).getValue());
+                        if (isConvertFrom == true) {
+                            SearchAreaDialogFragment.OnSetConvertFromListener callback = (SearchAreaDialogFragment.OnSetConvertFromListener) getTargetFragment();
+                            callback.setConvertFrom(listAdapter.getItem(position).getValue());
+                        }else{
+                            SearchAreaDialogFragment.OnSetConvertToListener callback = (SearchAreaDialogFragment.OnSetConvertToListener) getTargetFragment();
+                            callback.setConvertTo(listAdapter.getItem(position).getValue());
+                        }
+                        break;
+                }
+                //Code to close the dialog after selection
+                dismiss();
+            }
+        });
         return builder.create();
     }
 
@@ -108,6 +107,4 @@ public class ChooseCurrencyDialog extends DialogFragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
     }
-
-
 }

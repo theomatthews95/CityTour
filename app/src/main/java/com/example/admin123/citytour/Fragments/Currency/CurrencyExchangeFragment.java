@@ -215,7 +215,8 @@ public class CurrencyExchangeFragment extends Fragment implements ChooseCurrency
         void onFragmentInteraction(Uri uri);
     }
 
-    public class DecimalDigitsInputFilter implements InputFilter {
+    //Limit digits user can put into EditText for currency conversion
+    private class DecimalDigitsInputFilter implements InputFilter {
 
         Pattern mPattern;
 

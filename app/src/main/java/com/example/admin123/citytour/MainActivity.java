@@ -20,7 +20,7 @@ import com.example.admin123.citytour.Fragments.Currency.CurrencyExchangeFragment
 import com.example.admin123.citytour.Fragments.HomepageFragment;
 import com.example.admin123.citytour.Fragments.GmapFragment;
 import com.example.admin123.citytour.Fragments.PostcardFragment;
-import com.example.admin123.citytour.Fragments.SeeSightsFragment;
+import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, HomepageFragment.OnFragmentInteractionListener, SeeSightsFragment.OnFragmentInteractionListener, PostcardFragment.OnFragmentInteractionListener, CurrencyExchangeFragment.OnFragmentInteractionListener, GmapFragment.OnFragmentInteractionListener{
 

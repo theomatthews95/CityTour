@@ -15,10 +15,10 @@ import com.example.admin123.citytour.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class CurrencyHashmapAdapter extends BaseAdapter {
+public class ListHashmapAdapter extends BaseAdapter {
     private final ArrayList mData;
 
-    public CurrencyHashmapAdapter(Map<String, String> map) {
+    public ListHashmapAdapter(Map<String, String> map) {
         mData = new ArrayList();
         mData.addAll(map.entrySet());
     }
