@@ -1,4 +1,4 @@
-package com.example.admin123.citytour.Fragments.SeeSights;
+package com.example.admin123.citytour.Fragments.SeeSights.SearchType;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -6,16 +6,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.example.admin123.citytour.Fragments.Currency.ChooseCurrencyDialog;
 import com.example.admin123.citytour.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by theom on 01/03/2017.
@@ -47,11 +47,10 @@ public class SearchTypeDialogFragment extends DialogFragment{
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //Declare the view
-        final View v = getActivity().getLayoutInflater().inflate(R.layout.search_type_dialog, null);
+        View v = getActivity().getLayoutInflater().inflate(R.layout.search_type_dialog, null);
 
         //Create the ListView with the Location Type items
-        createLocationTypeListView(v);
-
+        ListView listView = createLocationTypeListView(v);
         //Build the alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getArguments().getString("title")).setView(v);
@@ -60,7 +59,11 @@ public class SearchTypeDialogFragment extends DialogFragment{
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                getCheckedItems(v);
+               // for (int i = 0; i<listAdapter.getArray().length; i++){
+                    System.out.println(listAdapter.getCheckedItems());
+                //}
+                OnSetSearchLocationTypeFromListener callback = (OnSetSearchLocationTypeFromListener) getTargetFragment();
+                callback.setSearchLocationType(listAdapter.getCheckedItems());
             }
         });
 
@@ -71,7 +74,7 @@ public class SearchTypeDialogFragment extends DialogFragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     }
 
-    public void createLocationTypeListView(View v){
+    public ListView createLocationTypeListView(View v){
         ListView lv;
         SearchTypeItem[] searchTypeItems;
         lv = (ListView) v.findViewById(R.id.listView1);
@@ -84,26 +87,35 @@ public class SearchTypeDialogFragment extends DialogFragment{
         searchTypeItems[5] = new SearchTypeItem("Shopping", "shopping_mall", 1);
         listAdapter = new SearchTypeListAdapter(getActivity(), searchTypeItems);
         lv.setAdapter(listAdapter);
-        listView = lv;
+        return lv;
     }
 
-    public void getCheckedItems(View v){
+    public void itemClicked(List v) {
+        //code to check if this checkbox is checked!
+        CheckBox checkBox = (CheckBox)v;
+        if(checkBox.isChecked()){
+
+        }
+    }
+
+   /* public void getCheckedItems(View v){
         OnSetSearchLocationTypeFromListener callback = (OnSetSearchLocationTypeFromListener) getTargetFragment();
         callback.setSearchLocationType(listAdapter.getCheckedItems());
         System.out.println("HI");
     }
-
-   /* public ArrayList<SearchTypeItem> getCheckedItems(){
+*/
+    /*public ArrayList<SearchTypeItem> getCheckedItems(View listView){
         ArrayList<SearchTypeItem> checkedSearchItems = new ArrayList<SearchTypeItem>();
         int total = 0 ;
         int mListLength = listAdapter.getArray().length;
+
         for (int i = 0; i < mListLength ; i++) {
-            CheckBox c = (CheckBox) listView.getChildAt(i);
+
             if (c.isChecked()) {
                 checkedSearchItems.add(listView.getChildAt(i));
             }
         }
         return checkedSearchItems;
-    }*/
-
+    }
+*/
 }

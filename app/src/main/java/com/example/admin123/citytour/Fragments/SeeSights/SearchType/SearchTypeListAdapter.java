@@ -1,4 +1,4 @@
-package com.example.admin123.citytour.Fragments.SeeSights;
+package com.example.admin123.citytour.Fragments.SeeSights.SearchType;
 
 /**
  * Created by theom on 01/03/2017.
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.admin123.citytour.R;
 
@@ -38,12 +39,24 @@ public class SearchTypeListAdapter extends ArrayAdapter{
                 convertView = inflater.inflate(R.layout.location_type_item, parent, false);
                 TextView name = (TextView) convertView.findViewById(R.id.textView1);
                 CheckBox cb = (CheckBox) convertView.findViewById(R.id.checkBox1);
+                cb.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                                //is chkIos checked?
+                                if (((CheckBox) v).isChecked()) {
+                                        System.out.println("Wubabab");
+                                }
+                        }
+                });
+
                 name.setText(searchTypeItems[position].getName());
-                if(searchTypeItems[position].getValue() == 1) {
+                if(searchTypeItems[position].getValue() == true) {
                     cb.setChecked(true);
                 }else {
                     cb.setChecked(false);
                 }
+
+
                 return convertView;
         }
 
@@ -61,9 +74,7 @@ public class SearchTypeListAdapter extends ArrayAdapter{
                 ArrayList<SearchTypeItem> checkedSearchItems = new ArrayList<SearchTypeItem>();
                 CheckBox cb = (CheckBox) theView.findViewById(R.id.checkBox1);
                 for (int i=0;i<searchTypeItems.length;i++){
-                        if(cb.isChecked() == true){
-                                checkedSearchItems.add(searchTypeItems[i]);
-                        }
+                       //System.out.println(searchTypeItems[i].getValue());
                 }
 
                 return checkedSearchItems;

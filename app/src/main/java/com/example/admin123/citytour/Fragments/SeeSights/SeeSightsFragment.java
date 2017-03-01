@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.admin123.citytour.Fragments.GmapFragment;
+import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeDialogFragment;
+import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeItem;
 import com.example.admin123.citytour.R;
 
 import java.util.ArrayList;
