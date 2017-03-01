@@ -67,15 +67,15 @@ public class CurrencyExchange extends AsyncTask<Void, Void, String> {
     }
 
     //method to parse JSON calculate the numeric exchange value
-    protected String calculateExchange(String userBaseCurrency, String userConversionCurrency, Integer conversionAmount){
-        Float conversionCurrencyRate = new Float(0);
+    protected String calculateExchange(String userBaseCurrency, String userConversionCurrency, Double conversionAmount){
+        Double conversionCurrencyRate = new Double(0);
         String exchangedValue = "Failed to convert";
         try {
             convertFrom = userBaseCurrency;
             conversionCurrency = userConversionCurrency;
             String response = doInBackground();
             JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
-            conversionCurrencyRate = BigDecimal.valueOf(object.getJSONObject("rates").getDouble(conversionCurrency)).floatValue();
+            conversionCurrencyRate = BigDecimal.valueOf(object.getJSONObject("rates").getDouble(conversionCurrency)).doubleValue();
             exchangedValue = String.format("%.2f", conversionCurrencyRate*conversionAmount);
         } catch (JSONException e) {
             // JSON Parsing error

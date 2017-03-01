@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,8 @@ import com.example.admin123.citytour.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.R.attr.key;
 import static android.R.attr.value;
@@ -87,6 +91,7 @@ public class CurrencyExchangeFragment extends Fragment implements ChooseCurrency
         View v = inflater.inflate(R.layout.fragment_currency_exchange, container, false);
         Button convertCurrencyButton = (Button)v.findViewById(R.id.calculateExchange);
         final EditText TopET = (EditText) v.findViewById(R.id.top_currency_value);
+        TopET.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(5,2)});
         TopET.setInputType(0x00002002);
         final TextView BottomET = (TextView) v.findViewById(R.id.bottom_currency_value);
 
@@ -99,7 +104,7 @@ public class CurrencyExchangeFragment extends Fragment implements ChooseCurrency
 
                 //check if a conversion amount has been entered and the EditText != empty
                 if (!conversionAmountString.matches("")){
-                    Integer conversionAmount = Integer.parseInt(conversionAmountString);
+                    Double conversionAmount = Double.parseDouble(conversionAmountString);
                     String response = currency_exchange.calculateExchange(convertFrom, convertTo, conversionAmount);
 
                     BottomET.setText(response);
@@ -208,5 +213,24 @@ public class CurrencyExchangeFragment extends Fragment implements ChooseCurrency
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public class DecimalDigitsInputFilter implements InputFilter {
+
+        Pattern mPattern;
+
+        public DecimalDigitsInputFilter(int digitsBeforeZero,int digitsAfterZero) {
+            mPattern=Pattern.compile("[0-9]{0," + (digitsBeforeZero-1) + "}+((\\.[0-9]{0," + (digitsAfterZero-1) + "})?)||(\\.)?");
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            Matcher matcher=mPattern.matcher(dest);
+            if(!matcher.matches())
+                return "";
+            return null;
+        }
+
     }
 }
