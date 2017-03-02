@@ -18,14 +18,14 @@ public class SearchTypeItem {
     public String getName(){
         return this.name;
     }
-    public boolean getValue(){
+    public boolean isChecked(){
         return this.isChecked;
     }
     public String getSearchValue(){
         return this.searchValue;
     }
-    /*public void changeChecked(){
-        value
-    }*/
+    public void setChecked(boolean isChecked){
+        this.isChecked = isChecked;
+    }
 
 }

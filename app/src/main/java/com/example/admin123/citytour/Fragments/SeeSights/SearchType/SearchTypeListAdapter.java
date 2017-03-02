@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,12 +20,11 @@ import com.example.admin123.citytour.R;
 import java.util.ArrayList;
 
 public class SearchTypeListAdapter extends ArrayAdapter{
-        SearchTypeItem[] searchTypeItems = null;
+        ArrayList<SearchTypeItem> searchTypeItems = new ArrayList<SearchTypeItem>();
         Context context;
         ArrayList<SearchTypeItem> checkedSearchItems = new ArrayList<SearchTypeItem>();
-        View theView;
 
-        public SearchTypeListAdapter(Context context, SearchTypeItem[] resource) {
+        public SearchTypeListAdapter(Context context, ArrayList<SearchTypeItem> resource) {
                 super(context, R.layout.location_type_item,resource);
                 // TODO Auto-generated constructor stub
                 this.context = context;
@@ -32,25 +32,24 @@ public class SearchTypeListAdapter extends ArrayAdapter{
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
                 // TODO Auto-generated method stub
-                theView=convertView;
                 LayoutInflater inflater = ((Activity)context).getLayoutInflater();
                 convertView = inflater.inflate(R.layout.location_type_item, parent, false);
                 TextView name = (TextView) convertView.findViewById(R.id.textView1);
                 CheckBox cb = (CheckBox) convertView.findViewById(R.id.checkBox1);
-                cb.setOnClickListener(new View.OnClickListener() {
+
+                //Listener to check for when user makes a change to the checkbox
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
-                        public void onClick(View v) {
-                                //is chkIos checked?
-                                if (((CheckBox) v).isChecked()) {
-                                        System.out.println("Wubabab");
-                                }
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                //method used to change the state of the checkbox
+                                setChecked(position);
                         }
                 });
 
-                name.setText(searchTypeItems[position].getName());
-                if(searchTypeItems[position].getValue() == true) {
+                name.setText(searchTypeItems.get(position).getName());
+                if(searchTypeItems.get(position).isChecked() == true) {
                     cb.setChecked(true);
                 }else {
                     cb.setChecked(false);
@@ -62,21 +61,27 @@ public class SearchTypeListAdapter extends ArrayAdapter{
 
         @Override
         public SearchTypeItem getItem(int position){
-                return searchTypeItems[position];
+                return searchTypeItems.get(position);
         }
 
-        public SearchTypeItem[] getArray(){
+        public ArrayList<SearchTypeItem> getArray(){
             return searchTypeItems;
         }
 
         //return the type locations that are
         public ArrayList<SearchTypeItem> getCheckedItems(){
                 ArrayList<SearchTypeItem> checkedSearchItems = new ArrayList<SearchTypeItem>();
-                CheckBox cb = (CheckBox) theView.findViewById(R.id.checkBox1);
-                for (int i=0;i<searchTypeItems.length;i++){
-                       //System.out.println(searchTypeItems[i].getValue());
+                for (int i=0;i<searchTypeItems.size();i++){
+                        if (searchTypeItems.get(i).isChecked() == true) {
+                                checkedSearchItems.add(searchTypeItems.get(i));
+                        }
                 }
-
                 return checkedSearchItems;
+        }
+
+        //Method used to change the state of the checkbox
+        public void setChecked(Integer position){
+                searchTypeItems.get(position).setChecked(!searchTypeItems.get(position).isChecked());
+                System.out.println(searchTypeItems.get(position).getName()+" "+searchTypeItems.get(position).isChecked());
         }
 }

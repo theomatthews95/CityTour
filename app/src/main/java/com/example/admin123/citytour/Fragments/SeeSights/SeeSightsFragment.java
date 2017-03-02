@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.admin123.citytour.Fragments.GmapFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeDialogFragment;
@@ -30,6 +32,7 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
 
     private OnFragmentInteractionListener mListener;
     private String searchLocationType;
+    private TextView whatTypeTextView;
 
     // TODO: Rename and change types and number of parameters
     public static SeeSightsFragment newInstance() {
@@ -71,6 +74,8 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
                 showLocationTypeDialog();
             }
         });
+
+        whatTypeTextView = (TextView) v.findViewById(R.id.what_type_search_editText);
 
         Button mSearch = (Button) v.findViewById(R.id.search_map);
         mSearch.setOnClickListener(new View.OnClickListener() {
@@ -126,21 +131,34 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
      * >Communicating with Other Fragments</a> for more information.
      */
 
-    //Set the search location type
-    public void setSearchLocationType(ArrayList<SearchTypeItem> searchLocationTypeArray){
-        String searchLocationType="";
-        for(int i = 0; i<searchLocationTypeArray.size(); i++){
-            searchLocationType = searchLocationType+"|"+searchLocationTypeArray.get(i).getSearchValue();
-        }
-        this.searchLocationType = searchLocationType;
-        System.out.println(searchLocationType);
-    }
-
     public void showLocationTypeDialog(){
         SearchTypeDialogFragment dialog = SearchTypeDialogFragment.newInstance("Point of interest type");
         dialog.setTargetFragment(this, 0);
         dialog.show(getFragmentManager(), "fragmentDialog");
     }
+
+    //Set the search location type
+    public void setSearchLocationType(ArrayList<SearchTypeItem> searchLocationTypeArray){
+        String searchLocationType="";
+        String visibleSearchLocationType="";
+
+        //Iterate over the returned array list from the dialogfragmet to create a query string for places API
+        for(int i = 0; i<searchLocationTypeArray.size(); i++){
+            if(i == 0){
+                searchLocationType = searchLocationTypeArray.get(i).getSearchValue();
+                visibleSearchLocationType = searchLocationTypeArray.get(i).getName();
+            }else {
+                searchLocationType = searchLocationType + "|" + searchLocationTypeArray.get(i).getSearchValue();
+                visibleSearchLocationType = visibleSearchLocationType + ", " + searchLocationTypeArray.get(i).getName();
+            }
+        }
+
+        //change the text view under the dialog launch button to show the user their selection
+        whatTypeTextView.setText(visibleSearchLocationType);
+        this.searchLocationType = searchLocationType;
+        System.out.println(searchLocationType);
+    }
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

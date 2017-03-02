@@ -24,6 +24,7 @@ import java.util.List;
 public class SearchTypeDialogFragment extends DialogFragment{
     private ListView listView;
     private SearchTypeListAdapter listAdapter;
+    private ArrayList<SearchTypeItem> searchTypeItems = new ArrayList<SearchTypeItem>();
 
     public interface OnSetSearchLocationTypeFromListener {
         public void setSearchLocationType(ArrayList<SearchTypeItem> searchLocationTypeArray);
@@ -59,11 +60,9 @@ public class SearchTypeDialogFragment extends DialogFragment{
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-               // for (int i = 0; i<listAdapter.getArray().length; i++){
-                    System.out.println(listAdapter.getCheckedItems());
-                //}
                 OnSetSearchLocationTypeFromListener callback = (OnSetSearchLocationTypeFromListener) getTargetFragment();
                 callback.setSearchLocationType(listAdapter.getCheckedItems());
+                dismiss();
             }
         });
 
@@ -76,46 +75,15 @@ public class SearchTypeDialogFragment extends DialogFragment{
 
     public ListView createLocationTypeListView(View v){
         ListView lv;
-        SearchTypeItem[] searchTypeItems;
         lv = (ListView) v.findViewById(R.id.listView1);
-        searchTypeItems = new SearchTypeItem[6];
-        searchTypeItems[0] = new SearchTypeItem("Museum", "museum", 0);
-        searchTypeItems[1] = new SearchTypeItem("Restaurant", "restaurant", 1);
-        searchTypeItems[2] = new SearchTypeItem("Cafe", "cafe", 1);
-        searchTypeItems[3] = new SearchTypeItem("Library", "library", 0);
-        searchTypeItems[4] = new SearchTypeItem("Aquarium", "aquarium", 1);
-        searchTypeItems[5] = new SearchTypeItem("Shopping", "shopping_mall", 1);
+        searchTypeItems.add(new SearchTypeItem("Museum", "museum", 0));
+        searchTypeItems.add(new SearchTypeItem("Restaurant", "restaurant", 1));
+        searchTypeItems.add(new SearchTypeItem("Cafe", "cafe", 1));
+        searchTypeItems.add(new SearchTypeItem("Library", "library", 0));
+        searchTypeItems.add(new SearchTypeItem("Aquarium", "aquarium", 1));
+        searchTypeItems.add(new SearchTypeItem("Shopping", "shopping_mall", 1));
         listAdapter = new SearchTypeListAdapter(getActivity(), searchTypeItems);
         lv.setAdapter(listAdapter);
         return lv;
     }
-
-    public void itemClicked(List v) {
-        //code to check if this checkbox is checked!
-        CheckBox checkBox = (CheckBox)v;
-        if(checkBox.isChecked()){
-
-        }
-    }
-
-   /* public void getCheckedItems(View v){
-        OnSetSearchLocationTypeFromListener callback = (OnSetSearchLocationTypeFromListener) getTargetFragment();
-        callback.setSearchLocationType(listAdapter.getCheckedItems());
-        System.out.println("HI");
-    }
-*/
-    /*public ArrayList<SearchTypeItem> getCheckedItems(View listView){
-        ArrayList<SearchTypeItem> checkedSearchItems = new ArrayList<SearchTypeItem>();
-        int total = 0 ;
-        int mListLength = listAdapter.getArray().length;
-
-        for (int i = 0; i < mListLength ; i++) {
-
-            if (c.isChecked()) {
-                checkedSearchItems.add(listView.getChildAt(i));
-            }
-        }
-        return checkedSearchItems;
-    }
-*/
 }
