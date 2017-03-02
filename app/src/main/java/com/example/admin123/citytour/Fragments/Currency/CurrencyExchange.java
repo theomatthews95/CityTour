@@ -52,9 +52,9 @@ public class CurrencyExchange extends AsyncTask<Void, Void, String> {
                     stringBuilder.append(line).append("\n");
                 }
                 bufferedReader.close();
-                String response = stringBuilder.toString();
+
                 //return JSON data as string for calculateExchange() to calculate a conversion value given user params
-                return response;
+                return stringBuilder.toString();
             }
             finally{
                 urlConnection.disconnect();
@@ -62,7 +62,7 @@ public class CurrencyExchange extends AsyncTask<Void, Void, String> {
         }
         catch(Exception e) {
             Log.e("ERROR", e.getMessage(), e);
-            return null;
+            return "";
         }
     }
 
