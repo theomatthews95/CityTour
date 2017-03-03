@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
 import com.example.admin123.citytour.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,6 +20,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 
 
 public class GmapFragment extends Fragment implements OnMapReadyCallback{
@@ -43,13 +46,16 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng birmingham = new LatLng(52.4862, -1.8904);
-        LatLng oxford = new LatLng(51.7520, -1.2577);
-        mMap.addMarker(new MarkerOptions().position(birmingham).title("Marker in Brum"));
-        mMap.addMarker(new MarkerOptions().position(oxford).title("Oxford"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(birmingham));
+        ArrayList<GooglePlace> places =  (ArrayList<GooglePlace>) getArguments().getSerializable("googlePlaceList");
+        LatLng marker = new LatLng(0.0,0.0);
+        for (int i = 0; i<places.size(); i++){
+            String title = places.get(i).getName();
+            double lat = places.get(i).getGeometry().getLocation().getLat();
+            double lng = places.get(i).getGeometry().getLocation().getLng();
+            marker = new LatLng(lat, lng);
+            mMap.addMarker(new MarkerOptions().position(marker).title(title));
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
      /*   if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling

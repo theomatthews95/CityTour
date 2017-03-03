@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.admin123.citytour.Fragments.GmapFragment;
+import com.example.admin123.citytour.Fragments.Currency.ChooseCurrencyDialog;
+import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
+import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlaceList;
+import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacesList;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeDialogFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeItem;
 import com.example.admin123.citytour.R;
@@ -81,7 +83,11 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         mSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new GmapFragment();
+                Bundle bundle = new Bundle();
+                String locationType = searchLocationType;
+                bundle.putString("locationType", locationType );
+                Fragment fragment = new PlacesList();
+                fragment.setArguments(bundle);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.relativeLayout, fragment);
                 transaction.addToBackStack(null);
