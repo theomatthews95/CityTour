@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.admin123.citytour.Fragments.Currency.ChooseCurrencyDialog;
-import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
-import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlaceList;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacesList;
+import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaDialogFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeDialogFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeItem;
 import com.example.admin123.citytour.R;

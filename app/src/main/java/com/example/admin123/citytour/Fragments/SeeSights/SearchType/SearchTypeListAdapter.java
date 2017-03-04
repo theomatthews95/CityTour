@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class SearchTypeListAdapter extends ArrayAdapter{
         ArrayList<SearchTypeItem> searchTypeItems = new ArrayList<SearchTypeItem>();
         Context context;
-        ArrayList<SearchTypeItem> checkedSearchItems = new ArrayList<SearchTypeItem>();
 
         public SearchTypeListAdapter(Context context, ArrayList<SearchTypeItem> resource) {
                 super(context, R.layout.location_type_item,resource);

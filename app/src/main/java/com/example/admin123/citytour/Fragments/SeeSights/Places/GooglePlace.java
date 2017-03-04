@@ -8,7 +8,7 @@ import java.util.List;
  * Created by theom on 03/03/2017.
  */
 
-public class GooglePlace {
+public class GooglePlace implements Serializable{
     private static final long serialVersionUID = -4041502421563593320L;
     //@Key
     private String name;
