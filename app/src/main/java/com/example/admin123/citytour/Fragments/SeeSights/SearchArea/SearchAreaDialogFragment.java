@@ -3,38 +3,20 @@ package com.example.admin123.citytour.Fragments.SeeSights.SearchArea;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.admin123.citytour.Fragments.Currency.ListHashmapAdapter;
 import com.example.admin123.citytour.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import static com.google.android.gms.wearable.DataMap.TAG;
 
@@ -44,24 +26,19 @@ import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class SearchAreaDialogFragment extends DialogFragment implements DialogInterface.OnDismissListener {
 
-    private ListView listView;
-    private HashMap<String, String> searchAreaHashMap = new HashMap<String, String>();
-    private SearchAreaListAdapter listAdapter;
     private SeekBar seekbarDistance;
     private TextView textViewDistance;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
     private LatLng searchCoordinates;
     private Integer searchRadius;
+    private String searchAreaName;
 
+    //Callback method to return data to SeeSightsFragment
     public interface OnSetSearchLocationAreaFromListener {
         public void setSearchLocationArea(SearchAreaItem searchLocationArea);
     }
 
     public SearchAreaDialogFragment() {
-        searchAreaHashMap.put("Birmingham", "birmingham");
-        searchAreaHashMap.put("London", "london");
-        searchAreaHashMap.put("Oxford", "oxford");
-        searchAreaHashMap.put("Manchester", "manchester");
     }
 
     public static SearchAreaDialogFragment newInstance(String title) {
@@ -78,15 +55,18 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
         //Declare the view
         View v = getActivity().getLayoutInflater().inflate(R.layout.search_area_dialog, null);
 
+        //Create the Google Places AutoComplete Widget
         autocompleteFragment = (SupportPlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment.setText("My Location");
+
+        //Listener for Google Places AutoComplete widget
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getLatLng());//get place details here
                 searchCoordinates = place.getLatLng();
+                searchAreaName = place.getName().toString();
             }
 
             @Override
@@ -95,10 +75,15 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
                 Log.i(TAG, "An error occurred: " + status);
             }
         });
+
+        //Seekbar for sliding input of radius
         seekbarDistance = (SeekBar) v.findViewById(R.id.seekbarDistance);
+
+        //TextView to display user input on slider
         textViewDistance = (TextView) v.findViewById(R.id.textViewDistance);
         textViewDistance.setText("Search radius: " + seekbarDistance.getProgress() + " meters");
 
+        //Listener for the Seekbar sliding input of radius
         seekbarDistance.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener(){
                     int progress_value;
@@ -122,27 +107,35 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
                 }
         );
 
-        //Build the alert dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getArguments().getString("title")).setView(v);
-
+        //Button to submit the user inputs from the search area dialog
         Button doneButton = (Button) v.findViewById(R.id.doneButton);
+
+        //Listener for button to submit user input from dialog
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 if(searchCoordinates == null){
                     searchCoordinates = new LatLng(51.7520209,-1.2577262999999999);
+                    searchAreaName = "Oxford";
                 }
                 if(searchRadius == null){
                     searchRadius = 1;
                 }
-                SearchAreaItem searchAreaItem = new SearchAreaItem(searchCoordinates, searchRadius);
+
+                //Create SearchAreaItem object to store data input from user in dialog fragment
+                SearchAreaItem searchAreaItem = new SearchAreaItem(searchCoordinates, searchRadius, searchAreaName);
                 SearchAreaDialogFragment.OnSetSearchLocationAreaFromListener callback = (SearchAreaDialogFragment.OnSetSearchLocationAreaFromListener) getTargetFragment();
+
+                //Callback submit for user's inputted data
                 callback.setSearchLocationArea(searchAreaItem);
 
                 dismiss();
             }
         });
+
+        //Build the alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getArguments().getString("title")).setView(v);
 
         return builder.create();
     }

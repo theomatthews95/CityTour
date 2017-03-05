@@ -35,11 +35,8 @@ import java.net.URLEncoder;
  */
 
 public class PlacesList extends Fragment{
-    private String placesKey;
-    /* Location is Aston University */
-    private double latitude = 52.485867;
-    private double longitude = -1.890161;
 
+    private String placesKey;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,15 +46,19 @@ public class PlacesList extends Fragment{
         placesKey = getResources().getString(R.string.google_maps_key);
         if (placesKey.equals("PUT YOUR KEY HERE")) {
             Toast.makeText(getActivity(), "You haven't entered your Google Places Key into the strings file.  Dont forget to set a referer too.", Toast.LENGTH_LONG).show();
-
         } else {
+            //Get users inputted data from SeeSightsFragment to create Google Places API Request
             String type = URLEncoder.encode(getArguments().getString("locationType"));
             Double searchAreaLong = getArguments().getDouble("searchAreaLong");
             Double searchAreaLat = getArguments().getDouble("searchAreaLat");
             String searchRadius = getArguments().getString("searchRadius");
+
+            //Insert retrieved data from SeeSightsFragment into places API request
             String placesRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
                     searchAreaLong + "," + searchAreaLat + "&type="+type+"&radius="+searchRadius+"&key=" + placesKey;
             PlacesReadFeed process = new PlacesReadFeed();
+
+            //Execute API request
             process.execute(new String[] {placesRequest});
         }
 

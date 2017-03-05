@@ -2,16 +2,21 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_border">
 
     <fragment android:id="@+id/place_autocomplete_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
-
         xmlns:android="http://schemas.android.com/apk/res/android"
         />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listViewArea"

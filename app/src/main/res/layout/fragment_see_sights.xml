@@ -17,6 +17,7 @@
             android:background="@drawable/custom_border">
 
             <TextView
+                android:id="@+id/whatAreaTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="What area?"
@@ -52,6 +53,7 @@
             android:background="@drawable/custom_border"
             >
             <TextView
+                android:id="@+id/what_type_search_editText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="What type?"
@@ -65,11 +67,6 @@
                 android:drawableRight="@drawable/ic_navigate_next_black_24dp"
                 android:background="@drawable/custom_button"
                 />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/what_type_search_editText"
-                android:textSize="10dp"/>
         </LinearLayout>
 
         <!--Layer for padding-->

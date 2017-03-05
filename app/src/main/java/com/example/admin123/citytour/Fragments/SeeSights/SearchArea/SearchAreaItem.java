@@ -10,14 +10,18 @@ import java.io.Serializable;
 public class SearchAreaItem{
     LatLng searchCoordinates;
     Integer searchRadius;
+    String searchAreaName;
 
-    SearchAreaItem(LatLng searchCoordinates, int searchRadius){
+    SearchAreaItem(LatLng searchCoordinates, int searchRadius, String searchAreaName){
         this.searchCoordinates = searchCoordinates;
         this.searchRadius = searchRadius;
+        this.searchAreaName= searchAreaName;
     }
+
     public LatLng getSearchCoordinates(){
         return this.searchCoordinates;
     }
     public Integer getRadius(){ return this.searchRadius; }
+    public String getName(){ return this.searchAreaName;}
 
 }
