@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_draw);
 
+
         listView = (ListView) findViewById(R.id.listView);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fragmentArray);
         listView.setAdapter(listAdapter);

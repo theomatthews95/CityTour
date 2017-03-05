@@ -3,15 +3,22 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:gravity="center">
-    <EditText
+
+
+    <fragment android:id="@+id/place_autocomplete_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/custom_border"/>
+        android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
+
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        />
+
     <ListView
         android:id="@+id/listViewArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +36,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:max="100"
+        android:max="5000"
         android:progress="20"
         android:secondaryProgress="20" />
 
@@ -46,4 +53,5 @@
         android:orientation="vertical"
         android:padding="5dp">
     </LinearLayout>
+
 </LinearLayout>

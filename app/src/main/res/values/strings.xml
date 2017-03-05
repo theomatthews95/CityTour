@@ -14,10 +14,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_maps">Map</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-        AIzaSyC_lp_36AiFyBxYPl5y85LEhXi1j3oorBQ
+        AIzaSyAcQcZflwI3t2XaeBet735S6n57hBiMFJE
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="places_key">AIzaSyBJwIkzYYTOOWUK8Rj_E0OXiEN1zv_v20Y</string>
-    <string name="referer">http://aston.ac.uk/cs3040/places/example</string>
 </resources>

@@ -22,6 +22,7 @@
                 android:text="What area?"
                 android:textSize="50dp"
                 android:gravity="center"/>
+
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">

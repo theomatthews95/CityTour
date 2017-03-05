@@ -21,9 +21,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.admin123.citytour.Fragments.GmapFragment;
+import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaItem;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeDialogFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 import com.example.admin123.citytour.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import java.net.URLEncoder;
@@ -44,15 +46,17 @@ public class PlacesList extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        placesKey = getResources().getString(R.string.places_key);
+        placesKey = getResources().getString(R.string.google_maps_key);
         if (placesKey.equals("PUT YOUR KEY HERE")) {
-
-            //Toast.makeText(this, "You haven't entered your Google Places Key into the strings file.  Dont forget to set a referer too.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "You haven't entered your Google Places Key into the strings file.  Dont forget to set a referer too.", Toast.LENGTH_LONG).show();
 
         } else {
             String type = URLEncoder.encode(getArguments().getString("locationType"));
+            Double searchAreaLong = getArguments().getDouble("searchAreaLong");
+            Double searchAreaLat = getArguments().getDouble("searchAreaLat");
+            String searchRadius = getArguments().getString("searchRadius");
             String placesRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
-                    latitude + "," + longitude + "&type="+type+"&radius=2200&key=" + placesKey;
+                    searchAreaLong + "," + searchAreaLat + "&type="+type+"&radius="+searchRadius+"&key=" + placesKey;
             PlacesReadFeed process = new PlacesReadFeed();
             process.execute(new String[] {placesRequest});
         }
