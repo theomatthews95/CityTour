@@ -2,6 +2,7 @@ package com.example.admin123.citytour.Fragments.SeeSights;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacesList;
+import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.RecentLocationsDBHelper;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaDialogFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaItem;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeDialogFragment;
@@ -48,7 +50,7 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     private double searchLat;
     private double searchLong;
     private String searchRadius;
-
+    //private RecentLocationsDBHelper locationsDB;
 
     // TODO: Rename and change types and number of parameters
     public static SeeSightsFragment newInstance() {
@@ -63,7 +65,7 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //locationsDB = new RecentLocationsDBHelper(getActivity());
         if (getArguments() != null) {
         }
     }
@@ -155,21 +157,22 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     }
 
     //Set the search location area parameters
-    public void setSearchLocationArea(SearchAreaItem searchAreaItem){
+    public void setSearchLocationArea(SearchAreaItem searchAreaItem) {
         searchRadius = searchAreaItem.getRadius().toString();
         searchLat = searchAreaItem.getSearchCoordinates().longitude;
         searchLong = searchAreaItem.getSearchCoordinates().latitude;
         String searchAreaName = searchAreaItem.getName();
 
         //change the text view above the dialog launch button to show the user their selection
-        if(searchAreaName.equals(""))
-        {
+        if (searchAreaName.equals("")) {
             whatAreaTextView.setText("What area?");
             whatAreaTextView.setTextSize(50);
-        }else{
+        } else {
             whatAreaTextView.setText(searchAreaName);
             whatAreaTextView.setTextSize(40);
         }
+
+        /*InsertRecentDatabase(searchAreaName);*/
     }
 
     //Display dialog to allow user to input what type of location they would like to search
@@ -208,6 +211,29 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         this.searchLocationType = searchLocationType;
         System.out.println(searchLocationType);
     }
+
+
+    /*private void InsertRecentDatabase(String searchAreaName){
+        boolean isInserted = locationsDB.insertData(searchAreaName, searchLat, searchLong);
+        if (isInserted == true)
+            Log.i(TAG, "Inserted");
+        else
+            Log.i(TAG, "didn't");
+
+        Cursor allData = locationsDB.getAllData();
+        if (allData.getCount() == 0){
+            return;
+        }
+
+        StringBuffer buffer = new StringBuffer();
+        while (allData.moveToNext()){
+            buffer.append("ID :"+allData.getString(0)+"\n");
+            buffer.append("Name :"+allData.getString(1)+"\n");
+            buffer.append("Lat :"+allData.getString(2)+"\n");
+            buffer.append("Long :"+allData.getString(3)+"\n");
+        }
+        Log.i(TAG, buffer.toString());
+    }*/
 
 
     @Override

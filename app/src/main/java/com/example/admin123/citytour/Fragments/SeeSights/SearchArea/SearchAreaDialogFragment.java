@@ -2,6 +2,7 @@ package com.example.admin123.citytour.Fragments.SeeSights.SearchArea;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -30,8 +31,11 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
     private TextView textViewDistance;
     private SupportPlaceAutocompleteFragment autocompleteFragment;
     private LatLng searchCoordinates;
+    private double searchLong;
+    private double searchLat;
     private Integer searchRadius;
     private String searchAreaName;
+    private RecentLocationsDBHelper locationsDB;
 
     //Callback method to return data to SeeSightsFragment
     public interface OnSetSearchLocationAreaFromListener {
@@ -39,6 +43,7 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
     }
 
     public SearchAreaDialogFragment() {
+
     }
 
     public static SearchAreaDialogFragment newInstance(String title) {
@@ -55,6 +60,9 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
         //Declare the view
         View v = getActivity().getLayoutInflater().inflate(R.layout.search_area_dialog, null);
 
+        //Create database to store recent searches
+        locationsDB = new RecentLocationsDBHelper(getActivity());
+
         //Create the Google Places AutoComplete Widget
         autocompleteFragment = (SupportPlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
@@ -67,6 +75,8 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getLatLng());//get place details here
                 searchCoordinates = place.getLatLng();
                 searchAreaName = place.getName().toString();
+                searchLong = place.getLatLng().longitude;
+                searchLat = place.getLatLng().latitude;
             }
 
             @Override
@@ -129,6 +139,8 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
                 //Callback submit for user's inputted data
                 callback.setSearchLocationArea(searchAreaItem);
 
+                InsertRecentDatabase(searchAreaName);
+
                 dismiss();
             }
         });
@@ -138,6 +150,28 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
         builder.setTitle(getArguments().getString("title")).setView(v);
 
         return builder.create();
+    }
+
+    private void InsertRecentDatabase(String searchAreaName){
+        boolean isInserted = locationsDB.insertData(searchAreaName, searchLat, searchLong);
+        if (isInserted == true)
+            Log.i(TAG, "Inserted");
+        else
+            Log.i(TAG, "didn't insert");
+
+        Cursor allData = locationsDB.getAllData();
+        if (allData.getCount() == 0){
+            return;
+        }
+
+        StringBuffer buffer = new StringBuffer();
+        while (allData.moveToNext()){
+            buffer.append("ID :"+allData.getString(0)+"\n");
+            buffer.append("Name :"+allData.getString(1)+"\n");
+            buffer.append("Lat :"+allData.getString(2)+"\n");
+            buffer.append("Long :"+allData.getString(3)+"\n");
+        }
+        Log.i(TAG, buffer.toString());
     }
 
     @Override
