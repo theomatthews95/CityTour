@@ -2,7 +2,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:gravity="center"
     >
 
     <LinearLayout
@@ -17,11 +16,40 @@
         />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listViewArea"
+    <TextView
+        android:id="@+id/myLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Location"
+        android:clickable="true"
+        android:paddingBottom="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recent Locations"
+        android:textStyle="bold"/>
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:id="@+id/recentLocationsList">
+        </ListView>
+        <TextView
+            android:id="@+id/empty_list_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List view is empty"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -41,21 +69,22 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:max="5000"
-        android:progress="20"
-        android:secondaryProgress="20" />
+        android:progress="2000"
+        android:secondaryProgress="2000" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Done"
-        android:id="@+id/doneButton"
-        android:background="@drawable/custom_button"
-        />
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:gravity="center">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done"
+            android:id="@+id/doneButton"
+            android:background="@drawable/custom_button"
+            />
     </LinearLayout>
 
 </LinearLayout>

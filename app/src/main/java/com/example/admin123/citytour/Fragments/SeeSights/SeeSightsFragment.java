@@ -50,7 +50,6 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     private double searchLat;
     private double searchLong;
     private String searchRadius;
-    //private RecentLocationsDBHelper locationsDB;
 
     // TODO: Rename and change types and number of parameters
     public static SeeSightsFragment newInstance() {
@@ -65,7 +64,6 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //locationsDB = new RecentLocationsDBHelper(getActivity());
         if (getArguments() != null) {
         }
     }
@@ -164,7 +162,7 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         String searchAreaName = searchAreaItem.getName();
 
         //change the text view above the dialog launch button to show the user their selection
-        if (searchAreaName.equals("")) {
+        if (searchAreaName == null) {
             whatAreaTextView.setText("What area?");
             whatAreaTextView.setTextSize(50);
         } else {
@@ -172,7 +170,6 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             whatAreaTextView.setTextSize(40);
         }
 
-        /*InsertRecentDatabase(searchAreaName);*/
     }
 
     //Display dialog to allow user to input what type of location they would like to search
@@ -211,29 +208,6 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         this.searchLocationType = searchLocationType;
         System.out.println(searchLocationType);
     }
-
-
-    /*private void InsertRecentDatabase(String searchAreaName){
-        boolean isInserted = locationsDB.insertData(searchAreaName, searchLat, searchLong);
-        if (isInserted == true)
-            Log.i(TAG, "Inserted");
-        else
-            Log.i(TAG, "didn't");
-
-        Cursor allData = locationsDB.getAllData();
-        if (allData.getCount() == 0){
-            return;
-        }
-
-        StringBuffer buffer = new StringBuffer();
-        while (allData.moveToNext()){
-            buffer.append("ID :"+allData.getString(0)+"\n");
-            buffer.append("Name :"+allData.getString(1)+"\n");
-            buffer.append("Lat :"+allData.getString(2)+"\n");
-            buffer.append("Long :"+allData.getString(3)+"\n");
-        }
-        Log.i(TAG, buffer.toString());
-    }*/
 
 
     @Override
