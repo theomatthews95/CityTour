@@ -131,9 +131,14 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
                 }
                 if (searchLong == 0.0 && searchLat == 0.0){
                     Log.i(TAG, "Entered");
-                    searchLat = userLocationLat;
-                    searchLong = userLocationLong;
-                    searchRadius = "2000";
+                    if (userLocationLat == 0.0 && userLocationLat == 0.0){
+                        Toast.makeText(getContext(), "GPS Location not yet ready.", Toast.LENGTH_SHORT).show();
+                        bundle.putString("locationType", "");
+                    }else {
+                        searchLat = userLocationLat;
+                        searchLong = userLocationLong;
+                        searchRadius = "2000";
+                    }
                 }
                 bundle.putDouble("searchAreaLong", searchLong);
                 bundle.putDouble("searchAreaLat", searchLat);
