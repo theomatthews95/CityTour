@@ -49,19 +49,24 @@ public class RecentLocationsDBHelper extends SQLiteOpenHelper {
     public boolean insertData(String name, Double latitude, Double longitude){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        boolean isRecordDuplicate = CheckIsDataAlreadyInDBorNot(TABLE_NAME, COL_1, name);
-        if (isRecordDuplicate == true){
-            deleteValue(name);
-        }
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_1, name);
-        contentValues.put(COL_2, latitude);
-        contentValues.put(COL_3, longitude);
-        long result = db.insert(TABLE_NAME, null, contentValues);
-        if (result == -1) {
+        try{
+           /* boolean isRecordDuplicate = CheckIsDataAlreadyInDBorNot(TABLE_NAME, COL_1, name);
+            if (isRecordDuplicate == true){
+                deleteValue(name);
+            }*/
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COL_1, name);
+            contentValues.put(COL_2, latitude);
+            contentValues.put(COL_3, longitude);
+
+            long result = db.insertOrThrow(TABLE_NAME, null, contentValues);
+            if (result == -1) {
+                return false;
+            }else {
+                return true;
+            }
+        }catch (SQLiteConstraintException e){
             return false;
-        }else {
-            return true;
         }
     }
 
@@ -71,10 +76,10 @@ public class RecentLocationsDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public Integer deleteValue(String duplicate){
+   /* public Integer deleteValue(String duplicate){
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME, "NAME = ?", new String[]{duplicate});
-    }
+    }*/
 
     public Cursor getRecent5(){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -82,7 +87,7 @@ public class RecentLocationsDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean CheckIsDataAlreadyInDBorNot(String TableName, String dbfield, String fieldValue) {
+   /* public boolean CheckIsDataAlreadyInDBorNot(String TableName, String dbfield, String fieldValue) {
         SQLiteDatabase db = this.getWritableDatabase();
         String Query = "Select * from " + TableName + " where " + dbfield + " =? ";
         Cursor cursor = db.rawQuery(Query, new String[]{fieldValue});
@@ -92,6 +97,6 @@ public class RecentLocationsDBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return true;
-    }
+    }*/
 }
 

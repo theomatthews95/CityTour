@@ -1,11 +1,19 @@
 package com.example.admin123.citytour.Fragments.SeeSights;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -14,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacesList;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.RecentLocationsDBHelper;
@@ -25,6 +34,9 @@ import com.example.admin123.citytour.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+//import com.google.android.gms.location.LocationListener;
+import android.location.LocationListener;
+
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
@@ -40,7 +52,7 @@ import static com.google.android.gms.wearable.DataMap.TAG;
 public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         SearchTypeDialogFragment.OnSetSearchLocationTypeFromListener,
         SearchAreaDialogFragment.OnSetSearchLocationAreaFromListener,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener {
 
 
     private OnFragmentInteractionListener mListener;
@@ -50,6 +62,10 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     private double searchLat;
     private double searchLong;
     private String searchRadius;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private double userLocationLat;
+    private double userLocationLong;
 
     // TODO: Rename and change types and number of parameters
     public static SeeSightsFragment newInstance() {
@@ -85,6 +101,10 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             }
         });
 
+        setUpLocation();
+        getUserLocation();
+
+
         // Configure what type of location is being searched for
         Button mWhatType = (Button) v.findViewById(R.id.what_type_button);
         mWhatType.setOnClickListener(new View.OnClickListener() {
@@ -103,10 +123,21 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 String locationType = searchLocationType;
-                bundle.putString("locationType", locationType);
-                bundle.putString("searchRadius",searchRadius);
+                if (locationType != null)
+                    bundle.putString("locationType", locationType);
+                else {
+                    Toast.makeText(getContext(), "You've not entered a location type", Toast.LENGTH_SHORT).show();
+                    bundle.putString("locationType", "");
+                }
+                if (searchLong == 0.0 && searchLat == 0.0){
+                    Log.i(TAG, "Entered");
+                    searchLat = userLocationLat;
+                    searchLong = userLocationLong;
+                    searchRadius = "2000";
+                }
                 bundle.putDouble("searchAreaLong", searchLong);
                 bundle.putDouble("searchAreaLat", searchLat);
+                bundle.putString("searchRadius",searchRadius);
                 Fragment fragment = new PlacesList();
                 fragment.setArguments(bundle);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -157,14 +188,22 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     //Set the search location area parameters
     public void setSearchLocationArea(SearchAreaItem searchAreaItem) {
         searchRadius = searchAreaItem.getRadius().toString();
-        searchLat = searchAreaItem.getSearchCoordinates().longitude;
-        searchLong = searchAreaItem.getSearchCoordinates().latitude;
         String searchAreaName = searchAreaItem.getName();
 
+        if (searchAreaName == null || searchAreaName.equals("My Location")){
+            searchLat = userLocationLat;
+            searchLong = userLocationLong;
+        }
+        else {
+            searchLat = searchAreaItem.getSearchCoordinates().latitude;
+            searchLong = searchAreaItem.getSearchCoordinates().longitude;
+        }
+
+        Log.i(TAG, "searchAreaName = "+searchAreaName+", Coordinates: "+searchLat + ", "+searchLong);
         //change the text view above the dialog launch button to show the user their selection
         if (searchAreaName == null) {
-            whatAreaTextView.setText("What area?");
-            whatAreaTextView.setTextSize(50);
+            whatAreaTextView.setText("My Location");
+            whatAreaTextView.setTextSize(35);
         } else {
             whatAreaTextView.setText(searchAreaName);
             whatAreaTextView.setTextSize(40);
@@ -209,6 +248,71 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         System.out.println(searchLocationType);
     }
 
+    private void setUpLocation(){
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                //Log.i(TAG, "Your location is "+location.getLatitude()+", "+location.getLongitude());
+                userLocationLat = location.getLatitude();
+                userLocationLong = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.INTERNET
+                }, 10);
+            }
+        }else{
+            getUserLocation();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 10:
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    getUserLocation();
+                return;
+        }
+    }
+
+    private void getUserLocation(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.INTERNET
+                }, 10);
+            }
+        locationManager.requestLocationUpdates("gps", 500, 0, locationListener);
+
+        }
+    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

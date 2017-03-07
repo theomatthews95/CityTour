@@ -74,7 +74,6 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
         //Declare the view
         View v = getActivity().getLayoutInflater().inflate(R.layout.search_area_dialog, null);
 
-
         recentLocationsArrayList = new ArrayList<SearchAreaItem>();
 
         //Create database to store recent searches
@@ -88,6 +87,7 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
         autoCompleteProcess();
 
         updateMostRecentLocations();
+
         listView = (ListView) v.findViewById(R.id.recentLocationsList);
         listAdapter = new SearchAreaListAdapter(recentLocationsArrayList);
         //listView.setEmptyView( v.findViewById( R.id.empty_list_view ) );
@@ -126,12 +126,13 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
             @Override
             public void onClick(View arg0) {
                 if(searchCoordinates == null){
-                    searchCoordinates = new LatLng(51.7520209,-1.2577262999999999);
+                    searchCoordinates = new LatLng(0.0,0.0);
                 }
                 if(searchRadius == null){
-                    searchRadius = 1;
+                    searchRadius = 2000;
                 }
 
+                Log.i(TAG,"The Search item on DONE of Area dialog: Coordinates "+searchCoordinates+" Name "+searchAreaName);
                 //Create SearchAreaItem object to store data input from user in dialog fragment
                 SearchAreaItem searchAreaItem = new SearchAreaItem(searchCoordinates, searchRadius, searchAreaName);
                 SearchAreaDialogFragment.OnSetSearchLocationAreaFromListener callback = (SearchAreaDialogFragment.OnSetSearchLocationAreaFromListener) getTargetFragment();
@@ -140,7 +141,7 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
                 callback.setSearchLocationArea(searchAreaItem);
 
                 InsertRecentDatabase(searchAreaName);
-
+                locationsDB.close();
                 dismiss();
             }
         });
@@ -153,19 +154,18 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
     }
 
     private void InsertRecentDatabase(String searchAreaName){
-        if (searchAreaName == null){
-            searchAreaName = "My Location";
+        if (searchAreaName == null || searchAreaName.equals("My Location")){
+            Log.i(TAG, "Not gonna insert my location or null biatch");
+        }else {
+            boolean isInserted = locationsDB.insertData(searchAreaName, searchLat, searchLong);
+            if (isInserted == true)
+                Log.i(TAG, "Inserted " + searchAreaName + " into database.");
+            else
+                Log.i(TAG, "Location not inserted into database. Most likely a duplicate.");
+
+            updateMostRecentLocations();
         }
-        boolean isInserted = locationsDB.insertData(searchAreaName, searchLat, searchLong);
-        if (isInserted == true)
-            Log.i(TAG, "Inserted location into database.");
-        else
-            Log.i(TAG, "Location not inserted into database. Most likely a duplicate.");
-
-        updateMostRecentLocations();
-
     }
-
 
 
     public void updateMostRecentLocations(){
@@ -189,7 +189,7 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
         }
 
         recent5.append("Recent 5 End"+"\n");
-        Log.i(TAG, recent5.toString());
+        //Log.i(TAG, recent5.toString());
     }
 
     @Override
@@ -211,7 +211,7 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getLatLng());//get place details here
+                //Log.i(TAG, "Place: " + place.getName() + ", " + place.getLatLng());//get place details here
                 searchCoordinates = place.getLatLng();
                 searchAreaName = place.getName().toString();
                 searchLong = place.getLatLng().longitude;

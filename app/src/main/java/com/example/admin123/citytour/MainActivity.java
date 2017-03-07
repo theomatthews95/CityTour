@@ -1,5 +1,8 @@
 package com.example.admin123.citytour;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +24,7 @@ import com.example.admin123.citytour.Fragments.HomepageFragment;
 import com.example.admin123.citytour.Fragments.GmapFragment;
 import com.example.admin123.citytour.Fragments.PostcardFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
+import com.google.android.gms.location.LocationListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, HomepageFragment.OnFragmentInteractionListener, SeeSightsFragment.OnFragmentInteractionListener, PostcardFragment.OnFragmentInteractionListener, CurrencyExchangeFragment.OnFragmentInteractionListener, GmapFragment.OnFragmentInteractionListener{
 
@@ -29,11 +33,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String fragmentArray[] = {"Homepage", "See the Sights", "Favourite", "Itinerary", "Postcard", "Currency Exchange"};
     DrawerLayout drawerLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_draw);
-
 
         listView = (ListView) findViewById(R.id.listView);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fragmentArray);

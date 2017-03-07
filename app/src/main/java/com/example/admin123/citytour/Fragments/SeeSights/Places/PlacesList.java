@@ -55,7 +55,7 @@ public class PlacesList extends Fragment{
 
             //Insert retrieved data from SeeSightsFragment into places API request
             String placesRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
-                    searchAreaLong + "," + searchAreaLat + "&type="+type+"&radius="+searchRadius+"&key=" + placesKey;
+                    searchAreaLat + "," + searchAreaLong + "&type="+type+"&radius="+searchRadius+"&key=" + placesKey;
             PlacesReadFeed process = new PlacesReadFeed();
 
             //Execute API request
