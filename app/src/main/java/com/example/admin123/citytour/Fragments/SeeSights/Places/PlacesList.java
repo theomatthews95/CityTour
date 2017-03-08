@@ -36,6 +36,8 @@ import java.net.URLEncoder;
 
 public class PlacesList extends Fragment{
 
+    private Double searchAreaLong;
+    private Double searchAreaLat;
     private String placesKey;
 
     @Override
@@ -49,8 +51,14 @@ public class PlacesList extends Fragment{
         } else {
             //Get users inputted data from SeeSightsFragment to create Google Places API Request
             String type = URLEncoder.encode(getArguments().getString("locationType"));
-            Double searchAreaLong = getArguments().getDouble("searchAreaLong");
-            Double searchAreaLat = getArguments().getDouble("searchAreaLat");
+            searchAreaLong = getArguments().getDouble("searchAreaLong");
+            searchAreaLat = getArguments().getDouble("searchAreaLat");
+            if(searchAreaLat == 0.0 && searchAreaLong == 0.0){
+                searchAreaLong = -1.89028791;
+                searchAreaLat = 52.48549062;
+                Toast.makeText(getContext(), "Couldn't establish user location so searching Birmingham", Toast.LENGTH_LONG).show();
+            }
+
             String searchRadius = getArguments().getString("searchRadius");
 
             //Insert retrieved data from SeeSightsFragment into places API request
@@ -95,6 +103,10 @@ public class PlacesList extends Fragment{
         protected void onPostExecute(GooglePlaceList places) {
             Bundle bundle = new Bundle();
             bundle.putSerializable("googlePlaceList", places.getResults());
+            bundle.putInt("numberOfPlaces", places.getResults().size());
+            //User's search location
+            bundle.putDouble("searchAreaLong", searchAreaLong);
+            bundle.putDouble("searchAreaLat", searchAreaLat);
             Fragment fragment = new GmapFragment();
             fragment.setArguments(bundle);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();

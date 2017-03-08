@@ -67,6 +67,8 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     private double userLocationLat;
     private double userLocationLong;
 
+    boolean toastGPSShown = false;
+
     // TODO: Rename and change types and number of parameters
     public static SeeSightsFragment newInstance() {
         SeeSightsFragment fragment = new SeeSightsFragment();
@@ -97,12 +99,15 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         mWhatArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
+                if (toastGPSShown == false) {
+                    Toast.makeText(getContext(), "GPS is currently not functioning", Toast.LENGTH_SHORT).show();
+                }
                 showLocationAreaDialog();
             }
         });
 
         setUpLocation();
-        getUserLocation();
+        //getUserLocation();
 
 
         // Configure what type of location is being searched for
@@ -131,14 +136,9 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
                 }
                 if (searchLong == 0.0 && searchLat == 0.0){
                     Log.i(TAG, "Entered");
-                    if (userLocationLat == 0.0 && userLocationLat == 0.0){
-                        Toast.makeText(getContext(), "GPS Location not yet ready.", Toast.LENGTH_SHORT).show();
-                        bundle.putString("locationType", "");
-                    }else {
-                        searchLat = userLocationLat;
-                        searchLong = userLocationLong;
-                        searchRadius = "2000";
-                    }
+                    searchLat = userLocationLat;
+                    searchLong = userLocationLong;
+                    searchRadius = "2000";
                 }
                 bundle.putDouble("searchAreaLong", searchLong);
                 bundle.putDouble("searchAreaLat", searchLat);
@@ -259,6 +259,10 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             @Override
             public void onLocationChanged(Location location) {
                 //Log.i(TAG, "Your location is "+location.getLatitude()+", "+location.getLongitude());
+                while (toastGPSShown == false) {
+                    Toast.makeText(getContext(), "GPS is functioning", Toast.LENGTH_SHORT).show();
+                    toastGPSShown = true;
+                }
                 userLocationLat = location.getLatitude();
                 userLocationLong = location.getLongitude();
             }
@@ -279,19 +283,18 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
                 startActivity(intent);
             }
         };
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.INTERNET
                 }, 10);
+            } else {
+                getUserLocation();
             }
-        }else{
-            getUserLocation();
         }
-
     }
 
     @Override
