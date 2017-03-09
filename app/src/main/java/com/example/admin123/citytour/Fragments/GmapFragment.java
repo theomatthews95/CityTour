@@ -1,6 +1,10 @@
 package com.example.admin123.citytour.Fragments;
 
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,12 +12,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
+import java.util.*;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
 import com.example.admin123.citytour.R;
 import com.google.android.gms.maps.CameraUpdate;
@@ -22,6 +27,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -74,7 +80,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
                 markers.add(marker);
                 mMap.addMarker(new MarkerOptions().position(marker)
                         .title(title)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.heart_pin))
+                        .icon(getBitmapDescriptor(R.drawable.ic_map_pin))
                 );
             }
         }else {
@@ -116,6 +122,23 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
             return;
         }
         mMap.setMyLocationEnabled(true);
+    }
+
+    private BitmapDescriptor getBitmapDescriptor(int id) {
+        Drawable vectorDrawable = getResources().getDrawable(R.drawable.ic_map_pin);
+        int h = ((int) convertDpToPixel(70));
+        int w = ((int) convertDpToPixel(70));
+        vectorDrawable.setBounds(0, 0, w, h);
+        Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bm);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bm);
+    }
+
+    public static float convertDpToPixel(float dp){
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return Math.round(px);
     }
 
     public interface OnFragmentInteractionListener {
