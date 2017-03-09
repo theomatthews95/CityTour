@@ -142,7 +142,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
     public BitmapDescriptor getBitmapDescriptor(int id) {
         Drawable vectorDrawable = getResources().getDrawable(id);
         int h = ((int) convertDpToPixel(70));
-        int w = ((int) convertDpToPixel(70));
+        int w = ((int) convertDpToPixel(75));
         vectorDrawable.setBounds(0, 0, w, h);
         Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bm);
