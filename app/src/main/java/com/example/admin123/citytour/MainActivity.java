@@ -23,8 +23,10 @@ import com.example.admin123.citytour.Fragments.Currency.CurrencyExchangeFragment
 import com.example.admin123.citytour.Fragments.HomepageFragment;
 import com.example.admin123.citytour.Fragments.GmapFragment;
 import com.example.admin123.citytour.Fragments.PostcardFragment;
+import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacePins;
 import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.places.Place;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, HomepageFragment.OnFragmentInteractionListener, SeeSightsFragment.OnFragmentInteractionListener, PostcardFragment.OnFragmentInteractionListener, CurrencyExchangeFragment.OnFragmentInteractionListener, GmapFragment.OnFragmentInteractionListener{
 
@@ -33,11 +35,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String fragmentArray[] = {"Homepage", "See the Sights", "Favourite", "Itinerary", "Postcard", "Currency Exchange"};
     DrawerLayout drawerLayout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_draw);
+
 
         listView = (ListView) findViewById(R.id.listView);
         listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fragmentArray);
@@ -102,6 +104,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public static PlacePins returnPlacePins(){
+        PlacePins placePins = new PlacePins();
+        return placePins;
     }
 
 }

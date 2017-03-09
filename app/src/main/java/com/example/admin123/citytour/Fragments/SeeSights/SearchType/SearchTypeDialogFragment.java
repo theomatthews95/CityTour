@@ -82,6 +82,7 @@ public class SearchTypeDialogFragment extends DialogFragment{
         searchTypeItems.add(new SearchTypeItem("Library", "library", 0));
         searchTypeItems.add(new SearchTypeItem("Aquarium", "aquarium", 1));
         searchTypeItems.add(new SearchTypeItem("Shopping", "shopping_mall", 1));
+        searchTypeItems.add(new SearchTypeItem("Hotels", "lodging", 0));
         listAdapter = new SearchTypeListAdapter(getActivity(), searchTypeItems);
         lv.setAdapter(listAdapter);
         return lv;

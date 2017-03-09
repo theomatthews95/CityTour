@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import java.util.*;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
+import com.example.admin123.citytour.MainActivity;
 import com.example.admin123.citytour.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -69,6 +70,8 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
         Integer numberOfPlaces = (Integer) getArguments().getInt("numberOfPlaces");
         Double placesSearchLat = (Double) getArguments().getDouble("searchAreaLat");
         Double placesSearchLong = (Double) getArguments().getDouble("searchAreaLong");
+        HashMap<String, Integer> placePins = MainActivity.returnPlacePins().PlacePins();
+
         ArrayList<LatLng> markers = new ArrayList<>();
 
         if (numberOfPlaces != 0) {
@@ -77,10 +80,22 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
                 double lat = places.get(i).getGeometry().getLocation().getLat();
                 double lng = places.get(i).getGeometry().getLocation().getLng();
                 LatLng marker = new LatLng(lat, lng);
+
+                String placeTypes = places.get(i).getTypes().get(0);
+
+                Integer pin = placePins.get(placeTypes);
+                if(pin != null){
+                    Log.i(TAG,"These are the types "+pin);
+                }else{
+                    Log.i(TAG,"no pin found");
+                    pin = R.drawable.ic_map_pin;
+                }
+
+
                 markers.add(marker);
                 mMap.addMarker(new MarkerOptions().position(marker)
                         .title(title)
-                        .icon(getBitmapDescriptor(R.drawable.ic_map_pin))
+                        .icon(getBitmapDescriptor(pin))
                 );
             }
         }else {
@@ -124,8 +139,8 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
         mMap.setMyLocationEnabled(true);
     }
 
-    private BitmapDescriptor getBitmapDescriptor(int id) {
-        Drawable vectorDrawable = getResources().getDrawable(R.drawable.ic_map_pin);
+    public BitmapDescriptor getBitmapDescriptor(int id) {
+        Drawable vectorDrawable = getResources().getDrawable(id);
         int h = ((int) convertDpToPixel(70));
         int w = ((int) convertDpToPixel(70));
         vectorDrawable.setBounds(0, 0, w, h);
@@ -145,4 +160,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+
 }
