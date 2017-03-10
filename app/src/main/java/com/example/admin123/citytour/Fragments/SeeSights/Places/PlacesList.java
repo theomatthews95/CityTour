@@ -1,31 +1,17 @@
 package com.example.admin123.citytour.Fragments.SeeSights.Places;
 
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.admin123.citytour.Fragments.GmapFragment;
-import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaItem;
-import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeDialogFragment;
-import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
+import com.example.admin123.citytour.Map.GmapFragment;
 import com.example.admin123.citytour.R;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import java.net.URLEncoder;

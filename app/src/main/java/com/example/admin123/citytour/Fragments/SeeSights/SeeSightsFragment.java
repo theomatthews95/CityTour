@@ -259,10 +259,10 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             @Override
             public void onLocationChanged(Location location) {
                 //Log.i(TAG, "Your location is "+location.getLatitude()+", "+location.getLongitude());
-                while (toastGPSShown == false) {
+                /*while (toastGPSShown == false) {
                     Toast.makeText(getContext(), "GPS is functioning", Toast.LENGTH_SHORT).show();
                     toastGPSShown = true;
-                }
+                }*/
                 userLocationLat = location.getLatitude();
                 userLocationLong = location.getLongitude();
             }

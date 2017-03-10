@@ -1,8 +1,5 @@
 package com.example.admin123.citytour;
 
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,12 +18,10 @@ import android.widget.ListView;
 
 import com.example.admin123.citytour.Fragments.Currency.CurrencyExchangeFragment;
 import com.example.admin123.citytour.Fragments.HomepageFragment;
-import com.example.admin123.citytour.Fragments.GmapFragment;
+import com.example.admin123.citytour.Map.GmapFragment;
 import com.example.admin123.citytour.Fragments.PostcardFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacePins;
 import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.places.Place;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, HomepageFragment.OnFragmentInteractionListener, SeeSightsFragment.OnFragmentInteractionListener, PostcardFragment.OnFragmentInteractionListener, CurrencyExchangeFragment.OnFragmentInteractionListener, GmapFragment.OnFragmentInteractionListener{
 

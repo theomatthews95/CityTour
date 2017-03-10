@@ -1,4 +1,4 @@
-package com.example.admin123.citytour.Fragments;
+package com.example.admin123.citytour.Map;
 
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -30,10 +31,15 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,6 +51,10 @@ import static com.google.android.gms.wearable.DataMap.TAG;
 public class GmapFragment extends Fragment implements OnMapReadyCallback{
     MapView mMapView;
     private GoogleMap mMap;
+    // Declare a variable for the cluster manager.
+    private ClusterManager<MyItem> mClusterManager;
+    private ArrayList<LatLng> markers = new ArrayList<>();
+    private ArrayList<Circle> drawnCircles = new ArrayList<Circle>();
 
     @Nullable
     @Override
@@ -72,46 +82,72 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
         Double placesSearchLong = (Double) getArguments().getDouble("searchAreaLong");
         HashMap<String, Integer> placePins = MainActivity.returnPlacePins().PlacePins();
 
-        ArrayList<LatLng> markers = new ArrayList<>();
+
+        setUpClusterer();
+
 
         if (numberOfPlaces != 0) {
+            //If the place API request returned values
+            //Iterate over the ArrayList containing all the places
+
             for (int i = 0; i < places.size(); i++) {
+
+                //Get the name of the place
                 String title = places.get(i).getName();
+
+                //Get the longitude and latitude of the place
                 double lat = places.get(i).getGeometry().getLocation().getLat();
                 double lng = places.get(i).getGeometry().getLocation().getLng();
+
+                //Create a LatLng item using the place's lat and long
                 LatLng marker = new LatLng(lat, lng);
 
+                //Add the marker to the arraylist of all the latlng markers
+                markers.add(marker);
+
+                //Get the place type for choosing an icon
                 String placeTypes = places.get(i).getTypes().get(0);
 
+                //Search the icon hashmap for a matching custom pin
                 Integer pin = placePins.get(placeTypes);
-                if(pin != null){
-                    Log.i(TAG,"These are the types "+pin);
-                }else{
-                    Log.i(TAG,"no pin found");
+
+                //If there is no pin in the hashmap, assign a default pin
+                if(pin == null) {
                     pin = R.drawable.ic_map_pin;
                 }
 
 
-                markers.add(marker);
-                mMap.addMarker(new MarkerOptions().position(marker)
-                        .title(title)
-                        .icon(getBitmapDescriptor(pin))
-                );
+                // Add cluster items (markers) to the cluster manager.
+                MyItem mapItem = new MyItem(lat, lng, title);
+                mClusterManager.addItem(mapItem);
+
+                BitmapDescriptor customPin = getBitmapDescriptor(pin);
+
+                AddCustomPins(customPin);
+
+                DrawHalos();
             }
         }else {
+            //If there are no search items to display
             LatLng marker = new LatLng(placesSearchLat, placesSearchLong);
-            Log.i(TAG, "MAPS "+placesSearchLat + ", " +placesSearchLong);
             markers.add(marker);
-            mMap.addMarker(new MarkerOptions().position(marker).title("Search Location"));
+
+            // Add cluster items (markers) to the cluster manager.
+            MyItem mapItem = new MyItem(placesSearchLat, placesSearchLat, "Search Location");
+            mClusterManager.addItem(mapItem);
+            //mMap.addMarker(new MarkerOptions().position(marker).title("Search Location"));
             Toast.makeText(getContext(), "No places found. Try a larger radius.", Toast.LENGTH_SHORT).show();
         }
 
+
+
         //Create boundary around markers
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+        //For each marker, add it to the bounding area
         for (LatLng marker1 : markers) {
             builder.include(marker1);
         }
-
 
         int padding = 15; // offset from edges of the map in pixels
 
@@ -121,28 +157,37 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
         //Move the camera to location
         mMap.moveCamera(cu);
 
-
-
-
-       //mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(40.4174885,-3.7035306)));
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return;
         }
         mMap.setMyLocationEnabled(true);
+
     }
+
+    private void setUpClusterer() {
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<MyItem>(getActivity(), mMap);
+
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+    }
+
+    private void AddCustomPins(BitmapDescriptor customPin){
+        final ClusterRenderer renderer = new ClusterRenderer(getActivity(), mMap, mClusterManager, customPin);
+        mClusterManager.setRenderer(renderer);
+    }
+
 
     public BitmapDescriptor getBitmapDescriptor(int id) {
         Drawable vectorDrawable = getResources().getDrawable(id);
-        int h = ((int) convertDpToPixel(70));
-        int w = ((int) convertDpToPixel(75));
+        int h = ((int) convertDpToPixel(75));
+        int w = ((int) convertDpToPixel(85));
         vectorDrawable.setBounds(0, 0, w, h);
         Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bm);
@@ -155,6 +200,43 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
         float px = dp * (metrics.densityDpi / 160f);
         return Math.round(px);
     }
+
+    private void DrawHalos(){
+        /*mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                Log.e(TAG,"Listener 1");
+            }
+        });*/
+
+        mMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+            @Override
+            public void onCameraMoveStarted(int i) {
+                LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+                Log.i(TAG, "Bounds "+bounds);
+                for (Circle circle : drawnCircles){
+                    circle.remove();
+                }
+                for (LatLng marker : markers){
+                    boolean isViewable = bounds.contains(marker);
+                    System.out.println(marker.latitude + ", " + marker.longitude + ": " + isViewable);
+                    Double radius = SphericalUtil.computeDistanceBetween(marker, mMap.getCameraPosition().target);
+                    if (isViewable == false) {
+                        // Instantiates a new CircleOptions object and defines the center and radius
+                        CircleOptions circleOptions = new CircleOptions()
+                                .center(marker)
+                                .radius(radius); // In meters
+
+                        // Get back the mutable Circle
+                        Circle circle = mMap.addCircle(circleOptions);
+                        drawnCircles.add(circle);
+                    }
+                }
+            }
+        });
+
+    }
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
