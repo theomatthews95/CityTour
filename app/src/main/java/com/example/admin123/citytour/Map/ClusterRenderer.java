@@ -38,5 +38,6 @@ public class ClusterRenderer extends DefaultClusterRenderer<MyItem> implements G
 
     @Override
     public void onCameraIdle() {
+
     }
 }
