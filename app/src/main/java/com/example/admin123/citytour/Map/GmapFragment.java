@@ -215,18 +215,26 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
                 }
                 for (LatLng marker : markers){
                     boolean isViewable = bounds.contains(marker);
-                    /*Double radius = SphericalUtil.computeDistanceBetween(marker, mMap.getCameraPosition().target);
-                    Double centerToSouthWest = SphericalUtil.computeDistanceBetween(mMap.getCameraPosition().target, bounds.southwest);
-                    Double centerToNorthEast = SphericalUtil.computeDistanceBetween(mMap.getCameraPosition().target, bounds.northeast);
 
-                    Double distanceSouthWest = SphericalUtil.computeDistanceBetween(bounds.southwest, marker);
-                    Double distanceNorthEast = SphericalUtil.computeDistanceBetween(bounds.northeast, marker);
-
-                    double southWest = distanceSouthWest - centerToSouthWest;
-                    double northEast = distanceNorthEast - centerToNorthEast;*/
                     Double radius;
 
-                    //System.out.println("VAlues: " +southWest + ", "+northEast);
+                    double southMiddleLong = mMap.getCameraPosition().target.longitude;
+                    double southMiddleLat = bounds.southwest.latitude;
+                    LatLng southHalfWay = new LatLng(southMiddleLat, southMiddleLong);
+
+                    double northMiddleLong = mMap.getCameraPosition().target.longitude;
+                    double northMiddleLat = bounds.northeast.latitude;
+                    LatLng northHalfway = new LatLng(northMiddleLat, northMiddleLong);
+
+
+                    double westMiddleLong = bounds.southwest.longitude;
+                    double westMiddleLat = bounds.southwest.latitude + (mMap.getCameraPosition().target.latitude - bounds.southwest.latitude);
+                    LatLng westHalfway = new LatLng(westMiddleLat, westMiddleLong);
+
+
+                    double eastMiddleLong = bounds.northeast.longitude;
+                    double eastMiddleLat = bounds.southwest.latitude + (mMap.getCameraPosition().target.latitude - bounds.southwest.latitude);
+                    LatLng eastHalfway = new LatLng(eastMiddleLat, eastMiddleLong);
 
                     if (isViewable == false) {
                         if (marker.latitude < bounds.southwest.latitude) {
@@ -236,12 +244,14 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
                                 //radius = ;
                             }else if (marker.longitude > bounds.northeast.longitude) {
                                 Log.i(TAG, "South East of display");
-                                radius = SphericalUtil.computeDistanceBetween(bounds.southwest, marker);
+                                radius = SphericalUtil.computeDistanceBetween(southHalfWay, marker);
                                 //radius = southWest;
                             }else{
                                 Log.i(TAG, "South of display");
-                                radius = SphericalUtil.computeDistanceBetween(bounds.southwest, marker);
-                                //radius = southWest;
+                                radius = SphericalUtil.computeDistanceBetween(southHalfWay, marker);
+                                Log.i(TAG, "Radius = "+radius);
+                                radius = radius*1.4;
+                                Log.i(TAG, "New radius = "+ radius);
                             }
                         }else if (marker.latitude > bounds.northeast.latitude){
                             if (marker.longitude > bounds.northeast.longitude){
@@ -250,31 +260,47 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
                                 //radius = northEast;
                             }else if (marker.longitude < bounds.southwest.longitude){
                                 Log.i(TAG, "North West of display");
-                                radius = SphericalUtil.computeDistanceBetween(bounds.northeast, marker);
+                                radius = SphericalUtil.computeDistanceBetween(northHalfway, marker);
+
                                 //radius = northEast;
                             }else{
                                 Log.i(TAG, "North of display");
-                                //radius = northEast;
-                                //Double widthOfDisplay = bounds.southwest.longitude - bounds.northeast.longitude;
-                                //LatLng NorthOfDisplay = SphericalUtil.computeOffset()
-                                radius = SphericalUtil.computeDistanceBetween(bounds.northeast, marker);
+                                radius = SphericalUtil.computeDistanceBetween(northHalfway, marker);
+                                Log.i(TAG, "Radius = "+radius);
+                                radius = radius*1.4;
+                                Log.i(TAG, "New radius = "+ radius);
                             }
                         }else if (marker.longitude < bounds.southwest.longitude){
                             Log.i(TAG, "West of display");
-                            radius = SphericalUtil.computeDistanceBetween(bounds.southwest, marker);
+                            radius = SphericalUtil.computeDistanceBetween(westHalfway, marker);
+                            Log.i(TAG, "Radius = "+radius);
+                            radius = radius*1.4;
+                            Log.i(TAG, "New radius = "+ radius);
                         }else{
                             Log.i(TAG, "East of display");
-                            radius = SphericalUtil.computeDistanceBetween(bounds.northeast, marker);
+                            radius = SphericalUtil.computeDistanceBetween(eastHalfway, marker);
+                            Log.i(TAG, "Radius = "+radius);
+                            radius = radius*1.4;
+                            Log.i(TAG, "New radius = "+ radius);
+
                         }
 
-                        // Instantiates a new CircleOptions object and defines the center and radius
-                        CircleOptions circleOptions = new CircleOptions()
-                                .center(marker)
-                                .radius(radius); // In meters
+                        boolean drawCircle = true;
+                        if (radius >= SphericalUtil.computeDistanceBetween(westHalfway, eastHalfway)/2 && radius >= 4000){
+                            Log.i(TAG, "Circle too big");
+                            drawCircle = false;
+                        }
 
-                        // Get back the mutable Circle
-                        Circle circle = mMap.addCircle(circleOptions);
-                        drawnCircles.add(circle);
+                        if (drawCircle == true) {
+                            // Instantiates a new CircleOptions object and defines the center and radius
+                            CircleOptions circleOptions = new CircleOptions()
+                                    .center(marker)
+                                    .radius(radius); // In meters
+
+                            // Get back the mutable Circle
+                            Circle circle = mMap.addCircle(circleOptions);
+                            drawnCircles.add(circle);
+                        }
                     }
                 }
             }
@@ -291,6 +317,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 
 
 

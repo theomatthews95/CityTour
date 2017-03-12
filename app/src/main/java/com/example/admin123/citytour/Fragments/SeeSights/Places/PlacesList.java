@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.admin123.citytour.Map.GmapFragment;
 import com.example.admin123.citytour.R;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.gson.Gson;
 
 import java.net.URLEncoder;
