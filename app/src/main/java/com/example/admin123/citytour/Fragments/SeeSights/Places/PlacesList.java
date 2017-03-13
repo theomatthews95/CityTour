@@ -96,7 +96,7 @@ public class PlacesList extends Fragment{
             bundle.putDouble("searchAreaLat", searchAreaLat);
             Fragment fragment = new GmapFragment();
             fragment.setArguments(bundle);
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.relativeLayout, fragment);
             transaction.addToBackStack(null);
             transaction.commit();

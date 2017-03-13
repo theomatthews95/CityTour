@@ -2,10 +2,8 @@ package com.example.admin123.citytour.Fragments.SeeSights;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -25,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacesList;
-import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.RecentLocationsDBHelper;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaDialogFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaItem;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeDialogFragment;
@@ -33,17 +30,8 @@ import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeIt
 import com.example.admin123.citytour.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
 //import com.google.android.gms.location.LocationListener;
 import android.location.LocationListener;
-
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 

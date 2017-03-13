@@ -2,7 +2,6 @@ package com.example.admin123.citytour.Map;
 
 import android.content.Context;
 
-import com.example.admin123.citytour.MapsActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -22,16 +21,17 @@ public class ClusterRenderer extends DefaultClusterRenderer<MyItem> implements G
     private BitmapDescriptor customPin;
 
 
-    public ClusterRenderer(Context context, GoogleMap map, ClusterManager<MyItem> clusterManager, BitmapDescriptor customPin) {
+    public ClusterRenderer(Context context, GoogleMap map, ClusterManager<MyItem> clusterManager) {
         super(context, map, clusterManager);
         this.customPin = customPin;
         mContext = context;
     }
 
     @Override protected void onBeforeClusterItemRendered(MyItem item, MarkerOptions markerOptions) {
-        final BitmapDescriptor markerDescriptor = customPin;
+        //final BitmapDescriptor markerDescriptor = customPin;
 
-        markerOptions.icon(markerDescriptor).snippet(item.getTitle());
+        //markerOptions.icon(markerDescriptor).snippet(item.getTitle());
+        markerOptions.icon(item.getIcon());
 
     }
 

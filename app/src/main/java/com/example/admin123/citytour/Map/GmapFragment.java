@@ -15,6 +15,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import com.example.admin123.citytour.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,7 +55,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
     MapView mMapView;
     private GoogleMap mMap;
     // Declare a variable for the cluster manager.
-    private ClusterManager<MyItem> mClusterManager;
+    private MyClusterManager<MyItem> mClusterManager;
     private ArrayList<LatLng> markers = new ArrayList<>();
     private ArrayList<Circle> drawnCircles = new ArrayList<Circle>();
     private ClusterRenderer renderer;
@@ -73,6 +76,10 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
 
         SupportMapFragment fragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         fragment.getMapAsync(this);
+        ViewGroup.LayoutParams params = fragment.getView().getLayoutParams();
+        params.height = 1525;
+
+        fragment.getView().setLayoutParams(params);
     }
 
 
@@ -112,19 +119,20 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
                 //Search the icon hashmap for a matching custom pin
                 Integer pin = placePins.get(placeTypes);
 
+
                 //If there is no pin in the hashmap, assign a default pin
                 if(pin == null) {
                     pin = R.drawable.ic_map_pin;
                 }
 
+                BitmapDescriptor customPin = getBitmapDescriptor(pin);
+                Log.i(TAG, customPin.toString());
+               //AddCustomPins(customPin);
 
-                // Add cluster items (markers) to the cluster manager.
-                MyItem mapItem = new MyItem(lat, lng, title);
+                // Add cluster item (markers) to the cluster manager.
+                MyItem mapItem = new MyItem(lat, lng, title, customPin);
                 mClusterManager.addItem(mapItem);
 
-                BitmapDescriptor customPin = getBitmapDescriptor(pin);
-
-                AddCustomPins(customPin);
 
                 DrawHalos();
             }
@@ -132,15 +140,15 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
             //If there are no search items to display
             LatLng marker = new LatLng(placesSearchLat, placesSearchLong);
             markers.add(marker);
-
             // Add cluster items (markers) to the cluster manager.
-            MyItem mapItem = new MyItem(placesSearchLat, placesSearchLat, "Search Location");
+            MyItem mapItem = new MyItem(placesSearchLat, placesSearchLat, "Search Location", getBitmapDescriptor(R.drawable.ic_map_pin));
             mClusterManager.addItem(mapItem);
             //mMap.addMarker(new MarkerOptions().position(marker).title("Search Location"));
             Toast.makeText(getContext(), "No places found. Try a larger radius.", Toast.LENGTH_SHORT).show();
         }
 
-
+        renderer = new ClusterRenderer(getActivity(), mMap, mClusterManager);
+        mClusterManager.setRenderer(renderer);
 
         //Create boundary around markers
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -169,7 +177,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
     private void setUpClusterer() {
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new ClusterManager<MyItem>(getActivity(), mMap);
+        mClusterManager = new MyClusterManager<MyItem>(getActivity(), mMap);
 
 
         // Point the map's listeners at the listeners implemented by the cluster
@@ -181,10 +189,10 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
 
     }
 
-    private void AddCustomPins(BitmapDescriptor customPin){
+   /* private void AddCustomPins(BitmapDescriptor customPin){
        renderer = new ClusterRenderer(getActivity(), mMap, mClusterManager, customPin);
-        mClusterManager.setRenderer(renderer);
-    }
+       mClusterManager.setRenderer(renderer);
+    }*/
 
 
     public BitmapDescriptor getBitmapDescriptor(int id) {
@@ -244,14 +252,13 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
                                 //radius = ;
                             }else if (marker.longitude > bounds.northeast.longitude) {
                                 Log.i(TAG, "South East of display");
-                                radius = SphericalUtil.computeDistanceBetween(southHalfWay, marker);
+                                LatLng southEast = new LatLng(bounds.southwest.latitude, bounds.northeast.longitude);
+                                radius = SphericalUtil.computeDistanceBetween(southEast, marker) * 1.4;
                                 //radius = southWest;
                             }else{
                                 Log.i(TAG, "South of display");
                                 radius = SphericalUtil.computeDistanceBetween(southHalfWay, marker);
-                                Log.i(TAG, "Radius = "+radius);
                                 radius = radius*1.4;
-                                Log.i(TAG, "New radius = "+ radius);
                             }
                         }else if (marker.latitude > bounds.northeast.latitude){
                             if (marker.longitude > bounds.northeast.longitude){
@@ -260,33 +267,27 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
                                 //radius = northEast;
                             }else if (marker.longitude < bounds.southwest.longitude){
                                 Log.i(TAG, "North West of display");
-                                radius = SphericalUtil.computeDistanceBetween(northHalfway, marker);
+                                LatLng northWest = new LatLng(bounds.northeast.latitude, bounds.southwest.longitude);
+                                radius = SphericalUtil.computeDistanceBetween(northWest, marker);
 
                                 //radius = northEast;
                             }else{
                                 Log.i(TAG, "North of display");
                                 radius = SphericalUtil.computeDistanceBetween(northHalfway, marker);
-                                Log.i(TAG, "Radius = "+radius);
                                 radius = radius*1.4;
-                                Log.i(TAG, "New radius = "+ radius);
                             }
                         }else if (marker.longitude < bounds.southwest.longitude){
                             Log.i(TAG, "West of display");
                             radius = SphericalUtil.computeDistanceBetween(westHalfway, marker);
-                            Log.i(TAG, "Radius = "+radius);
-                            radius = radius*1.4;
-                            Log.i(TAG, "New radius = "+ radius);
+                            radius = radius*1.2;
                         }else{
                             Log.i(TAG, "East of display");
                             radius = SphericalUtil.computeDistanceBetween(eastHalfway, marker);
-                            Log.i(TAG, "Radius = "+radius);
-                            radius = radius*1.4;
-                            Log.i(TAG, "New radius = "+ radius);
-
+                            radius = radius*1.2;
                         }
 
                         boolean drawCircle = true;
-                        if (radius >= SphericalUtil.computeDistanceBetween(westHalfway, eastHalfway)/2 && radius >= 4000){
+                        if (radius >= SphericalUtil.computeDistanceBetween(westHalfway, eastHalfway)/2 && radius >= 2000){
                             Log.i(TAG, "Circle too big");
                             drawCircle = false;
                         }
@@ -318,6 +319,19 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
         void onFragmentInteraction(Uri uri);
     }
 
+    @Override
+    public void onDestroyView() {
+        /*for (LatLng marker : markers){
+            marker.remove();
+        }*/
+
+        Fragment f = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
+        if (f != null) {
+            getFragmentManager().beginTransaction().remove(f).commit();
+        }
+
+        super.onDestroyView();
+    }
 
 
 

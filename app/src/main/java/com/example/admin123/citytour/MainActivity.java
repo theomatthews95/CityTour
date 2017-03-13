@@ -1,6 +1,7 @@
 package com.example.admin123.citytour;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         listView = (ListView) findViewById(R.id.listView);
-        listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fragmentArray);
+        listAdapter = new ArrayAdapter<String>(this, R.layout.global_nav_item, fragmentArray);
         listView.setAdapter(listAdapter);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
@@ -87,6 +90,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         });
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
     }
 
 
