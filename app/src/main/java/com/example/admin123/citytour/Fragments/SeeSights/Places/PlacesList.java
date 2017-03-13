@@ -57,6 +57,7 @@ public class PlacesList extends Fragment{
 
             //Execute API request
             process.execute(new String[] {placesRequest});
+
         }
 
         return inflater.inflate(R.layout.fragment_place_list, container, false);

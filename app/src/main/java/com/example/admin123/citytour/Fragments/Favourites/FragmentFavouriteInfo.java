@@ -21,18 +21,19 @@ import com.example.admin123.citytour.R;
 import com.google.gson.Gson;
 
 import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * Created by theom on 13/03/2017.
  */
 public class FragmentFavouriteInfo extends Fragment {
-
+    private GooglePlace place;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_favourite_details, container, false);
 
-        GooglePlace place = (GooglePlace) getArguments().getSerializable("place");
+        place = (GooglePlace) getArguments().getSerializable("place");
         TextView placeTitle = (TextView) v.findViewById(R.id.name);
         placeTitle.setText(place.getName());
 
@@ -57,10 +58,86 @@ public class FragmentFavouriteInfo extends Fragment {
 
             //Execute API request
             process.execute(new String[] {placesRequest});*/
+            PlacesDetailReadFeed process = new PlacesDetailReadFeed();
+            String placeDetailRequest = "https://maps.googleapis.com/maps/api/place/details/json?" +
+                    "key=" + placesKey + "&reference=" + place.getReference();
+
+            process.execute(new String[] {placeDetailRequest});
         }
 
 
 
         return v;
+    }
+    private class PlacesDetailReadFeed extends AsyncTask<String, Void, PlaceDetail> {
+
+        @Override
+        protected PlaceDetail doInBackground(String... urls) {
+            try {
+                //dialog.setMessage("Fetching Places Data");
+                String referer = null;
+                //dialog.setMessage("Fetching Places Data");
+                if (urls.length == 1) {
+                    referer = null;
+                } else {
+                    referer = urls[1];
+                }
+                String input = GooglePlacesUtility.readGooglePlaces(urls[0], referer);
+                Gson gson = new Gson();
+                PlaceDetail place = gson.fromJson(input, PlaceDetail.class);
+                Log.i("PLACES EXAMPLE", "Place found is " + place.toString());
+                return place;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("PLACES EXAMPLE", e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+
+        }
+
+        @Override
+        protected void onPostExecute(PlaceDetail placeDetail) {
+            place = placeDetail.getResult();
+            fillInLayout(place);
+        }
+    }
+
+    private void fillInLayout(GooglePlace place) {
+        // title element has name and types
+        TextView title = (TextView)getView().findViewById(R.id.name);
+        title.setText(place.getName());
+        Log.i("PLACES EXAMPLE", "Setting title to: " + title.getText());
+        //address
+        TextView address = (TextView) getView().findViewById(R.id.address);
+        address.setText(place.getFormatted_address() + " " + place.getFormatted_phone_number());
+        Log.i("PLACES EXAMPLE", "Setting address to: " + address.getText());
+        //vicinity
+        TextView vicinity = (TextView) getView().findViewById(R.id.vicinity);
+        vicinity.setText(place.getVicinity());
+        Log.i("PLACES EXAMPLE", "Setting vicinity to: " + vicinity.getText());
+        //rating
+        TextView reviews = (TextView) getView().findViewById(R.id.reviews);
+
+        List<GooglePlace.Review> reviewsData = place.getReviews();
+        if (reviewsData != null) {
+            StringBuffer sb = new StringBuffer();
+            for (GooglePlace.Review r : reviewsData) {
+                sb.append(r.getAuthor_name());
+                sb.append(" says \"");
+                sb.append(r.getText());
+                sb.append("\" and rated it ");
+                sb.append(r.getRating());
+                sb.append("\n");
+            }
+            reviews.setText("Reviews:\n" + sb.toString());
+        } else {
+            reviews.setText("There have not been any reviews!");
+        }
+        Log.i("PLACES EXAMPLE", "Setting rating to: " + reviews.getText());
     }
 }

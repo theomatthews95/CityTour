@@ -27,10 +27,9 @@ import com.google.gson.Gson;
 import java.net.URLEncoder;
 import java.util.List;
 
-*/
-/**
+*
  * Created by theom on 13/03/2017.
- *//*
+
 
 
 public class PlaceDetailActivity extends AppCompatActivity {
