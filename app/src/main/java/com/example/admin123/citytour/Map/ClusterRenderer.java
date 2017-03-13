@@ -17,22 +17,12 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 public class ClusterRenderer extends DefaultClusterRenderer<MyItem> implements GoogleMap.OnCameraIdleListener {
 
-    private final Context mContext;
-    private BitmapDescriptor customPin;
-
-
     public ClusterRenderer(Context context, GoogleMap map, ClusterManager<MyItem> clusterManager) {
         super(context, map, clusterManager);
-        this.customPin = customPin;
-        mContext = context;
     }
 
     @Override protected void onBeforeClusterItemRendered(MyItem item, MarkerOptions markerOptions) {
-        //final BitmapDescriptor markerDescriptor = customPin;
-
-        //markerOptions.icon(markerDescriptor).snippet(item.getTitle());
         markerOptions.icon(item.getIcon());
-
     }
 
 

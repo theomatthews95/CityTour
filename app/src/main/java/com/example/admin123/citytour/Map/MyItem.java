@@ -12,15 +12,17 @@ public class MyItem implements ClusterItem {
     private final LatLng mPosition;
     private final String mTitle;
     private BitmapDescriptor icon;
+    private Integer placeArrayPosition;
 
     /*public MyItem(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
     }*/
 
-    public MyItem(double lat, double lng, String title, BitmapDescriptor icon) {
+    public MyItem(double lat, double lng, String title, BitmapDescriptor icon, Integer placeArrayPosition) {
         mPosition = new LatLng(lat, lng);
         mTitle = title;
         this.icon=icon;
+        this.placeArrayPosition = placeArrayPosition;
     }
 
     @Override
@@ -37,8 +39,12 @@ public class MyItem implements ClusterItem {
         return icon;
     }
 
+    public Integer getPlaceArrayPosition(){
+        return placeArrayPosition;
+    }
+
     @Override
     public String getSnippet() {
-        return "";
+        return "Click me for more info";
     }
 }

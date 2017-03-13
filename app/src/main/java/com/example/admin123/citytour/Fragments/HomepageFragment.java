@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.admin123.citytour.Fragments.Currency.CurrencyExchangeFragment;
+import com.example.admin123.citytour.Fragments.Favourites.FavouritesFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 import com.example.admin123.citytour.R;
 
@@ -49,7 +50,16 @@ public class HomepageFragment extends Fragment implements View.OnClickListener {
             }
         });
         Button mLaunchFavouritesButton = (Button) v.findViewById(R.id.launchFavouritesButton);
-        mLaunchFavouritesButton.setOnClickListener(this);
+        mLaunchFavouritesButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new FavouritesFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.relativeLayout, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
         Button mLaunchItineraryButton = (Button) v.findViewById(R.id.launchItineraryButton);
         mLaunchItineraryButton.setOnClickListener(this);
         Button mLaunchPostcardButton = (Button) v.findViewById(R.id.launchPostcardButton);

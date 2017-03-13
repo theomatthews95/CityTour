@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.admin123.citytour.Map.GmapFragment;
@@ -26,6 +27,7 @@ public class PlacesList extends Fragment{
     private Double searchAreaLong;
     private Double searchAreaLat;
     private String placesKey;
+    private GooglePlaceList placeResults;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,32 +78,44 @@ public class PlacesList extends Fragment{
                 String input = GooglePlacesUtility.readGooglePlaces(urls[0], referer);
                 Gson gson = new Gson();
                 GooglePlaceList places = gson.fromJson(input, GooglePlaceList.class);
-                Log.i("PLACES_EXAMPLE", "Number of places found is " + places.getResults().size());
+                Log.i("Places", "Number of places found is " + places.getResults().size());
 
                 return places;
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.i("PLACES_EXAMPLE", e.getMessage());
+                Log.i("Places", e.getMessage());
                 return null;
             }
         }
 
         @Override
         protected void onPostExecute(GooglePlaceList places) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("googlePlaceList", places.getResults());
-            bundle.putInt("numberOfPlaces", places.getResults().size());
-            //User's search location
-            bundle.putDouble("searchAreaLong", searchAreaLong);
-            bundle.putDouble("searchAreaLat", searchAreaLat);
-            Fragment fragment = new GmapFragment();
-            fragment.setArguments(bundle);
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.relativeLayout, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            reportBack(places);
+
             //return places.getPlaceNames().get(1);
         }
+    }
+
+    protected void reportBack(GooglePlaceList placeResults) {
+        if (this.placeResults == null) {
+            this.placeResults = placeResults;
+
+        } else {
+            this.placeResults.getResults().addAll(placeResults.getResults());
+        }
+        System.out.println("places resutls "+placeResults.getResults().get(1).toString());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("googlePlaceList", placeResults.getResults());
+        bundle.putInt("numberOfPlaces", placeResults.getResults().size());
+        //User's search location
+        bundle.putDouble("searchAreaLong", searchAreaLong);
+        bundle.putDouble("searchAreaLat", searchAreaLat);
+        Fragment fragment = new GmapFragment();
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.relativeLayout, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 }

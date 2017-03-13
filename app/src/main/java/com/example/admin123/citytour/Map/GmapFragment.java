@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -22,7 +24,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import java.util.*;
+
+import com.example.admin123.citytour.Fragments.Favourites.FavouritesFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
+import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 import com.example.admin123.citytour.MainActivity;
 import com.example.admin123.citytour.R;
 import com.google.android.gms.maps.CameraUpdate;
@@ -41,10 +46,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.MarkerManager;
 import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.ClusterManager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import static com.example.admin123.citytour.R.id.drawerLayout;
@@ -52,10 +57,9 @@ import static com.google.android.gms.wearable.DataMap.TAG;
 
 
 public class GmapFragment extends Fragment implements OnMapReadyCallback{
-    MapView mMapView;
     private GoogleMap mMap;
     // Declare a variable for the cluster manager.
-    private MyClusterManager<MyItem> mClusterManager;
+    private ClusterManager<MyItem> mClusterManager;
     private ArrayList<LatLng> markers = new ArrayList<>();
     private ArrayList<Circle> drawnCircles = new ArrayList<Circle>();
     private ClusterRenderer renderer;
@@ -86,7 +90,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        ArrayList<GooglePlace> places =  (ArrayList<GooglePlace>) getArguments().getSerializable("googlePlaceList");
+        final ArrayList<GooglePlace> places =  (ArrayList<GooglePlace>) getArguments().getSerializable("googlePlaceList");
         Integer numberOfPlaces = (Integer) getArguments().getInt("numberOfPlaces");
         Double placesSearchLat = (Double) getArguments().getDouble("searchAreaLat");
         Double placesSearchLong = (Double) getArguments().getDouble("searchAreaLong");
@@ -127,12 +131,32 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
 
                 BitmapDescriptor customPin = getBitmapDescriptor(pin);
                 Log.i(TAG, customPin.toString());
-               //AddCustomPins(customPin);
+
+
 
                 // Add cluster item (markers) to the cluster manager.
-                MyItem mapItem = new MyItem(lat, lng, title, customPin);
-                mClusterManager.addItem(mapItem);
+                MyItem mapItem = new MyItem(lat, lng, title, customPin, i);
 
+                // Click listener for when marker's title is clicked, perform event
+                mClusterManager.setOnClusterItemInfoWindowClickListener(
+                        new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>(){
+                    @Override
+                    public void onClusterItemInfoWindowClick(MyItem mapItem){
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("place",places.get(mapItem.getPlaceArrayPosition()));
+                        bundle.putString("Title", mapItem.getTitle());
+                        Fragment fragment = new FavouritesFragment();
+                        fragment.setArguments(bundle);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.relativeLayout, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+
+                    }
+                });
+                mMap.setOnInfoWindowClickListener(mClusterManager);
+
+                mClusterManager.addItem(mapItem);
 
                 DrawHalos();
             }
@@ -141,12 +165,13 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
             LatLng marker = new LatLng(placesSearchLat, placesSearchLong);
             markers.add(marker);
             // Add cluster items (markers) to the cluster manager.
-            MyItem mapItem = new MyItem(placesSearchLat, placesSearchLat, "Search Location", getBitmapDescriptor(R.drawable.ic_map_pin));
+            MyItem mapItem = new MyItem(placesSearchLat, placesSearchLat, "Search Location", getBitmapDescriptor(R.drawable.ic_map_pin), 0);
             mClusterManager.addItem(mapItem);
             //mMap.addMarker(new MarkerOptions().position(marker).title("Search Location"));
             Toast.makeText(getContext(), "No places found. Try a larger radius.", Toast.LENGTH_SHORT).show();
         }
 
+        //Create cluster renderer
         renderer = new ClusterRenderer(getActivity(), mMap, mClusterManager);
         mClusterManager.setRenderer(renderer);
 
@@ -177,7 +202,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
     private void setUpClusterer() {
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
-        mClusterManager = new MyClusterManager<MyItem>(getActivity(), mMap);
+        mClusterManager = new ClusterManager<MyItem>(getActivity(), mMap);
 
 
         // Point the map's listeners at the listeners implemented by the cluster
@@ -188,11 +213,6 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
         mMap.setOnMarkerClickListener(mClusterManager);
 
     }
-
-   /* private void AddCustomPins(BitmapDescriptor customPin){
-       renderer = new ClusterRenderer(getActivity(), mMap, mClusterManager, customPin);
-       mClusterManager.setRenderer(renderer);
-    }*/
 
 
     public BitmapDescriptor getBitmapDescriptor(int id) {
@@ -287,7 +307,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback{
                         }
 
                         boolean drawCircle = true;
-                        if (radius >= SphericalUtil.computeDistanceBetween(westHalfway, eastHalfway)/2 && radius >= 2000){
+                        if (radius >= SphericalUtil.computeDistanceBetween(westHalfway, eastHalfway)/2 || radius >= 2000 || radius >= SphericalUtil.computeDistanceBetween(bounds.northeast, mMap.getCameraPosition().target)*0.5){
                             Log.i(TAG, "Circle too big");
                             drawCircle = false;
                         }
