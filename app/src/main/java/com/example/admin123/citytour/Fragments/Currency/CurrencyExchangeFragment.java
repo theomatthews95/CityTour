@@ -174,7 +174,7 @@ public class CurrencyExchangeFragment extends Fragment implements ChooseCurrency
     private void showDialog(boolean isConvertFrom){
         ChooseCurrencyDialog chooseCurrencyDialog = ChooseCurrencyDialog.newInstance("Choose Currency Dialog", isConvertFrom);
         chooseCurrencyDialog.setTargetFragment(this, 0);
-        chooseCurrencyDialog.show(getFragmentManager(), "fragmentDialog");
+        chooseCurrencyDialog.show(getActivity().getSupportFragmentManager(), "fragmentDialog");
     }
 
     public void setConvertFrom(String convertFrom){

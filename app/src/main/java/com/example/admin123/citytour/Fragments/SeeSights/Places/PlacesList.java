@@ -40,6 +40,7 @@ public class PlacesList extends Fragment{
         } else {
             //Get users inputted data from SeeSightsFragment to create Google Places API Request
             String type = URLEncoder.encode(getArguments().getString("locationType"));
+            String filterBy = URLEncoder.encode(getArguments().getString("filterBy"));
             searchAreaLong = getArguments().getDouble("searchAreaLong");
             searchAreaLat = getArguments().getDouble("searchAreaLat");
             if(searchAreaLat == 0.0 && searchAreaLong == 0.0){
@@ -52,7 +53,7 @@ public class PlacesList extends Fragment{
 
             //Insert retrieved data from SeeSightsFragment into places API request
             String placesRequest = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" +
-                    searchAreaLat + "," + searchAreaLong + "&type="+type+"&radius="+searchRadius+"&key=" + placesKey;
+                    searchAreaLat + "," + searchAreaLong +"&"+filterBy+"&type="+type+"&radius="+searchRadius+"&key=" + placesKey;
             PlacesReadFeed process = new PlacesReadFeed();
 
             //Execute API request
@@ -104,7 +105,6 @@ public class PlacesList extends Fragment{
         } else {
             this.placeResults.getResults().addAll(placeResults.getResults());
         }
-        System.out.println("places resutls "+placeResults.getResults().get(1).toString());
         Bundle bundle = new Bundle();
         bundle.putSerializable("googlePlaceList", placeResults.getResults());
         bundle.putInt("numberOfPlaces", placeResults.getResults().size());

@@ -27,45 +27,26 @@ import java.util.List;
  * Created by theom on 13/03/2017.
  */
 public class FragmentFavouriteInfo extends Fragment {
+    private String placeReference;
     private GooglePlace place;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_favourite_details, container, false);
 
-        place = (GooglePlace) getArguments().getSerializable("place");
-        TextView placeTitle = (TextView) v.findViewById(R.id.name);
-        placeTitle.setText(place.getName());
-
-        TextView placeAddress = (TextView) v.findViewById(R.id.address);
-        placeAddress.setText(place.getFormatted_address());
+        placeReference = getArguments().getString("placeReference");
+        Log.i("Favs","Place reference "+placeReference);
 
         String placesKey = getResources().getString(R.string.google_maps_key);
         if (placesKey.equals("PUT YOUR KEY HERE")) {
             Toast.makeText(getActivity(), "You haven't entered your Google Places Key into the strings file.  Dont forget to set a referer too.", Toast.LENGTH_LONG).show();
         } else {
-            //Get users inputted data from SeeSightsFragment to create Google Places API Request
-           /* String type = URLEncoder.encode(getArguments().getString("locationType"));
-
-
-            Double searchAreaLong = -1.89028791;
-            Double searchAreaLat = 52.48549062;
-
-            //Insert retrieved data from SeeSightsFragment into places API request
-            String placesRequest = "https://maps.googleapis.com/maps/api/place/details/json?" +
-                    "key=" + placesKey + "&reference=" + place.getReference();*/
-            /*PlacesList.PlacesReadFeed process = new PlacesList.PlacesReadFeed();
-
-            //Execute API request
-            process.execute(new String[] {placesRequest});*/
             PlacesDetailReadFeed process = new PlacesDetailReadFeed();
             String placeDetailRequest = "https://maps.googleapis.com/maps/api/place/details/json?" +
-                    "key=" + placesKey + "&reference=" + place.getReference();
+                    "key=" + placesKey + "&reference=" + placeReference;
 
             process.execute(new String[] {placeDetailRequest});
         }
-
-
 
         return v;
     }
@@ -122,7 +103,7 @@ public class FragmentFavouriteInfo extends Fragment {
         Log.i("PLACES EXAMPLE", "Setting vicinity to: " + vicinity.getText());
         //rating
         TextView reviews = (TextView) getView().findViewById(R.id.reviews);
-
+        Log.i("PLACES", "INfo"+place.getIcon());
         List<GooglePlace.Review> reviewsData = place.getReviews();
         if (reviewsData != null) {
             StringBuffer sb = new StringBuffer();
@@ -132,12 +113,11 @@ public class FragmentFavouriteInfo extends Fragment {
                 sb.append(r.getText());
                 sb.append("\" and rated it ");
                 sb.append(r.getRating());
-                sb.append("\n");
+                sb.append("\n\n");
             }
-            reviews.setText("Reviews:\n" + sb.toString());
+            reviews.setText(sb.toString());
         } else {
             reviews.setText("There have not been any reviews!");
         }
-        Log.i("PLACES EXAMPLE", "Setting rating to: " + reviews.getText());
     }
 }

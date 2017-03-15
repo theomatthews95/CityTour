@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/create_postcard"
+        android:icon="@drawable/ic_postcard"
+        android:title="Send"
+        app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/favourite_menu_button"
+        android:icon="@drawable/ic_like_false"
+        android:title="Favourite"
+        app:showAsAction="ifRoom|withText"/>
+</menu>

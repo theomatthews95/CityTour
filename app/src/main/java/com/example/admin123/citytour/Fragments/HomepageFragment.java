@@ -43,7 +43,7 @@ public class HomepageFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 Fragment fragment = new SeeSightsFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.relativeLayout, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -54,7 +54,7 @@ public class HomepageFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 Fragment fragment = new FavouritesFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.relativeLayout, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -67,7 +67,7 @@ public class HomepageFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v){
                 Fragment fragment = new PostcardFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.relativeLayout, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -78,7 +78,7 @@ public class HomepageFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v){
                 Fragment fragment = new CurrencyExchangeFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.relativeLayout, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();

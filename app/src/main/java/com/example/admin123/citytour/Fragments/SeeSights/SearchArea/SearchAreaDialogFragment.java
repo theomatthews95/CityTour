@@ -36,7 +36,8 @@ import static com.google.android.gms.wearable.DataMap.TAG;
  * Created by theom on 10/02/2017.
  */
 
-public class SearchAreaDialogFragment extends DialogFragment implements DialogInterface.OnDismissListener {
+public class SearchAreaDialogFragment extends DialogFragment
+        implements DialogInterface.OnDismissListener {
 
     private SeekBar seekbarDistance;
     private TextView textViewDistance;
@@ -81,7 +82,7 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
 
         //Create the Google Places AutoComplete Widget
         autocompleteFragment = (SupportPlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+                getActivity().getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
         //Listener for Google Places AutoComplete widget
         autoCompleteProcess();
@@ -197,7 +198,7 @@ public class SearchAreaDialogFragment extends DialogFragment implements DialogIn
     }
 
     public void cleanUp(){
-        getFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().remove(autocompleteFragment).commit();
     }
 
     @Override

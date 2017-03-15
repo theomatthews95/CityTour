@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
 
     <TextView
-        android:text="Edit stuff"
+        android:text="Your notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        android:textStyle="bold"
+        android:textSize="40dp" />
+
+    <EditText
+        android:id="@+id/user_notes"
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:gravity="top|left"
+        android:hint="Add details here about things you want to remember about this location..."
+        android:inputType="textCapSentences|textMultiLine"
+        android:background="@drawable/text_box_style"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"/>
+
+    <Button
+        android:id="@+id/save_notes_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:background="@drawable/custom_button"
+        android:drawableRight="@drawable/ic_save_black_24px"
+        android:paddingRight="20dp"
+        />
+
 </LinearLayout>

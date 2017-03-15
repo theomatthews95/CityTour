@@ -6,37 +6,75 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/scrollView" >
+        android:id="@+id/scrollView"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
             <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textStyle="bold"
+                android:textSize="40dp"/>
+
+            <TextView
                 android:id="@+id/name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView" >
+                android:text="TextView"
+                android:paddingBottom="5dp">
             </TextView>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textStyle="bold"
+                android:textSize="40dp"
+                android:paddingTop="5dp"/>
 
             <TextView
                 android:id="@+id/address"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView" >
+                android:text="TextView"
+                android:paddingBottom="5dp">
             </TextView>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Vicinity"
+                android:textStyle="bold"
+                android:textSize="40dp"
+                android:paddingTop="5dp"/>
 
             <TextView
                 android:id="@+id/vicinity"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView" >
+                android:text="TextView"
+                android:paddingBottom="5dp">
             </TextView>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Reviews"
+                android:textStyle="bold"
+                android:textSize="40dp"
+                android:paddingTop="5dp"/>
+
             <TextView
                 android:id="@+id/reviews"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView" >
+                android:text="TextView"
+                android:paddingBottom="5dp">
             </TextView>
 
         </LinearLayout>

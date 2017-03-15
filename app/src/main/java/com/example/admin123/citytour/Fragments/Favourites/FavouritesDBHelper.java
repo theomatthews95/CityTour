@@ -1,4 +1,4 @@
-package com.example.admin123.citytour.Fragments.SeeSights.SearchArea;
+package com.example.admin123.citytour.Fragments.Favourites;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,15 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
- * Created by theom on 05/03/2017.
+ * Created by theom on 15/03/2017.
  */
 
-public class RecentLocationsDBHelper extends SQLiteOpenHelper {
+public class FavouritesDBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "recent_locations.db";
     public static final String TABLE_NAME = "recent_locations_table";
     public static final String COL_1 = "NAME";
@@ -22,17 +19,14 @@ public class RecentLocationsDBHelper extends SQLiteOpenHelper {
     public static final String COL_3 = "LONGITUDE";
     public static final String COL_4 = "TIMESTAMP";
 
-
-    public RecentLocationsDBHelper(Context context) {
+    public FavouritesDBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         //Create table with appropriate column headers
-        db.execSQL("create table "+ TABLE_NAME + "(NAME TEXT PRIMARY KEY," +
-                "LATITUDE REAL,LONGITUDE REAL, " +
-                "TIMESTAMP DATETIME DEFAULT CURRENT_TIMESTAMP)");
+        db.execSQL("create table "+ TABLE_NAME + "(NAME TEXT PRIMARY KEY,LATITUDE REAL,LONGITUDE REAL, TIMESTAMP DATETIME DEFAULT CURRENT_TIMESTAMP)");
 
     }
 
@@ -42,7 +36,6 @@ public class RecentLocationsDBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
         onCreate(db);
     }
-
 
     //Function to insert data into the DB
     public boolean insertData(String name, Double latitude, Double longitude){
@@ -73,18 +66,4 @@ public class RecentLocationsDBHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select * from "+TABLE_NAME, null);
         return res;
     }
-
-
-    //Return the top 5 most recent results to have been inserted into the DB
-    public Cursor getRecent5(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from (select * " +
-                "from recent_locations_table " +
-                "order by timestamp " +
-                "DESC limit 10) " +
-                "order by timestamp DESC;", null);
-        return res;
-    }
-
 }
-

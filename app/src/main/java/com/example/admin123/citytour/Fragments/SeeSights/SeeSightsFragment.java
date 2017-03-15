@@ -18,10 +18,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.admin123.citytour.Fragments.SeeSights.FilterBy.ChooseFilterDialog;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacesList;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaDialogFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaItem;
@@ -34,12 +36,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import android.location.LocationListener;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         SearchTypeDialogFragment.OnSetSearchLocationTypeFromListener,
         SearchAreaDialogFragment.OnSetSearchLocationAreaFromListener,
+        ChooseFilterDialog.OnSetFiltersListener,
         GoogleApiClient.OnConnectionFailedListener {
 
 
@@ -47,9 +51,11 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     private String searchLocationType;
     private TextView whatTypeTextView;
     private TextView whatAreaTextView;
+    private TextView filterByTextView;
     private double searchLat;
     private double searchLong;
     private String searchRadius;
+    private String filterBy="";
     private LocationManager locationManager;
     private LocationListener locationListener;
     private double userLocationLat;
@@ -79,8 +85,12 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_see_sights, container, false);
 
-        //TextView that is changed to display user's search area
+        setUpLocation();
+
+        //TextViews that are changed to display user's search inputs
         whatAreaTextView = (TextView) v.findViewById(R.id.whatAreaTextView);
+        whatTypeTextView = (TextView) v.findViewById(R.id.what_type_search_textview);
+        filterByTextView = (TextView) v.findViewById(R.id.filter_by_textview);
 
         // Configure what area is search
         Button mWhatArea = (Button) v.findViewById(R.id.what_area_button);
@@ -94,10 +104,6 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             }
         });
 
-        setUpLocation();
-        //getUserLocation();
-
-
         // Configure what type of location is being searched for
         Button mWhatType = (Button) v.findViewById(R.id.what_type_button);
         mWhatType.setOnClickListener(new View.OnClickListener() {
@@ -107,8 +113,13 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             }
         });
 
-        //TextView that is changed to display what the user has selected from What Type dialog
-        whatTypeTextView = (TextView) v.findViewById(R.id.what_type_search_editText);
+        Button mWhatFilter = (Button) v.findViewById(R.id.filterByButton) ;
+        mWhatFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                showFilterByDialog();
+            }
+        });
 
         Button mSearch = (Button) v.findViewById(R.id.search_map);
         mSearch.setOnClickListener(new View.OnClickListener() {
@@ -131,9 +142,10 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
                 bundle.putDouble("searchAreaLong", searchLong);
                 bundle.putDouble("searchAreaLat", searchLat);
                 bundle.putString("searchRadius",searchRadius);
+                bundle.putString("filterBy", filterBy);
                 Fragment fragment = new PlacesList();
                 fragment.setArguments(bundle);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.relativeLayout, fragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -175,8 +187,23 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     public void showLocationAreaDialog(){
         SearchAreaDialogFragment dialog = SearchAreaDialogFragment.newInstance("Search area");
         dialog.setTargetFragment(this, 0);
-        dialog.show(getFragmentManager(), "fragmentDialog");
+        dialog.show(getActivity().getSupportFragmentManager(), "fragmentDialog");
     }
+
+    //Display dialog to allow user to input what type of location they would like to search
+    public void showLocationTypeDialog(){
+        SearchTypeDialogFragment dialog = SearchTypeDialogFragment.newInstance("Point of interest type");
+        dialog.setTargetFragment(this, 0);
+        dialog.show(getActivity().getSupportFragmentManager(), "fragmentDialog");
+    }
+
+    //Display dialog to allow user to input what type of location they would like to search
+    public void showFilterByDialog(){
+        ChooseFilterDialog chooseFilterDialog = ChooseFilterDialog.newInstance("Choose filter for search");
+        chooseFilterDialog.setTargetFragment(this, 0);
+        chooseFilterDialog.show(getActivity().getSupportFragmentManager(), "fragmentDialog");
+    }
+
 
     //Set the search location area parameters
     public void setSearchLocationArea(SearchAreaItem searchAreaItem) {
@@ -199,18 +226,9 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             whatAreaTextView.setTextSize(35);
         } else {
             whatAreaTextView.setText(searchAreaName);
-            whatAreaTextView.setTextSize(40);
         }
 
     }
-
-    //Display dialog to allow user to input what type of location they would like to search
-    public void showLocationTypeDialog(){
-        SearchTypeDialogFragment dialog = SearchTypeDialogFragment.newInstance("Point of interest type");
-        dialog.setTargetFragment(this, 0);
-        dialog.show(getFragmentManager(), "fragmentDialog");
-    }
-
 
     //Set the search location type
     public void setSearchLocationType(ArrayList<SearchTypeItem> searchLocationTypeArray){
@@ -238,7 +256,20 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             whatTypeTextView.setTextSize(22);
         }
         this.searchLocationType = searchLocationType;
-        System.out.println(searchLocationType);
+        Log.i("Search Type", "Location search type is set to "+searchLocationType);
+    }
+
+    public void setFilters(String filterBy, String filterTitle){
+        //change the text view above the dialog launch button to show the user their selection
+        if(filterTitle.equals(""))
+        {
+            filterByTextView.setText("What type?");
+            filterByTextView.setTextSize(50);
+        }else{
+            filterByTextView.setText(filterTitle);
+            //filterByTextView.setTextSize(22);
+        }
+        this.filterBy = filterBy;
     }
 
     private void setUpLocation(){
