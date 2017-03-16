@@ -29,6 +29,8 @@ import java.util.List;
 public class FragmentFavouriteInfo extends Fragment {
     private String placeReference;
     private GooglePlace place;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,9 +100,9 @@ public class FragmentFavouriteInfo extends Fragment {
         address.setText(place.getFormatted_address() + " " + place.getFormatted_phone_number());
         Log.i("PLACES EXAMPLE", "Setting address to: " + address.getText());
         //vicinity
-        TextView vicinity = (TextView) getView().findViewById(R.id.vicinity);
+        /*TextView vicinity = (TextView) getView().findViewById(R.id.vicinity);
         vicinity.setText(place.getVicinity());
-        Log.i("PLACES EXAMPLE", "Setting vicinity to: " + vicinity.getText());
+        Log.i("PLACES EXAMPLE", "Setting vicinity to: " + vicinity.getText());*/
         //rating
         TextView reviews = (TextView) getView().findViewById(R.id.reviews);
         Log.i("PLACES", "INfo"+place.getIcon());

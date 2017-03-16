@@ -6,55 +6,40 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import java.util.*;
 
-import com.example.admin123.citytour.Fragments.Favourites.FavouritesFragment;
+import com.example.admin123.citytour.Fragments.Favourites.FavouriteItemDetailsFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
-import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 import com.example.admin123.citytour.MainActivity;
 import com.example.admin123.citytour.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.MarkerManager;
 import com.google.maps.android.SphericalUtil;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 
-import static com.example.admin123.citytour.R.id.drawerLayout;
 import static com.google.android.gms.wearable.DataMap.TAG;
 
 
@@ -368,7 +353,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
       bundle.putString("title", mapItem.getTitle());
       bundle.putDouble("lat", mapItem.getPosition().latitude);
       bundle.putDouble("long", mapItem.getPosition().longitude);
-      Fragment fragment = new FavouritesFragment();
+      Fragment fragment = new FavouriteItemDetailsFragment();
       fragment.setArguments(bundle);
       FragmentTransaction transaction = getFragmentManager().beginTransaction();
       transaction.replace(R.id.relativeLayout, fragment);

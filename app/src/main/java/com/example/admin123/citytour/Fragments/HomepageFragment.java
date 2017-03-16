@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.admin123.citytour.Fragments.Currency.CurrencyExchangeFragment;
-import com.example.admin123.citytour.Fragments.Favourites.FavouritesFragment;
+import com.example.admin123.citytour.Fragments.Favourites.FavouriteItemDetailsFragment;
+import com.example.admin123.citytour.Fragments.Favourites.FavouritesListFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 import com.example.admin123.citytour.R;
 
@@ -53,7 +54,7 @@ public class HomepageFragment extends Fragment implements View.OnClickListener {
         mLaunchFavouritesButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Fragment fragment = new FavouritesFragment();
+                Fragment fragment = new FavouritesListFragment();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.relativeLayout, fragment);
                 transaction.addToBackStack(null);
