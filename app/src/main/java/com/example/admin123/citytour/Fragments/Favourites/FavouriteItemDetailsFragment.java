@@ -58,8 +58,11 @@ public class FavouriteItemDetailsFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_favourites, container, false);
         setHasOptionsMenu(true);
+
+        //Reference used to query google places for more location information
         placeReference = getArguments().getString("placeReference");
-        //Create database to store recent searches
+
+        //Create database to store favourite locations
         favouritesDB = new FavouritesDBHelper(getActivity());
 
         //Get longitude and latitude of location

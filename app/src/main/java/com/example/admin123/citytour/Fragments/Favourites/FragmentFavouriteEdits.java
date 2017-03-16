@@ -49,7 +49,6 @@ public class FragmentFavouriteEdits extends Fragment {
                 callback.setUserNotes(userNotesEditText.getText().toString());*/
 
                 Integer isUpdate = updateDB(locationTitle, locationLat, locationLong, placeReference, userNotesEditText.getText().toString());
-                getDB();
                 if (isUpdate == 1){
                     Toast.makeText(getContext(), "Saved notes", Toast.LENGTH_SHORT).show();
                 }else{
@@ -64,7 +63,7 @@ public class FragmentFavouriteEdits extends Fragment {
         return v;
     }
 
-    private void getDB(){
+   /* private void getDB(){
         Cursor res = favouritesDB.getAllData();
         StringBuffer dbContents = new StringBuffer();
 
@@ -80,7 +79,7 @@ public class FragmentFavouriteEdits extends Fragment {
             dbContents.append(", 5 :"+res.getString(5) + "\n");
         }
         Log.i("DB_Helper", dbContents.toString());
-    }
+    }*/
 
     private Integer updateDB(String locationName, Double locationLat, Double locationLong, String placeReference, String userNotes){
         Integer updateNotesResults = favouritesDB.updateUserNotes(locationName, locationLat, locationLong, placeReference, userNotes);

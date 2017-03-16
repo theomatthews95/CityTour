@@ -1,5 +1,6 @@
 package com.example.admin123.citytour.Fragments.Favourites;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,7 @@ public class FavouritesListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private FavouriteListAdapter adapter;
+    private FavouritesDBHelper favouritesDB;
 
     @Nullable
     @Override
@@ -33,24 +35,64 @@ public class FavouritesListFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_favourites_list, container, false);
 
+        //Create database to store favourite locations
+        favouritesDB = new FavouritesDBHelper(getActivity());
+
         recyclerView = (RecyclerView) v.findViewById(R.id.favouritesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new FavouriteListAdapter(getData());
+        adapter = new FavouriteListAdapter(getDB());
         recyclerView.setAdapter(adapter);
+        getDB();
+        favouritesDB.close();
         return v;
     }
 
     public static List<FavouriteListItem> getData(){
         List<FavouriteListItem> data = new ArrayList<>();
-        int [] icons = {R.drawable.ic_map_pin_aquarium, R.drawable.ic_map_pin_bar, R.drawable.ic_map_pin_cafe, R.drawable.ic_map_pin_food};
-        String[] titles={"China", "US", "UK", "Europe"};
+        int [] icons = {R.drawable.ic_map_pin_aquarium, R.drawable.ic_map_pin_bar, R.drawable.ic_map_pin_cafe, R.drawable.ic_map_pin_food,R.drawable.ic_map_pin_aquarium, R.drawable.ic_map_pin_bar, R.drawable.ic_map_pin_cafe, R.drawable.ic_map_pin_food};
+        String[] titles={"China", "US", "UK", "Europe","China", "US", "UK", "Europe"};
         for(int i=0; i<titles.length && i<icons.length; i++){
             FavouriteListItem current=new FavouriteListItem(icons[i], titles[i]);
             current.iconId=icons[i];
             current.title=titles[i];
             data.add(current);
         }
+        return data;
+    }
+
+    private List<FavouriteListItem> getDB(){
+        List<FavouriteListItem> data = new ArrayList<>();
+        Cursor res = favouritesDB.getAllData();
+        StringBuffer dbContents = new StringBuffer();
+        int [] icons = {R.drawable.ic_map_pin_aquarium, R.drawable.ic_map_pin_bar, R.drawable.ic_map_pin_cafe, R.drawable.ic_map_pin_food,R.drawable.ic_map_pin_aquarium, R.drawable.ic_map_pin_bar, R.drawable.ic_map_pin_cafe, R.drawable.ic_map_pin_food};
+        //List<String> titles = new ArrayList<>();
+
+        if (res.getCount() == 0){
+            String titleText="There are no favourites to display";
+            FavouriteListItem current=new FavouriteListItem(icons[0], titleText);
+            current.title=titleText;
+            current.iconId=icons[0];
+            data.add(current);
+        }
+        int i = 0;
+        while (res.moveToNext()){
+            //titles.add(res.getString(0));
+            String titleText=res.getString(0);
+            FavouriteListItem current=new FavouriteListItem(icons[0], titleText);
+            current.title=titleText;
+            current.iconId=icons[0];
+            data.add(current);
+            dbContents.append("Name :"+res.getString(0));
+            dbContents.append(", Lat :"+res.getDouble(1));
+            dbContents.append(", Long :"+res.getDouble(2));
+            dbContents.append(", 3 :"+res.getDouble(3));
+            dbContents.append(", 4 :"+res.getDouble(4));
+            dbContents.append(", 5 :"+res.getString(5) + "\n");
+            i++;
+        }
+        Log.i("DB_Helper", dbContents.toString());
+
         return data;
     }
 }
