@@ -12,5 +12,10 @@
         android:layout_gravity="bottom"
         class="com.google.android.gms.maps.SupportMapFragment">
 
-    </fragment>
+    </fragment><!--
+    <com.google.android.gms.maps.MapView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map" />
+-->
 </FrameLayout>

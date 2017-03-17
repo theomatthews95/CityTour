@@ -355,7 +355,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
       bundle.putDouble("long", mapItem.getPosition().longitude);
       Fragment fragment = new FavouriteItemFragment();
       fragment.setArguments(bundle);
-      FragmentTransaction transaction = getFragmentManager().beginTransaction();
+      FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
       transaction.replace(R.id.relativeLayout, fragment);
       transaction.addToBackStack(null);
       transaction.commit();
