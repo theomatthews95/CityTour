@@ -24,7 +24,7 @@ import com.example.admin123.citytour.R;
  * Created by theom on 13/03/2017.
  */
 
-public class FavouriteItemDetailsFragment extends Fragment {
+public class FavouriteItemFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -36,8 +36,8 @@ public class FavouriteItemDetailsFragment extends Fragment {
     private String locationTitle;
 
     // TODO: Rename and change types and number of parameters
-    public static FavouriteItemDetailsFragment newInstance() {
-        FavouriteItemDetailsFragment fragment = new FavouriteItemDetailsFragment();
+    public static FavouriteItemFragment newInstance() {
+        FavouriteItemFragment fragment = new FavouriteItemFragment();
         Bundle args = new Bundle();
 
         fragment.setArguments(args);
@@ -56,7 +56,7 @@ public class FavouriteItemDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_favourites, container, false);
+        View v = inflater.inflate(R.layout.fragment_favourite_item, container, false);
         setHasOptionsMenu(true);
 
         //Reference used to query google places for more location information

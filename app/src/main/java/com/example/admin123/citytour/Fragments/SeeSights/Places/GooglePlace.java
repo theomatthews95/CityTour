@@ -22,6 +22,15 @@ public class GooglePlace implements Serializable{
     //@Key
     private List<String> types;
 
+    /*//@Key
+    private String opening_hours;*/
+
+    //@Key
+    private String international_phone_number;
+
+    //@Key
+    private List<Photos> photos;
+
     public static class Geometry implements Serializable {
         /**
          *
@@ -312,4 +321,42 @@ public class GooglePlace implements Serializable{
     public void setFormatted_phone_number(String formatted_phone_number) {
         this.formatted_phone_number = formatted_phone_number;
     }
+
+    public String getInternational_phone_number(){
+        return international_phone_number;
+    }
+
+    public void setInternational_phone_number(String international_phone_number){
+        this.international_phone_number=international_phone_number;
+    }
+
+    public List<Photos> getPhotos(){
+        return photos;
+    }
+    public void setPhotos(List<Photos> photos){
+        this.photos=photos;
+    }
+
+    public static class Photos implements Serializable{
+        private Integer height;
+        private Integer width;
+        private String photo_reference;
+
+        public String getPhoto_reference(){
+            return photo_reference;
+        }
+        public Integer getHeight(){
+            return height;
+        }
+        public Integer getWidth(){
+            return width;
+        }
+    }
+ /*  public String setOpening_hours(S){
+
+   }
+
+    public String getOpening_hours(){
+        return opening_hours;
+    }*/
 }

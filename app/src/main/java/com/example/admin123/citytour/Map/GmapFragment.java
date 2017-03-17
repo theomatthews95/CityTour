@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import java.util.*;
 
-import com.example.admin123.citytour.Fragments.Favourites.FavouriteItemDetailsFragment;
+import com.example.admin123.citytour.Fragments.Favourites.FavouriteItemFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
 import com.example.admin123.citytour.MainActivity;
 import com.example.admin123.citytour.R;
@@ -353,7 +353,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
       bundle.putString("title", mapItem.getTitle());
       bundle.putDouble("lat", mapItem.getPosition().latitude);
       bundle.putDouble("long", mapItem.getPosition().longitude);
-      Fragment fragment = new FavouriteItemDetailsFragment();
+      Fragment fragment = new FavouriteItemFragment();
       fragment.setArguments(bundle);
       FragmentTransaction transaction = getFragmentManager().beginTransaction();
       transaction.replace(R.id.relativeLayout, fragment);

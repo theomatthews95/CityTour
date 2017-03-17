@@ -1,6 +1,5 @@
 package com.example.admin123.citytour.Fragments.Favourites;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 
 import com.example.admin123.citytour.R;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -98,7 +96,7 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
             bundle.putDouble("lat", latitude);
             bundle.putDouble("long", longitude);
             bundle.putBoolean("isFavourited", true);
-            Fragment fragment = new FavouriteItemDetailsFragment();
+            Fragment fragment = new FavouriteItemFragment();
             fragment.setArguments(bundle);
             FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.relativeLayout, fragment);
