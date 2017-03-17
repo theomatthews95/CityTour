@@ -122,4 +122,5 @@ public class FragmentFavouriteInfo extends Fragment {
             reviews.setText("There have not been any reviews!");
         }
     }
+
 }

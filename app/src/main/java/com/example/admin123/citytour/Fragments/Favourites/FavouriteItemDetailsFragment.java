@@ -61,6 +61,7 @@ public class FavouriteItemDetailsFragment extends Fragment {
 
         //Reference used to query google places for more location information
         placeReference = getArguments().getString("placeReference");
+        isFavourited = getArguments().getBoolean("isFavourited");
 
         //Create database to store favourite locations
         favouritesDB = new FavouritesDBHelper(getActivity());
@@ -68,7 +69,7 @@ public class FavouriteItemDetailsFragment extends Fragment {
         //Get longitude and latitude of location
         locationLat = getArguments().getDouble("lat");
         locationLong = getArguments().getDouble("long");
-        locationTitle = getArguments().getString("title").replaceAll("\\s+","_").toLowerCase();
+        locationTitle = getArguments().getString("title");
 
         viewPager = (ViewPager) v.findViewById(R.id.favouritesViewPager);
         viewPager.setAdapter(new FavouritesAdapter(getChildFragmentManager(), getActivity()));
@@ -123,7 +124,7 @@ public class FavouriteItemDetailsFragment extends Fragment {
                     bundle1.putDouble("lat", locationLat);
                     bundle1.putDouble("long", locationLong);
                     bundle1.putString("locationTitle", locationTitle);
-                    bundle1.putString("reference", placeReference);
+                    bundle1.putString("placeReference", placeReference);
                     bundle1.putBoolean("isFavourited", isFavourited);
                     favEdits.setTargetFragment(getParentFragment(), 0);
                     favEdits.setArguments(bundle1);
@@ -152,6 +153,7 @@ public class FavouriteItemDetailsFragment extends Fragment {
         inflater.inflate(R.menu.favourite_menu_items, menu);
         MenuItem item = menu.findItem(R.id.favourite_menu_button);
         item.expandActionView();
+        changeIcon(item);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -190,6 +192,7 @@ public class FavouriteItemDetailsFragment extends Fragment {
         if (isInserted == true) {
             Log.i("DB_Helper", "Inserted " + locationTitle + " " + locationLat + ", " + locationLong + ", " + placeReference + " into database.");
             Toast.makeText(getActivity(), "Favourited", Toast.LENGTH_SHORT).show();
+            getDb();
         }else {
             Log.i("DB_Helper", "Location not inserted into database. Most likely a duplicate.");
         }
@@ -207,6 +210,20 @@ public class FavouriteItemDetailsFragment extends Fragment {
         }else{
             Log.i("DB_Helper", "Failed to delete "+locationTitle);
         }
+    }
+
+    private void getDb(){
+        Cursor res = favouritesDB.getAllData();
+        StringBuffer dbContents = new StringBuffer();
+        while (res.moveToNext()){
+            dbContents.append("Name :"+res.getString(0));
+            dbContents.append(", Lat :"+res.getDouble(1));
+            dbContents.append(", Long :"+res.getDouble(2));
+            dbContents.append(", 3 :"+res.getDouble(3));
+            dbContents.append(", 4 :"+res.getString(4));
+            dbContents.append(", 5 :"+res.getString(5) + "\n");
+        }
+        Log.i("DB_Helper", dbContents.toString());
     }
 }
 

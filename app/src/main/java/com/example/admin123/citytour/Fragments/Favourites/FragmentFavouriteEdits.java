@@ -25,19 +25,19 @@ public class FragmentFavouriteEdits extends Fragment {
 
     private FavouritesDBHelper favouritesDB;
     private EditText userNotesEditText;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_favourite_edits,container,false);
 
         favouritesDB = new FavouritesDBHelper(getActivity());
-        final String locationTitle = getArguments().getString("locationTitle");
+        final String locationTitle  = getArguments().getString("locationTitle");
         final Double locationLat = getArguments().getDouble("lat");
         final Double locationLong = getArguments().getDouble("long");
         final String placeReference = getArguments().getString("placeReference");
         userNotesEditText = (EditText) v.findViewById(R.id.user_notes);
-
+        getNotes(locationTitle);
+        //getNotes(locationTitle);
 
         Button saveNotesButton = (Button) v.findViewById(R.id.save_notes_button);
 
@@ -63,7 +63,23 @@ public class FragmentFavouriteEdits extends Fragment {
         return v;
     }
 
-   /* private void getDB(){
+    private void getNotes(String locationTitle){
+        Cursor res = favouritesDB.getLocationData(locationTitle);
+        StringBuffer dbContents = new StringBuffer();
+
+        if (res.getCount() == 0){
+            return;
+        }
+        while (res.moveToNext()){
+            dbContents.append(res.getString(5));
+        }
+        String userNotes = dbContents.toString();
+        if (!userNotes.equals("DEFAULT TEXT")){
+            userNotesEditText.setText(userNotes);
+        }
+    }
+
+    private void getDB(){
         Cursor res = favouritesDB.getAllData();
         StringBuffer dbContents = new StringBuffer();
 
@@ -76,10 +92,14 @@ public class FragmentFavouriteEdits extends Fragment {
             dbContents.append(", Long :"+res.getDouble(2));
             dbContents.append(", 3 :"+res.getDouble(3));
             dbContents.append(", 4 :"+res.getDouble(4));
-            dbContents.append(", 5 :"+res.getString(5) + "\n");
+            dbContents.append(", User notes :"+res.getString(5) + "\n");
         }
+       /* String userNotes = res.getString(5);
+        if (!userNotes.equals("DEFAULT TEXT")){
+            userNotesEditText.setText(userNotes);
+        }*/
         Log.i("DB_Helper", dbContents.toString());
-    }*/
+    }
 
     private Integer updateDB(String locationName, Double locationLat, Double locationLong, String placeReference, String userNotes){
         Integer updateNotesResults = favouritesDB.updateUserNotes(locationName, locationLat, locationLong, placeReference, userNotes);

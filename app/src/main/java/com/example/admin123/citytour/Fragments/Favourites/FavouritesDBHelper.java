@@ -73,6 +73,13 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
     }
 
     //Return all data from the DB
+    public Cursor getLocationData(String locationName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME+ " WHERE "+COL_1+"=\""+locationName+"\"", null);
+        return res;
+    }
+
+    //Return all data from the DB
     public Integer deleteValue(String locationTitle){
         SQLiteDatabase db = this.getWritableDatabase();
         Integer deletedNum = db.delete(TABLE_NAME, "NAME = ?", new String[]{locationTitle});
