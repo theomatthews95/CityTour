@@ -39,10 +39,11 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
 
     private List<FavouriteListItem> data = Collections.emptyList();
     private SparseBooleanArray selectedItems;
+    private MyViewHolder.OnItemClickListener clickListener;
 
-    public FavouriteListAdapter(List<FavouriteListItem> data){
+    public FavouriteListAdapter(List<FavouriteListItem> data, MyViewHolder.OnItemClickListener clickListener){
         this.data=data;
-
+        this.clickListener=clickListener;
         Log.i("Favourite_List_Adapter","Hi constructor");
     }
 
@@ -50,7 +51,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //View v = inflater.inflate(R.layout.favourite_list_item, parent, false);
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.favourite_list_item, parent, false);
-        MyViewHolder holder = new MyViewHolder(v);
+        MyViewHolder holder = new MyViewHolder(v,clickListener);
         return holder;
     }
 
@@ -61,6 +62,8 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
         holder.locationPhoto.setImageBitmap(current.locationPhoto);
         Log.i("location photo", current.locationPhoto.toString());
         holder.setParams(current.reference, current.latitude, current.longitude);
+
+        holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -81,15 +84,17 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
         String reference;
         Double latitude;
         Double longitude;
+        View selectedOverlay;
 
-        //public OnItemClickListener listener;
+        public OnItemClickListener listener;
 
-        public MyViewHolder(View itemView) {
+        public MyViewHolder(View itemView, OnItemClickListener listener) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
             title = (TextView) itemView.findViewById(R.id.listText);
             locationPhoto = (ImageView) itemView.findViewById(R.id.listIcon);
-            //this.listener = listener;
+            selectedOverlay = itemView.findViewById(R.id.selected_overlay);
+            this.listener = listener;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
@@ -127,8 +132,10 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
 
         @Override
         public boolean onLongClick(View v){
-            Log.i(TAG, "Long clicked");
-            return true;
+            if (listener != null) {
+                return listener.onItemLongClicked(getPosition());
+            }
+            return false;
         }
 
         public void setParams(String reference, Double latitude, Double longitude){
@@ -136,11 +143,14 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
             this.latitude=latitude;
             this.longitude=longitude;
         }
+
+        public interface OnItemClickListener{
+            public void onItemClicked(int position);
+            public boolean onItemLongClicked(int position);
+        }
+
     }
 
 
-    /*public interface OnItemClickListener{
-        void onItemClick(String textName);
-    }*/
 
 }

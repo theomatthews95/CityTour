@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.admin123.citytour.Fragments.Currency.CurrencyExchangeFragment;
+import com.example.admin123.citytour.Fragments.Favourites.FavouriteListAdapter;
 import com.example.admin123.citytour.Fragments.Favourites.FavouritesListFragment;
 import com.example.admin123.citytour.Fragments.HomepageFragment;
 import com.example.admin123.citytour.Map.GmapFragment;
@@ -27,7 +29,14 @@ import com.example.admin123.citytour.Fragments.PostcardFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacePins;
 import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, HomepageFragment.OnFragmentInteractionListener, SeeSightsFragment.OnFragmentInteractionListener, PostcardFragment.OnFragmentInteractionListener, CurrencyExchangeFragment.OnFragmentInteractionListener, GmapFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        HomepageFragment.OnFragmentInteractionListener,
+        SeeSightsFragment.OnFragmentInteractionListener,
+        PostcardFragment.OnFragmentInteractionListener,
+        CurrencyExchangeFragment.OnFragmentInteractionListener,
+        GmapFragment.OnFragmentInteractionListener,
+        FavouriteListAdapter.MyViewHolder.OnItemClickListener{
 
     ListView listView;
     ArrayAdapter<String> listAdapter;
@@ -85,6 +94,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         break;
                 }
 
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.relativeLayout, fragment).commit();
                 drawerLayout.closeDrawers();
@@ -116,4 +128,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return placePins;
     }
 
+    @Override
+    public void onItemClicked(int position) {
+
+    }
+
+    @Override
+    public boolean onItemLongClicked(int position) {
+        System.out.println("HI");
+        return false;
+    }
 }
