@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +40,6 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
     private FavouritesDBHelper favouritesDB;
     private ActionModeCallback actionModeCallback = new ActionModeCallback();
     private ActionMode actionMode;
-    private Toolbar toolbar;
 
     @Nullable
     @Override
@@ -102,12 +102,13 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
 
     @Override
     public boolean onItemLongClicked(int position) {
-        /*if (actionMode == null) {
-
-           actionMode = startSupportActionMode(actionModeCallback);
+        if (actionMode == null) {
+            //  ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Chats");
+            ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
+           //actionMode = startSupportActionMode(actionModeCallback);
         }
 
-        toggleSelection(position);*/
+        toggleSelection(position);
 
         return true;
     }
@@ -137,7 +138,7 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate (R.menu.favourite_menu_items, menu);
+            mode.getMenuInflater().inflate (R.menu.menu_delete, menu);
             return true;
         }
 
@@ -149,7 +150,7 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.favourite_menu_button:
+                case R.id.menu_delete:
                     // TODO: actually remove items
                     Log.d(TAG, "menu_remove");
                     mode.finish();

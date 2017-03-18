@@ -94,9 +94,6 @@ public class MainActivity extends AppCompatActivity implements
                         break;
                 }
 
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                setSupportActionBar(toolbar);
-
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.relativeLayout, fragment).commit();
                 drawerLayout.closeDrawers();

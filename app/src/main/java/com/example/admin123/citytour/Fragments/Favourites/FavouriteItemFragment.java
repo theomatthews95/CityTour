@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
@@ -222,7 +223,7 @@ public class FavouriteItemFragment extends Fragment {
     private void InsertFavouriteDatabase(){
 
         if(placeImage==null) {
-             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.no_image_available);
+             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.birmingham_new_street);
              placeImage = bitmapUtility.getBytes(bm);
         }
 
