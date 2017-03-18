@@ -101,11 +101,12 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
                 //Get the longitude and latitude of the place
                 double lat = places.get(i).getGeometry().getLocation().getLat();
                 double lng = places.get(i).getGeometry().getLocation().getLng();
-                System.out.println("LAT LONG HERE IS "+ lat +lng);
 
                 List<GooglePlace.Photos> photoRef = places.get(i).getPhotos();
                 if(photoRef != null) {
                     placePhotoReferences.add(photoRef.get(0).getPhoto_reference());
+
+                    Log.i(TAG, photoRef.get(0).getPhoto_reference());
                 }
                 //Create a LatLng item using the place's lat and long
                 LatLng marker = new LatLng(lat, lng);
@@ -358,6 +359,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
         bundle.putString("title", mapItem.getTitle());
         bundle.putDouble("lat", mapItem.getPosition().latitude);
         bundle.putDouble("long", mapItem.getPosition().longitude);
+        bundle.putString("launchedFrom", "Map_fragment");
         Fragment fragment = new FavouriteItemFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();

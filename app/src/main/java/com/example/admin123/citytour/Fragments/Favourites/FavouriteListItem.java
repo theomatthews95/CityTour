@@ -11,15 +11,13 @@ import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class FavouriteListItem
 {
-    int iconId;
     String title;
     String reference;
     Double latitude;
     Double longitude;
     Bitmap locationPhoto;
 
-    FavouriteListItem(int iconId, String title, String reference, Double latitude, Double longitude, Bitmap locationPhoto){
-        this.iconId=iconId;
+    FavouriteListItem(String title, String reference, Double latitude, Double longitude, Bitmap locationPhoto){
         this.title=title;
         this.reference=reference;
         this.longitude=longitude;

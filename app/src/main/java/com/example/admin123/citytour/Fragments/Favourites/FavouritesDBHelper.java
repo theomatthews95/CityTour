@@ -3,6 +3,7 @@ package com.example.admin123.citytour.Fragments.Favourites;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -107,6 +108,26 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
         cv.put(COL_7,   image);
         Integer result = db.update(TABLE_NAME, cv, "NAME = ?", new String[]{locationTitle});
         return result;
+    }
+
+    public boolean isLocationFavourite(String locationTitle) throws SQLException {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int count = -1;
+        Cursor c = null;
+        try {
+            String query = "SELECT COUNT(*) FROM "
+                    + TABLE_NAME + " WHERE " + COL_1 + " = ?";
+            c = db.rawQuery(query, new String[] {locationTitle});
+            if (c.moveToFirst()) {
+                count = c.getInt(0);
+            }
+            return count > 0;
+        }
+        finally {
+            if (c != null) {
+                c.close();
+            }
+        }
     }
 
 }

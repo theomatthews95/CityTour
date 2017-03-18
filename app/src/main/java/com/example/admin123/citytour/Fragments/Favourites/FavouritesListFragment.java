@@ -53,53 +53,32 @@ public class FavouritesListFragment extends Fragment {
         return v;
     }
 
- /*   public static List<FavouriteListItem> getData(){
-        List<FavouriteListItem> data = new ArrayList<>();
-        int [] icons = {R.drawable.ic_map_pin_aquarium, R.drawable.ic_map_pin_bar, R.drawable.ic_map_pin_cafe, R.drawable.ic_map_pin_food,R.drawable.ic_map_pin_aquarium, R.drawable.ic_map_pin_bar, R.drawable.ic_map_pin_cafe, R.drawable.ic_map_pin_food};
-        String[] titles={"China", "US", "UK", "Europe","China", "US", "UK", "Europe"};
-        for(int i=0; i<titles.length && i<icons.length; i++){
-            FavouriteListItem current=new FavouriteListItem(icons[i], titles[i], "");
-            current.iconId=icons[i];
-            current.title=titles[i];
-            data.add(current);
-        }
-        return data;
-    }*/
-
     private List<FavouriteListItem> getDB(){
         List<FavouriteListItem> data = new ArrayList<>();
         Cursor res = favouritesDB.getAllData();
         StringBuffer dbContents = new StringBuffer();
-        int [] icons = {R.drawable.ic_map_pin_aquarium, R.drawable.ic_map_pin_bar, R.drawable.ic_map_pin_cafe, R.drawable.ic_map_pin_food,R.drawable.ic_map_pin_aquarium, R.drawable.ic_map_pin_bar, R.drawable.ic_map_pin_cafe, R.drawable.ic_map_pin_food};
-        //List<String> titles = new ArrayList<>();
 
         if (res.getCount() == 0){
             String titleText="There are no favourites to display";
-            FavouriteListItem current=new FavouriteListItem(icons[0], titleText, "", 0.0, 0.0, null);
-            current.title=titleText;
-            current.iconId=icons[0];
+            FavouriteListItem current=new FavouriteListItem(titleText, "", 0.0, 0.0, null);
             data.add(current);
+        }else {
+            while (res.moveToNext()) {
+                //titles.add(res.getString(0));
+                String titleText = res.getString(0);
+                Double latitude = res.getDouble(1);
+                Double longitude = res.getDouble(2);
+                String reference = res.getString(4);
+                byte[] placeImage = res.getBlob(6);
+                DbBitmapUtility bitmapUtility = new DbBitmapUtility();
+                Bitmap locationPhoto = bitmapUtility.getImage(placeImage);
+
+                FavouriteListItem current = new FavouriteListItem(titleText, reference, latitude, longitude, locationPhoto);
+
+                data.add(current);
+            }
+            Log.i("Favouriites_list", dbContents.toString());
         }
-        int i = 0;
-
-        while (res.moveToNext()){
-            //titles.add(res.getString(0));
-            String titleText=res.getString(0);
-            Double latitude=res.getDouble(1);
-            Double longitude=res.getDouble(2);
-            String reference=res.getString(4);
-            byte [] placeImage=res.getBlob(6);
-            DbBitmapUtility bitmapUtility = new DbBitmapUtility();
-            Bitmap locationPhoto = bitmapUtility.getImage(placeImage);
-
-            FavouriteListItem current=new FavouriteListItem(icons[0], titleText, reference, latitude, longitude, locationPhoto);
-            //current.title=titleText;
-            current.iconId=icons[0];
-            data.add(current);
-            i++;
-        }
-        Log.i("Favouriites_list", dbContents.toString());
-
         return data;
     }
 }

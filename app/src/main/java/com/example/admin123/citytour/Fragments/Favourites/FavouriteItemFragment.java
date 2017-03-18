@@ -74,13 +74,7 @@ public class FavouriteItemFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_favourite_item, container, false);
         setHasOptionsMenu(true);
-        //Reference used to query google places for more location information
-        placeReference = getArguments().getString("placeReference");
-        String photoReference = getArguments().getString("photoReference");
-        isFavourited = getArguments().getBoolean("isFavourited");
 
-        //the bytearray image sent from the favouritelist
-        placeImage = getArguments().getByteArray("placeImage");
         //Create database to store favourite locations
         favouritesDB = new FavouritesDBHelper(getActivity());
 
@@ -88,7 +82,23 @@ public class FavouriteItemFragment extends Fragment {
         locationLat = getArguments().getDouble("lat");
         locationLong = getArguments().getDouble("long");
         locationTitle = getArguments().getString("title");
-        locationPhoto = getLocationPhoto(photoReference);
+
+        String launchedFrom = getArguments().getString("launchedFrom");
+
+        if (launchedFrom.equals("Map_fragment")){
+            String photoReference = getArguments().getString("photoReference");
+            Log.i(TAG, "phootoreference is "+photoReference);
+            locationPhoto = getLocationPhoto(photoReference);
+            placeImage = bitmapUtility.getBytes(bitmapUtility.drawableToBitmap(locationPhoto));
+            isFavourited = favouritesDB.isLocationFavourite(locationTitle);
+        } else if (launchedFrom.equals("Favourite_list")){
+            //the bytearray image sent from the favouritelist
+            placeImage = getArguments().getByteArray("placeImage");
+            isFavourited = getArguments().getBoolean("isFavourited");
+        }
+
+        //Reference used to query google places for more location information
+        placeReference = getArguments().getString("placeReference");
 
         viewPager = (ViewPager) v.findViewById(R.id.favouritesViewPager);
         viewPager.setAdapter(new FavouritesAdapter(getChildFragmentManager(), getActivity()));
@@ -132,9 +142,9 @@ public class FavouriteItemFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    if (placeImage == null) {
+                    /*if (placeImage == null) {
                         placeImage = bitmapUtility.getBytes(bitmapUtility.drawableToBitmap(locationPhoto));
-                    }
+                    }*/
                     Fragment fragment = new FragmentFavouriteInfo();
                     Bundle bundle = new Bundle();
                     bundle.putString("placeReference",placeReference);
@@ -211,13 +221,9 @@ public class FavouriteItemFragment extends Fragment {
 
     private void InsertFavouriteDatabase(){
 
-        byte[] placeImage;
-        if(locationPhoto==null) {
+        if(placeImage==null) {
              Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.no_image_available);
              placeImage = bitmapUtility.getBytes(bm);
-        }else{
-            //Convert drawable to bitmap, then bitmap to byte array
-            placeImage = bitmapUtility.getBytes(bitmapUtility.drawableToBitmap(locationPhoto));
         }
 
         boolean isInserted = favouritesDB.insertData(locationTitle, locationLat, locationLong, placeReference, "DEFAULT TEXT", placeImage);
@@ -288,7 +294,7 @@ public class FavouriteItemFragment extends Fragment {
         String placesKey = getResources().getString(R.string.google_maps_key);
 
         try {
-            url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxheight=4000&photoreference="+photoReference+"&key="+placesKey);
+            url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&maxheight=400&photoreference="+photoReference+"&key="+placesKey);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

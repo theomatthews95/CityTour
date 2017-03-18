@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.admin123.citytour.Fragments.Currency.CurrencyExchangeFragment;
+import com.example.admin123.citytour.Fragments.Favourites.FavouritesListFragment;
 import com.example.admin123.citytour.Fragments.HomepageFragment;
 import com.example.admin123.citytour.Map.GmapFragment;
 import com.example.admin123.citytour.Fragments.PostcardFragment;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         fragment = new SeeSightsFragment();
                         break;
                     case 2:
-                        fragment = new HomepageFragment();
+                        fragment = new FavouritesListFragment();
                         break;
                     case 3:
                         fragment = new HomepageFragment();
