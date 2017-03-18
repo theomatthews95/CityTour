@@ -49,6 +49,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
     private ClusterManager<MyItem> mClusterManager;
     private ArrayList<LatLng> markers = new ArrayList<>();
     private ArrayList<String> placeReferences = new ArrayList<>();
+    private ArrayList<String> placePhotoReferences = new ArrayList<>();
     private ArrayList<Circle> drawnCircles = new ArrayList<Circle>();
     private ClusterRenderer renderer;
 
@@ -102,6 +103,10 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
                 double lng = places.get(i).getGeometry().getLocation().getLng();
                 System.out.println("LAT LONG HERE IS "+ lat +lng);
 
+                List<GooglePlace.Photos> photoRef = places.get(i).getPhotos();
+                if(photoRef != null) {
+                    placePhotoReferences.add(photoRef.get(0).getPhoto_reference());
+                }
                 //Create a LatLng item using the place's lat and long
                 LatLng marker = new LatLng(lat, lng);
 
@@ -244,7 +249,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
                     if (isViewable == false) {
                         if (marker.latitude < bounds.southwest.latitude) {
                             if (marker.longitude < bounds.southwest.longitude) {
-                               // Log.i(TAG, "South West of display");
+                                // Log.i(TAG, "South West of display");
                                 radius = SphericalUtil.computeDistanceBetween(bounds.southwest, marker)*1.4;
                                 //radius = ;
                             }else if (marker.longitude > bounds.northeast.longitude) {
@@ -258,7 +263,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
                             }
                         }else if (marker.latitude > bounds.northeast.latitude){
                             if (marker.longitude > bounds.northeast.longitude){
-                               // Log.i(TAG, "North East of display");
+                                // Log.i(TAG, "North East of display");
                                 radius = SphericalUtil.computeDistanceBetween(bounds.northeast, marker);
                             }else if (marker.longitude < bounds.southwest.longitude){
                                 //Log.i(TAG, "North West of display");
@@ -335,32 +340,32 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
     }
 
 
-  /*  @Override
-    public void onResume() {
-        SupportMapFragment f = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
-        if (f == null) {
-            getFragmentManager().beginTransaction().replace(R.id.relativeLayout, f).commit();
-            System.out.println("Trying to destroy "+f);
-        }
-        super.onResume();
+    /*  @Override
+      public void onResume() {
+          SupportMapFragment f = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
+          if (f == null) {
+              getFragmentManager().beginTransaction().replace(R.id.relativeLayout, f).commit();
+              System.out.println("Trying to destroy "+f);
+          }
+          super.onResume();
+      }*/
+    @Override
+    public void onClusterItemInfoWindowClick(MyItem mapItem) {
 
-    }*/
-  @Override
-  public void onClusterItemInfoWindowClick(MyItem mapItem) {
+        Bundle bundle = new Bundle();
+        bundle.putString("placeReference",placeReferences.get(mapItem.getPlaceArrayPosition()));
+        bundle.putString("photoReference", placePhotoReferences.get(mapItem.getPlaceArrayPosition()));
+        bundle.putString("title", mapItem.getTitle());
+        bundle.putDouble("lat", mapItem.getPosition().latitude);
+        bundle.putDouble("long", mapItem.getPosition().longitude);
+        Fragment fragment = new FavouriteItemFragment();
+        fragment.setArguments(bundle);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.relativeLayout, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
-      Bundle bundle = new Bundle();
-      bundle.putString("placeReference",placeReferences.get(mapItem.getPlaceArrayPosition()));
-      bundle.putString("title", mapItem.getTitle());
-      bundle.putDouble("lat", mapItem.getPosition().latitude);
-      bundle.putDouble("long", mapItem.getPosition().longitude);
-      Fragment fragment = new FavouriteItemFragment();
-      fragment.setArguments(bundle);
-      FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-      transaction.replace(R.id.relativeLayout, fragment);
-      transaction.addToBackStack(null);
-      transaction.commit();
-
-  }
+    }
 
 
 }

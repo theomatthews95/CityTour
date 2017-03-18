@@ -37,9 +37,6 @@ public class ChooseCurrencyDialog extends DialogFragment {
     }
 
     public ChooseCurrencyDialog() {
-        // Empty constructor is required for DialogFragment
-        // Make sure not to add arguments to the constructor
-        // Use `newInstance` instead as shown below
         currenciesCodeMap.put("$ US Dollar", "USD");
         currenciesCodeMap.put("£ Pound Sterling", "GBP");
         currenciesCodeMap.put("¥ Chinese Yuan", "CNY");

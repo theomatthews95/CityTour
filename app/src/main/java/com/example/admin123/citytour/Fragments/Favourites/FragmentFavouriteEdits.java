@@ -102,7 +102,7 @@ public class FragmentFavouriteEdits extends Fragment {
     }
 
     private Integer updateDB(String locationName, Double locationLat, Double locationLong, String placeReference, String userNotes){
-        Integer updateNotesResults = favouritesDB.updateUserNotes(locationName, locationLat, locationLong, placeReference, userNotes);
+        Integer updateNotesResults = favouritesDB.updateUserNotes(locationName, userNotes);
         Log.i("DB_Helper", "The database was updated with the text: "+userNotes+ " Result: "+updateNotesResults);
         return updateNotesResults;
     }

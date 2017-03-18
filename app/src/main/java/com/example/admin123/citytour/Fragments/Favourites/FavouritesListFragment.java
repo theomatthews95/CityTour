@@ -1,6 +1,8 @@
 package com.example.admin123.citytour.Fragments.Favourites;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.R;
 
 import java.util.ArrayList;
@@ -72,7 +75,7 @@ public class FavouritesListFragment extends Fragment {
 
         if (res.getCount() == 0){
             String titleText="There are no favourites to display";
-            FavouriteListItem current=new FavouriteListItem(icons[0], titleText, "", 0.0, 0.0);
+            FavouriteListItem current=new FavouriteListItem(icons[0], titleText, "", 0.0, 0.0, null);
             current.title=titleText;
             current.iconId=icons[0];
             data.add(current);
@@ -85,9 +88,12 @@ public class FavouritesListFragment extends Fragment {
             Double latitude=res.getDouble(1);
             Double longitude=res.getDouble(2);
             String reference=res.getString(4);
+            byte [] placeImage=res.getBlob(6);
+            DbBitmapUtility bitmapUtility = new DbBitmapUtility();
+            Bitmap locationPhoto = bitmapUtility.getImage(placeImage);
 
-            FavouriteListItem current=new FavouriteListItem(icons[0], titleText, reference, latitude, longitude);
-            current.title=titleText;
+            FavouriteListItem current=new FavouriteListItem(icons[0], titleText, reference, latitude, longitude, locationPhoto);
+            //current.title=titleText;
             current.iconId=icons[0];
             data.add(current);
             i++;

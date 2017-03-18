@@ -1,7 +1,12 @@
 package com.example.admin123.citytour.Fragments.Favourites;
 
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,8 +22,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.Fragments.PostcardFragment;
 import com.example.admin123.citytour.R;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * Created by theom on 13/03/2017.
@@ -34,6 +47,9 @@ public class FavouriteItemFragment extends Fragment {
     private Double locationLat;
     private Double locationLong;
     private String locationTitle;
+    private Drawable locationPhoto;
+    static DbBitmapUtility bitmapUtility = new DbBitmapUtility();
+    byte [] placeImage;
 
     // TODO: Rename and change types and number of parameters
     public static FavouriteItemFragment newInstance() {
@@ -58,11 +74,13 @@ public class FavouriteItemFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_favourite_item, container, false);
         setHasOptionsMenu(true);
-
         //Reference used to query google places for more location information
         placeReference = getArguments().getString("placeReference");
+        String photoReference = getArguments().getString("photoReference");
         isFavourited = getArguments().getBoolean("isFavourited");
 
+        //the bytearray image sent from the favouritelist
+        placeImage = getArguments().getByteArray("placeImage");
         //Create database to store favourite locations
         favouritesDB = new FavouritesDBHelper(getActivity());
 
@@ -70,6 +88,7 @@ public class FavouriteItemFragment extends Fragment {
         locationLat = getArguments().getDouble("lat");
         locationLong = getArguments().getDouble("long");
         locationTitle = getArguments().getString("title");
+        locationPhoto = getLocationPhoto(photoReference);
 
         viewPager = (ViewPager) v.findViewById(R.id.favouritesViewPager);
         viewPager.setAdapter(new FavouritesAdapter(getChildFragmentManager(), getActivity()));
@@ -113,9 +132,13 @@ public class FavouriteItemFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
+                    if (placeImage == null) {
+                        placeImage = bitmapUtility.getBytes(bitmapUtility.drawableToBitmap(locationPhoto));
+                    }
                     Fragment fragment = new FragmentFavouriteInfo();
                     Bundle bundle = new Bundle();
                     bundle.putString("placeReference",placeReference);
+                    bundle.putByteArray("placeImage", placeImage);
                     fragment.setArguments(bundle);
                     return fragment;
                 case 1:
@@ -125,8 +148,8 @@ public class FavouriteItemFragment extends Fragment {
                     bundle1.putDouble("long", locationLong);
                     bundle1.putString("locationTitle", locationTitle);
                     bundle1.putString("placeReference", placeReference);
+                    //Boolean to tell app if user can save notes by saying if it is in the DB
                     bundle1.putBoolean("isFavourited", isFavourited);
-                    favEdits.setTargetFragment(getParentFragment(), 0);
                     favEdits.setArguments(bundle1);
                     return favEdits;
                 default:
@@ -187,12 +210,22 @@ public class FavouriteItemFragment extends Fragment {
     }
 
     private void InsertFavouriteDatabase(){
-        boolean isInserted = favouritesDB.insertData(locationTitle, locationLat, locationLong, placeReference, "DEFAULT TEXT");
+
+        byte[] placeImage;
+        if(locationPhoto==null) {
+             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.no_image_available);
+             placeImage = bitmapUtility.getBytes(bm);
+        }else{
+            //Convert drawable to bitmap, then bitmap to byte array
+            placeImage = bitmapUtility.getBytes(bitmapUtility.drawableToBitmap(locationPhoto));
+        }
+
+        boolean isInserted = favouritesDB.insertData(locationTitle, locationLat, locationLong, placeReference, "DEFAULT TEXT", placeImage);
 
         if (isInserted == true) {
             Log.i("DB_Helper", "Inserted " + locationTitle + " " + locationLat + ", " + locationLong + ", " + placeReference + " into database.");
             Toast.makeText(getActivity(), "Favourited", Toast.LENGTH_SHORT).show();
-            getDb();
+            //getDb();
         }else {
             Log.i("DB_Helper", "Location not inserted into database. Most likely a duplicate.");
         }
@@ -221,9 +254,53 @@ public class FavouriteItemFragment extends Fragment {
             dbContents.append(", Long :"+res.getDouble(2));
             dbContents.append(", 3 :"+res.getDouble(3));
             dbContents.append(", 4 :"+res.getString(4));
-            dbContents.append(", 5 :"+res.getString(5) + "\n");
+            dbContents.append(", 5 :"+res.getString(5));
+            dbContents.append(", Bitmap :"+res.getBlob(6) + "\n");
         }
         Log.i("DB_Helper", dbContents.toString());
+    }
+
+    private void setLocationPhotoDB(Drawable locationPhoto){
+
+        //Convert drawable to bitmap, then bitmap to byte array
+        byte[] locationPhotobitmap = bitmapUtility.getBytes(bitmapUtility.drawableToBitmap(locationPhoto));
+
+        Integer result = favouritesDB.addLocationPhoto(locationTitle, locationPhotobitmap);
+        if(result!=1){
+            Log.i(TAG, "Failed to insert photo");
+        }else{
+            Log.i(TAG, "Inserted photo");
+        }
+
+    }
+
+    private Drawable getLocationPhoto(String photoReference){
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //your codes here
+
+        }
+        URL url = null;
+        String placesKey = getResources().getString(R.string.google_maps_key);
+
+        try {
+            url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxheight=4000&photoreference="+photoReference+"&key="+placesKey);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        InputStream content = null;
+        try {
+            content = (InputStream)url.getContent();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Drawable locationPhoto = Drawable.createFromStream(content , "src");
+
+        return locationPhoto;
     }
 }
 

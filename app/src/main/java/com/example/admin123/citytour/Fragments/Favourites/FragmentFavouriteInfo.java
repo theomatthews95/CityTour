@@ -1,6 +1,10 @@
 package com.example.admin123.citytour.Fragments.Favourites;
 
 import android.app.ProgressDialog;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlacesUtility;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlaceDetail;
@@ -27,6 +32,7 @@ import com.google.android.gms.location.places.PlacePhotoMetadataResult;
 import com.google.android.gms.location.places.Places;
 import com.google.gson.Gson;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -41,9 +47,10 @@ import java.util.List;
 public class FragmentFavouriteInfo extends Fragment {
     private String placeReference;
     private GooglePlace place;
-    private GoogleApiClient mGoogleApiClient;
-    private final String placeId = "ChIJhSxoJzyuEmsR9gBDBR09ZrE";
     private final static String TAG = "FavouriteFragment";
+    private FavouritesDBHelper favouritesDB;
+    private String placeTitle = "";
+    private Bitmap locationPhoto;
 
     @Nullable
     @Override
@@ -51,7 +58,11 @@ public class FragmentFavouriteInfo extends Fragment {
         View v = inflater.inflate(R.layout.fragment_favourite_details, container, false);
 
         placeReference = getArguments().getString("placeReference");
-        Log.i("Favs","Place reference "+placeReference);
+        byte [] placeImage = getArguments().getByteArray("placeImage");
+        DbBitmapUtility bitmapUtility = new DbBitmapUtility();
+        locationPhoto = bitmapUtility.getImage(placeImage);
+
+        favouritesDB = new FavouritesDBHelper(getActivity());
 
         String placesKey = getResources().getString(R.string.google_maps_key);
         if (placesKey.equals("PUT YOUR KEY HERE")) {
@@ -64,6 +75,7 @@ public class FragmentFavouriteInfo extends Fragment {
             process.execute(new String[] {placeDetailRequest});
         }
 
+        favouritesDB.close();
         return v;
     }
     private class PlacesDetailReadFeed extends AsyncTask<String, Void, PlaceDetail> {
@@ -103,51 +115,22 @@ public class FragmentFavouriteInfo extends Fragment {
             place = placeDetail.getResult();
 
             fillInLayout(place);
-            int SDK_INT = android.os.Build.VERSION.SDK_INT;
-            if (SDK_INT > 8)
-            {
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                        .permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-                //your codes here
-
-            }
-            URL url = null;
-            String placesKey = getResources().getString(R.string.google_maps_key);
-            try {
-                url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxheight=4000&photoreference="+place.getPhotos().get(0).getPhoto_reference()+"&key="+placesKey);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            InputStream content = null;
-            try {
-                content = (InputStream)url.getContent();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Drawable d = Drawable.createFromStream(content , "src");
-
             ImageView iv = (ImageView) getView().findViewById(R.id.favourite_image);
-            iv.setImageDrawable(d);
+            iv.setImageBitmap(locationPhoto);
         }
     }
 
     private void fillInLayout(GooglePlace place) {
         // title element has name and types
         TextView title = (TextView)getView().findViewById(R.id.name);
-        title.setText(place.getName());
+        placeTitle = place.getName();
+        title.setText(placeTitle);
 
         Log.i("PLACES EXAMPLE", "Setting title to: " + title.getText());
         //address
         TextView address = (TextView) getView().findViewById(R.id.address_text_view);
         address.setText(place.getFormatted_address() + " " + place.getFormatted_phone_number());
         Log.i("PLACES EXAMPLE", "Setting address to: " + address.getText());
-        Log.i("PLACES", "Photo reference:"+place.getPhotos().get(0).getPhoto_reference());
-        //vicinity
-        /*TextView vicinity = (TextView) getView().findViewById(R.id.vicinity);
-        vicinity.setText(place.getVicinity());
-        Log.i("PLACES EXAMPLE", "Setting vicinity to: " + vicinity.getText());*/
-        //rating
         TextView reviews = (TextView) getView().findViewById(R.id.reviews);
         Log.i("PLACES", "INfo"+place.getIcon());
         List<GooglePlace.Review> reviewsData = place.getReviews();
@@ -167,4 +150,20 @@ public class FragmentFavouriteInfo extends Fragment {
         }
     }
 
+
+    private void getDb(){
+        Cursor res = favouritesDB.getAllData();
+        StringBuffer dbContents = new StringBuffer();
+        while (res.moveToNext()){
+            dbContents.append("Name :"+res.getString(0));
+            dbContents.append(", Lat :"+res.getDouble(1));
+            dbContents.append(", Long :"+res.getDouble(2));
+            dbContents.append(", 5 :"+res.getBlob(6) + "\n");
+        }
+        Log.i("DB_Helper", dbContents.toString());
+    }
+
+    public interface OnSetLocationPhotoRef {
+        public void setLocationPhotoRef(Drawable locationPhoto);
+    }
 }

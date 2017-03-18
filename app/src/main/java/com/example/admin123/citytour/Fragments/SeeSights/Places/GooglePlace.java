@@ -333,6 +333,7 @@ public class GooglePlace implements Serializable{
     public List<Photos> getPhotos(){
         return photos;
     }
+
     public void setPhotos(List<Photos> photos){
         this.photos=photos;
     }

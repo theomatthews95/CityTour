@@ -1,5 +1,7 @@
 package com.example.admin123.citytour.Fragments.Favourites;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,7 +15,9 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.R;
 
 import java.util.Collections;
@@ -52,7 +56,7 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
     public void onBindViewHolder(MyViewHolder holder, int position) {
         FavouriteListItem current = data.get(position);
         holder.title.setText(current.title);
-        holder.icon.setImageResource(current.iconId);
+        holder.icon.setImageBitmap(current.locationPhoto);
         holder.setParams(current.reference, current.latitude, current.longitude);
     }
 
@@ -88,20 +92,31 @@ public class FavouriteListAdapter extends RecyclerView.Adapter<FavouriteListAdap
         @Override
         public void onClick(View v) {
             listener.onItemClick(title.getText().toString());
-            AppCompatActivity activity = (AppCompatActivity) v.getContext();
-            Bundle bundle = new Bundle();
-            bundle.putString("placeReference",reference);
-            Log.i(TAG, "place ref on creation of fragment = "+reference);
-            bundle.putString("title", title.getText().toString());
-            bundle.putDouble("lat", latitude);
-            bundle.putDouble("long", longitude);
-            bundle.putBoolean("isFavourited", true);
-            Fragment fragment = new FavouriteItemFragment();
-            fragment.setArguments(bundle);
-            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.relativeLayout, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            if (!title.getText().toString().equals("There are no favourites to display")) {
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                Bundle bundle = new Bundle();
+                bundle.putString("placeReference", reference);
+                Log.i(TAG, "place ref on creation of fragment = " + reference);
+                bundle.putString("title", title.getText().toString());
+                bundle.putDouble("lat", latitude);
+                bundle.putDouble("long", longitude);
+                bundle.putBoolean("isFavourited", true);
+
+                //Get icon from ImageView and convert it to a bitmap, then to a byte array
+                BitmapDrawable drawable = (BitmapDrawable) icon.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                DbBitmapUtility bitmapUtility = new DbBitmapUtility();
+                byte[] placeImage = bitmapUtility.getBytes(bitmap);
+                bundle.putByteArray("placeImage", placeImage);
+                Fragment fragment = new FavouriteItemFragment();
+                fragment.setArguments(bundle);
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.relativeLayout, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }else{
+                Toast.makeText(v.getContext(), "Bad user. No touchey.", Toast.LENGTH_SHORT).show();
+            }
 
         }
         public void setParams(String reference, Double latitude, Double longitude){
