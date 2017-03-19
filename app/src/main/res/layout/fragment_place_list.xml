@@ -6,18 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
+    android:layout_gravity="center"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="30dp"
+        android:background="@drawable/ic_logo"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Please wait whilst we load your data :)"/>
+        android:layout_gravity="center"
+        android:text="Please wait whilst,\n we load your data :)"/>
 
-    <ListView
-        android:id="@+id/the_place_list"
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="5"/>
+        android:paddingTop="20dp"
+        android:indeterminate="true"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

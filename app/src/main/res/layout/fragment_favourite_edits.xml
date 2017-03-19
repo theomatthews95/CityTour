@@ -6,13 +6,32 @@
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
 
-    <TextView
-        android:text="Your notes"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textStyle="bold"
-        android:textSize="40dp" />
+        android:orientation="horizontal">
+        <TextView
+            android:text="Your notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:textStyle="bold"
+            android:textSize="40dp"
+            android:paddingBottom="20dp"
+            android:paddingRight="10dp"/>
+
+        <Button
+            android:id="@+id/save_notes_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:drawableRight="@drawable/ic_save_black_24px"
+            android:paddingRight="20dp"
+            android:paddingLeft="15dp"
+            android:background="@drawable/custom_button"
+            />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/user_notes"
@@ -25,18 +44,6 @@
         android:inputType="textCapSentences|textMultiLine"
         android:background="@drawable/text_box_style"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="10dp"/>
 
-    <Button
-        android:id="@+id/save_notes_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:background="@drawable/custom_button"
-        android:drawableRight="@drawable/ic_save_black_24px"
-        android:paddingRight="20dp"
-        />
 
 </LinearLayout>

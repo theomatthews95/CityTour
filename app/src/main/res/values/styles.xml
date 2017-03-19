@@ -9,28 +9,9 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">#000000</item>
         <item name="android:textSize">20dp</item>
-        <!--<item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>-->
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="windowActionBarOverlay">true</item>
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
-        <item name="windowActionBar">false</item>
-    </style>
 
-    <style name="CustomAccentOverlay" parent="ThemeOverlay.AppCompat">
-        <item name="colorAccent">@color/colorPrimary</item>
-    </style>
-
-
-    </resources>
+</resources>

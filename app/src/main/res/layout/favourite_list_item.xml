@@ -29,8 +29,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/listText"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 android:paddingStart="5dp"
-                android:paddingEnd="0dp"
+                android:paddingEnd="5dp"
                 />
 
             <ImageView
@@ -46,7 +47,8 @@
             android:id="@+id/selected_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@color/selectedItem"
+
             android:visibility="invisible" />
 
     </android.support.v7.widget.CardView>

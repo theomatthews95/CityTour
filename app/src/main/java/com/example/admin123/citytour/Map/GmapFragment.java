@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,6 +36,8 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.ClusterManager;
 
@@ -171,6 +174,11 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
 
         LatLngBounds bounds = builder.build();
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+
+        Polyline line = mMap.addPolyline(new PolylineOptions()
+                .add(new LatLng(51.5, -0.1), new LatLng(40.7, -74.0), new LatLng(52.486435, -1.888999))
+                .width(5)
+                .color(Color.RED));
 
         //Move the camera to location
         mMap.moveCamera(cu);

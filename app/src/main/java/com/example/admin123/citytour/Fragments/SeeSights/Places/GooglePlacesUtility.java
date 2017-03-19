@@ -12,12 +12,13 @@ import java.net.URL;
  * Created by theom on 03/03/2017.
  */
 
-public class GooglePlacesUtility {  public static String readGooglePlaces(String uri, String referer) {
+public class GooglePlacesUtility {
+    public static String readGooglePlaces(String uri, String referer) {
     HttpURLConnection conn = null;
     StringBuilder jsonResults = new StringBuilder();
     try {
         URL url = new URL(uri);
-        Log.i("AJB", url.toString());
+        Log.i("TGS", url.toString());
         conn = (HttpURLConnection) url.openConnection();
         if (referer != null) {
             conn.setRequestProperty("Referer", referer);
@@ -30,7 +31,7 @@ public class GooglePlacesUtility {  public static String readGooglePlaces(String
         while ((read = in.read(buff)) != -1) {
             jsonResults.append(buff, 0, read);
         }
-        Log.i("AJB", "RESULTS: " + jsonResults);
+        Log.i("TGS", "RESULTS: " + jsonResults);
     } catch (MalformedURLException e) {
         Log.i("Google Places Utility", "Error processing Places API URL");
         return null;

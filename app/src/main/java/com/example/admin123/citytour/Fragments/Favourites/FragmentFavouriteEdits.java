@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -53,6 +54,11 @@ public class FragmentFavouriteEdits extends Fragment {
                     Toast.makeText(getContext(), "Saved notes", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getContext(), "You must favourite the item before you can save notes", Toast.LENGTH_SHORT).show();
+                }
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
 
             }

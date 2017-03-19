@@ -22,6 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.admin123.citytour.DbBitmapUtility;
+import com.example.admin123.citytour.Fragments.HomepageFragment;
+import com.example.admin123.citytour.Fragments.Itinerary.ItineraryFragment;
 import com.example.admin123.citytour.R;
 
 import java.util.ArrayList;
@@ -84,7 +86,7 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
                 DbBitmapUtility bitmapUtility = new DbBitmapUtility();
                 Bitmap locationPhoto = bitmapUtility.getImage(placeImage);
 
-                FavouriteListItem current = new FavouriteListItem(titleText, reference, latitude, longitude, locationPhoto);
+                FavouriteListItem current = new FavouriteListItem(titleText, reference, latitude, longitude, placeImage);
 
                 data.add(current);
             }
@@ -103,22 +105,14 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
     @Override
     public boolean onItemLongClicked(int position) {
         if (actionMode == null) {
-            //  ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Chats");
-            ((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
-           //actionMode = startSupportActionMode(actionModeCallback);
+            actionMode =((AppCompatActivity) getActivity()).startSupportActionMode(actionModeCallback);
         }
 
         toggleSelection(position);
 
         return true;
     }
-  /*  @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.favourite_menu_items, menu);
-        MenuItem item = menu.findItem(R.id.favourite_menu_button);
-        item.expandActionView();
-        super.onCreateOptionsMenu(menu, inflater);
-    }*/
+
 
     private void toggleSelection(int position) {
         adapter.toggleSelection(position);
@@ -151,9 +145,21 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_delete:
-                    // TODO: actually remove items
-                    Log.d(TAG, "menu_remove");
+                    ArrayList<FavouriteListItem> itineraryList = adapter.getItemsDetails(adapter.getSelectedItems());
+                    Log.d(TAG, "menu_remove" +itineraryList);
+
                     mode.finish();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("itineraryList", itineraryList);
+
+                    Fragment fragment = new ItineraryFragment();
+                    fragment.setArguments(bundle);
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.relativeLayout, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+
                     return true;
 
                 default:

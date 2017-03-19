@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">-
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingTop="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/itinerary_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your itinerary items"
+            android:textSize="30dp"
+            android:paddingLeft="15dp"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/favouritesList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itinerary_title"
+            >
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/confirm_itinerary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show on map"
+            android:background="@drawable/custom_button"
+            android:layout_below="@+id/favouritesList"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
+    </RelativeLayout>
+</LinearLayout>
+

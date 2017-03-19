@@ -24,7 +24,9 @@ import android.widget.Toast;
 
 import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.R;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,8 +61,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
     public void onBindViewHolder(MyViewHolder holder, int position) {
         FavouriteListItem current = data.get(position);
         holder.title.setText(current.title);
-        holder.locationPhoto.setImageBitmap(current.locationPhoto);
-        Log.i("location photo", current.locationPhoto.toString());
+        holder.locationPhoto.setImageBitmap(new DbBitmapUtility().getImage(current.locationPhoto));
         holder.setParams(current.reference, current.latitude, current.longitude);
 
         holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
@@ -74,6 +75,14 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    public ArrayList<FavouriteListItem> getItemsDetails(List<Integer> positions){
+        ArrayList<FavouriteListItem> itineraryList = new ArrayList<>();
+        for (Integer position : positions){
+            itineraryList.add(data.get(position));
+        }
+        return itineraryList;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder
@@ -94,6 +103,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
             title = (TextView) itemView.findViewById(R.id.listText);
             locationPhoto = (ImageView) itemView.findViewById(R.id.listIcon);
             selectedOverlay = itemView.findViewById(R.id.selected_overlay);
+
             this.listener = listener;
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
@@ -101,7 +111,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
 
         @Override
         public void onClick(View v) {
-            if (!title.getText().toString().equals("There are no favourites to display")) {
+           if (!title.getText().toString().equals("There are no favourites to display")) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 Bundle bundle = new Bundle();
                 bundle.putString("placeReference", reference);
@@ -126,6 +136,9 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
                 transaction.commit();
             }else{
                 Toast.makeText(v.getContext(), "Bad user. No touchey.", Toast.LENGTH_SHORT).show();
+            }
+            if (listener != null) {
+                listener.onItemClicked(getPosition());
             }
 
         }
