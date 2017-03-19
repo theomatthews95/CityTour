@@ -1,5 +1,6 @@
 package com.example.admin123.citytour.Fragments.Favourites;
 
+import android.content.Context;
 import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.R;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.vision.text.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,19 +44,31 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
     private List<FavouriteListItem> data = Collections.emptyList();
     private SparseBooleanArray selectedItems;
     private MyViewHolder.OnItemClickListener clickListener;
+    private boolean isItinerary;
 
-    public FavouriteListAdapter(List<FavouriteListItem> data, MyViewHolder.OnItemClickListener clickListener){
+    public FavouriteListAdapter(List<FavouriteListItem> data, MyViewHolder.OnItemClickListener clickListener, boolean isItinerary){
         this.data=data;
         this.clickListener=clickListener;
+        this.isItinerary=isItinerary;
         Log.i("Favourite_List_Adapter","Hi constructor");
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //View v = inflater.inflate(R.layout.favourite_list_item, parent, false);
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.favourite_list_item, parent, false);
+
+        View v;
+        if (isItinerary == false) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.favourite_list_item, parent, false);
+        }else {
+            if (viewType == R.layout.itinerary_info_item) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.favourite_list_item, parent, false);
+            } else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.itinerary_info_item, parent, false);
+            }
+        }
         MyViewHolder holder = new MyViewHolder(v,clickListener);
         return holder;
+
     }
 
     @Override
@@ -63,8 +77,16 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
         holder.title.setText(current.title);
         holder.locationPhoto.setImageBitmap(new DbBitmapUtility().getImage(current.locationPhoto));
         holder.setParams(current.reference, current.latitude, current.longitude);
-
         holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
+        holder.timeToNext.setText(current.timeToNext);
+        holder.distanceToNext.setText(current.distanceToNext);
+    }
+
+    @Override
+    public int getItemViewType (int position) {
+        //Some logic to know which type will come next;
+        if ( (position & 1) == 0 ) { return R.layout.itinerary_info_item; } else { return R.layout.itinerary_list_item; }
+
     }
 
     @Override
@@ -94,6 +116,8 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
         Double latitude;
         Double longitude;
         View selectedOverlay;
+        TextView distanceToNext;
+        TextView timeToNext;
 
         public OnItemClickListener listener;
 
@@ -103,6 +127,8 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
             title = (TextView) itemView.findViewById(R.id.listText);
             locationPhoto = (ImageView) itemView.findViewById(R.id.listIcon);
             selectedOverlay = itemView.findViewById(R.id.selected_overlay);
+            distanceToNext = (TextView) itemView.findViewById(R.id.distance);
+            timeToNext = (TextView) itemView.findViewById(R.id.timing);
 
             this.listener = listener;
             itemView.setOnClickListener(this);

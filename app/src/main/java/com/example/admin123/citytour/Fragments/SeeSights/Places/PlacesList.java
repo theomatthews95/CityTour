@@ -111,6 +111,7 @@ public class PlacesList extends Fragment{
         //User's search location
         bundle.putDouble("searchAreaLong", searchAreaLong);
         bundle.putDouble("searchAreaLat", searchAreaLat);
+
         Fragment fragment = new GmapFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

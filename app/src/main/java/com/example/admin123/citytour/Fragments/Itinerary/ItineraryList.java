@@ -1,5 +1,8 @@
 package com.example.admin123.citytour.Fragments.Itinerary;
 
+import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,48 +10,16 @@ import java.util.List;
  * Created by theom on 19/03/2017.
  */
 
-public class ItineraryList {
+public class ItineraryList implements Serializable{
 
-    private ArrayList<Routes> routesList;
-    private String text;
-    private ArrayList<ItineraryList> results;
+    private String status;
 
-    public String getText() {
-        return text;
+    private ArrayList<GeocodedWaypoints> geocoded_waypoints;
+    private ArrayList<Routes> routes;
+
+    public ArrayList<GeocodedWaypoints> getGeocodedWaypoints() {
+        return geocoded_waypoints;
     }
 
-    public static class Routes{
-        ArrayList<Legs> legList;
-        OverviewPolyline overview_polyline;
-        ArrayList<Integer> waypoint_order;
-
-        public ArrayList<Legs> getLegList(){return legList;}
-        public OverviewPolyline getOverview_polyline(){return overview_polyline;}
-        public ArrayList<Integer> getWaypoint_order(){return waypoint_order;}
-
-        public static class Legs{
-            String duration;
-            String distance;
-            public String getDuration(){return duration;}
-            public String getDistance(){return distance;}
-        }
-
-        public static class OverviewPolyline{
-            String points;
-            public String getPoints(){return points;}
-        }
-
-    }
-
-    public ArrayList<Routes> getRoutesList(){
-        return routesList;
-    }
-
-    public ArrayList<ItineraryList> getResults() {
-        return results;
-    }
-
-    public void setResults(ArrayList<ItineraryList> results) {
-        this.results = results;
-    }
+    public ArrayList<Routes> getRoutes(){ return routes;}
 }

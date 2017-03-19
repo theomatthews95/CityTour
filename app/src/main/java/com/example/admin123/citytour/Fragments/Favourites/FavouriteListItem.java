@@ -20,13 +20,17 @@ public class FavouriteListItem implements Serializable
     Double latitude;
     Double longitude;
     byte[] locationPhoto;
+    String distanceToNext;
+    String timeToNext;
 
-    FavouriteListItem(String title, String reference, Double latitude, Double longitude, byte[] locationPhoto){
+    public FavouriteListItem(String title, String reference, Double latitude, Double longitude, byte[] locationPhoto, String distanceToNext, String timeToNext){
         this.title=title;
         this.reference=reference;
         this.longitude=longitude;
         this.latitude=latitude;
         this.locationPhoto=locationPhoto;
+        this.distanceToNext=distanceToNext;
+        this.timeToNext=timeToNext;
     }
 
     public Double getLat(){
@@ -36,4 +40,6 @@ public class FavouriteListItem implements Serializable
     public Double getLong(){
         return longitude;
     }
+
+    public String getTitle(){return title;}
 }

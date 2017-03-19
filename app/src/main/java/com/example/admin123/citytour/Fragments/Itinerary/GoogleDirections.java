@@ -22,6 +22,8 @@ import com.google.gson.Gson;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import static com.google.android.gms.plus.PlusOneDummyView.TAG;
+
 /**
  * Created by theom on 18/03/2017.
  */
@@ -29,7 +31,8 @@ import java.util.ArrayList;
 public class GoogleDirections extends Fragment {
 
     private String placesKey;
-    private ItineraryList itineraryList;
+    private ItineraryList googleDirectionResults;
+    private  ArrayList<FavouriteListItem> initialItinList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,26 +44,29 @@ public class GoogleDirections extends Fragment {
             Toast.makeText(getActivity(), "You haven't entered your Google Places Key into the strings file.  Dont forget to set a referer too.", Toast.LENGTH_LONG).show();
         } else {
 
-            ArrayList<FavouriteListItem> itineraryList = (ArrayList<FavouriteListItem>) getArguments().getSerializable("itineraryList");
+            initialItinList = (ArrayList<FavouriteListItem>) getArguments().getSerializable("itineraryList");
             String waypoints = "None_set";
             String destination = "Not_set";
             String origin = "Not_set";
-            for (int i = 0; i<itineraryList.size(); i++){
+            for (int i = 0; i<initialItinList.size(); i++){
                 if (i == 0) {
-                    origin = "origin="+itineraryList.get(i).getLat() +","+itineraryList.get(i).getLong();
+                    origin = "origin="+initialItinList.get(i).getLat() +","+initialItinList.get(i).getLong();
+                    Log.i(TAG, "i == 0 "+initialItinList.get(i).getTitle());
                 }else if (i == 1){
-                    destination = "destination="+itineraryList.get(i).getLat() +","+itineraryList.get(i).getLong();
+                    destination = "destination="+initialItinList.get(i).getLat() +","+initialItinList.get(i).getLong();
+                    Log.i(TAG, "i == 1 "+initialItinList.get(i).getTitle());
                 }else if (i == 2){
-                    waypoints = "waypoints=optimize:true|"+itineraryList.get(i).getLat() +","+itineraryList.get(i).getLong();
+                    waypoints = "waypoints=optimize:true|"+initialItinList.get(i).getLat() +","+initialItinList.get(i).getLong();
+                    Log.i(TAG, "i == 2 "+initialItinList.get(i).getTitle());
                 }else{
-                    waypoints = waypoints + "|" + itineraryList.get(i).getLat() +","+itineraryList.get(i).getLong();
+                    waypoints = waypoints + "|" + initialItinList.get(i).getLat() +","+initialItinList.get(i).getLong();
+                    Log.i(TAG, "i == whateever "+initialItinList.get(i).getTitle());
                 }
             }
             String params = origin+"&"+destination+"&"+waypoints;
             //Insert retrieved data from SeeSightsFragment into places API request
             String placesRequest = "https://maps.googleapis.com/maps/api/directions/json?" +
                     params+"&mode=walking&key=" + placesKey;
-           // String placesRequest ="https://maps.googleapis.com/maps/api/directions/json?origin=52.486435,-1.888999&destination=52.480962,-1.895156&waypoints=optimize:true|52.483366,-1.897720|52.486069,-1.895087&mode=walking&key=" + placesKey;
 
             GoogleDirections.DirectionsReadFeed process = new GoogleDirections.DirectionsReadFeed();
 
@@ -87,10 +93,10 @@ public class GoogleDirections extends Fragment {
                 }
                 String input = GooglePlacesUtility.readGooglePlaces(urls[0], referer);
                 Gson gson = new Gson();
-                ItineraryList itineraryList = gson.fromJson(input, ItineraryList.class);
-                //Log.i("Places", "Number of places found is " + ItineraryList.getResults().size());
+                ItineraryList googleDirectionResults = gson.fromJson(input, ItineraryList.class);
 
-                return itineraryList;
+                Log.i("TGS", googleDirectionResults.toString());
+                return googleDirectionResults;
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.i("Itinerary", e.getMessage());
@@ -102,29 +108,29 @@ public class GoogleDirections extends Fragment {
         protected void onPostExecute(ItineraryList itineraryList) {
             reportBack(itineraryList);
 
-            //return places.getPlaceNames().get(1);
         }
     }
 
-    protected void reportBack(ItineraryList itineraryList) {
-        if (this.itineraryList == null) {
-            this.itineraryList = itineraryList;
+    protected void reportBack(ItineraryList googleDirectionResults) {
+        if (this.googleDirectionResults == null) {
+            this.googleDirectionResults = googleDirectionResults;
 
         } else {
-            this.itineraryList.getResults().addAll(itineraryList.getResults());
+            //this.itineraryList.getStatus().addAll(itineraryList.getStatus());
         }
-        Log.i("TGS", "NOOOISE"+ itineraryList.getRoutesList());
-        /*Bundle bundle = new Bundle();
-        bundle.putSerializable("googlePlaceList", placeResults.getResults());
-        bundle.putInt("numberOfPlaces", placeResults.getResults().size());
-        //User's search location
-        bundle.putDouble("searchAreaLong", searchAreaLong);
-        bundle.putDouble("searchAreaLat", searchAreaLat);
-        Fragment fragment = new GmapFragment();
+        Log.i("TGS", "Distance "+ googleDirectionResults.getRoutes().get(0).getLegs().get(0).getDistance().getText());
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("initialItinList", initialItinList);
+        bundle.putSerializable("googleDirectionResults", googleDirectionResults);
+
+        String polyline = googleDirectionResults.getRoutes().get(0).getOverview_polyline().getPoints();
+        bundle.putString("polyline", polyline);
+        Fragment fragment = new ItineraryFragment();
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.relativeLayout, fragment);
         transaction.addToBackStack(null);
-        transaction.commit();*/
+        transaction.commit();
     }
 }

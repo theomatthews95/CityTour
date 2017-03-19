@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.Fragments.HomepageFragment;
+import com.example.admin123.citytour.Fragments.Itinerary.GoogleDirections;
 import com.example.admin123.citytour.Fragments.Itinerary.ItineraryFragment;
 import com.example.admin123.citytour.R;
 
@@ -58,7 +59,7 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
         recyclerView = (RecyclerView) v.findViewById(R.id.favouritesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new FavouriteListAdapter(getDB(), this);
+        adapter = new FavouriteListAdapter(getDB(), this, false);
 
         recyclerView.setAdapter(adapter);
         getDB();
@@ -73,7 +74,7 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
 
         if (res.getCount() == 0){
             String titleText="There are no favourites to display";
-            FavouriteListItem current=new FavouriteListItem(titleText, "", 0.0, 0.0, null);
+            FavouriteListItem current=new FavouriteListItem(titleText, "", 0.0, 0.0, null, "", "");
             data.add(current);
         }else {
             while (res.moveToNext()) {
@@ -86,7 +87,7 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
                 DbBitmapUtility bitmapUtility = new DbBitmapUtility();
                 Bitmap locationPhoto = bitmapUtility.getImage(placeImage);
 
-                FavouriteListItem current = new FavouriteListItem(titleText, reference, latitude, longitude, placeImage);
+                FavouriteListItem current = new FavouriteListItem(titleText, reference, latitude, longitude, placeImage, "", "");
 
                 data.add(current);
             }
@@ -146,14 +147,13 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
             switch (item.getItemId()) {
                 case R.id.menu_delete:
                     ArrayList<FavouriteListItem> itineraryList = adapter.getItemsDetails(adapter.getSelectedItems());
-                    Log.d(TAG, "menu_remove" +itineraryList);
 
                     mode.finish();
 
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("itineraryList", itineraryList);
 
-                    Fragment fragment = new ItineraryFragment();
+                    Fragment fragment = new GoogleDirections();
                     fragment.setArguments(bundle);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.relativeLayout, fragment);

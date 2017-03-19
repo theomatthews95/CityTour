@@ -22,6 +22,7 @@ import android.widget.Toast;
 import java.util.*;
 
 import com.example.admin123.citytour.Fragments.Favourites.FavouriteItemFragment;
+import com.example.admin123.citytour.Fragments.Favourites.FavouriteListItem;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
 import com.example.admin123.citytour.MainActivity;
 import com.example.admin123.citytour.R;
@@ -38,6 +39,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 import com.google.maps.android.SphericalUtil;
 import com.google.maps.android.clustering.ClusterManager;
 
@@ -86,9 +88,13 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
         mMap = googleMap;
         final ArrayList<GooglePlace> places =  (ArrayList<GooglePlace>) getArguments().getSerializable("googlePlaceList");
         Integer numberOfPlaces = (Integer) getArguments().getInt("numberOfPlaces");
-        Double placesSearchLat = (Double) getArguments().getDouble("searchAreaLat");
-        Double placesSearchLong = (Double) getArguments().getDouble("searchAreaLong");
+        Double searchAreaLat = (Double) getArguments().getDouble("searchAreaLat");
+        Double searchAreaLong = (Double) getArguments().getDouble("searchAreaLong");
         HashMap<String, Integer> placePins = MainActivity.returnPlacePins().PlacePins();
+
+        ArrayList<FavouriteListItem> itineraryList = (ArrayList<FavouriteListItem>) getArguments().getSerializable("itineraryList");
+        String polyline = (String) getArguments().getString("polyline");
+
 
         setUpClusterer();
 
@@ -148,14 +154,24 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
                 DrawHalos();
             }
         }else {
-            //If there are no search items to display
-            LatLng marker = new LatLng(placesSearchLat, placesSearchLong);
-            markers.add(marker);
-            // Add cluster items (markers) to the cluster manager.
-            MyItem mapItem = new MyItem(placesSearchLat, placesSearchLat, "Search Location", getBitmapDescriptor(R.drawable.ic_map_pin), 0);
-            mClusterManager.addItem(mapItem);
-            //mMap.addMarker(new MarkerOptions().position(marker).title("Search Location"));
-            Toast.makeText(getContext(), "No places found. Try a larger radius.", Toast.LENGTH_SHORT).show();
+            if (itineraryList!=null){
+                for(FavouriteListItem item : itineraryList){
+                    LatLng marker = new LatLng(item.getLat(), item.getLong());
+                    markers.add(marker);
+                    MyItem mapItem = new MyItem(item.getLat(), item.getLong(),item.getTitle(), getBitmapDescriptor(R.drawable.ic_map_pin), 0);
+                    mClusterManager.addItem(mapItem);
+                }
+
+            }else {
+                //If there are no search items to display
+                LatLng marker = new LatLng(searchAreaLat, searchAreaLong);
+                markers.add(marker);
+                // Add cluster items (markers) to the cluster manager.
+                MyItem mapItem = new MyItem(searchAreaLat, searchAreaLong, "Search Location", getBitmapDescriptor(R.drawable.ic_map_pin), 0);
+                mClusterManager.addItem(mapItem);
+                //mMap.addMarker(new MarkerOptions().position(marker).title("Search Location"));
+                Toast.makeText(getContext(), "No places found. Try a larger radius.", Toast.LENGTH_SHORT).show();
+            }
         }
 
         //Create cluster renderer
@@ -175,10 +191,21 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
         LatLngBounds bounds = builder.build();
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-        Polyline line = mMap.addPolyline(new PolylineOptions()
-                .add(new LatLng(51.5, -0.1), new LatLng(40.7, -74.0), new LatLng(52.486435, -1.888999))
-                .width(5)
-                .color(Color.RED));
+        if(polyline!=null) {
+            List<LatLng> points = (PolyUtil.decode(polyline));
+            for (int i = 0; i < points.size() - 1; i++) {
+                LatLng src = points.get(i);
+                LatLng dest = points.get(i + 1);
+
+                // mMap is the Map Object
+                Polyline line = mMap.addPolyline(
+                        new PolylineOptions().add(
+                                new LatLng(src.latitude, src.longitude),
+                                new LatLng(dest.latitude, dest.longitude)
+                        ).width(7).color(Color.BLUE).geodesic(true)
+                );
+            }
+        }
 
         //Move the camera to location
         mMap.moveCamera(cu);
