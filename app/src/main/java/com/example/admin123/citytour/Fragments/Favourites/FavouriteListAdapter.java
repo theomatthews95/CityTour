@@ -116,6 +116,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
         Double latitude;
         Double longitude;
         View selectedOverlay;
+        View visitedOverlay;
         TextView distanceToNext;
         TextView timeToNext;
 
@@ -127,6 +128,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
             title = (TextView) itemView.findViewById(R.id.listText);
             locationPhoto = (ImageView) itemView.findViewById(R.id.listIcon);
             selectedOverlay = itemView.findViewById(R.id.selected_overlay);
+            visitedOverlay = itemView.findViewById(R.id.visited_overlay);
             distanceToNext = (TextView) itemView.findViewById(R.id.distance);
             timeToNext = (TextView) itemView.findViewById(R.id.timing);
 
@@ -137,7 +139,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
 
         @Override
         public void onClick(View v) {
-           if (!title.getText().toString().equals("There are no favourites to display")) {
+           if (!title.getText().toString().equals("Not a favourite")) {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 Bundle bundle = new Bundle();
                 bundle.putString("placeReference", reference);

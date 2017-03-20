@@ -3,10 +3,10 @@
     xmlns:idk="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/menu_delete"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:id="@+id/menu_itinerary"
+        android:icon="@drawable/ic_checklist_white"
         android:orderInCategory="100"
-        idk:showAsAction="ifRoom|withText"
-        android:title="Delete"/>
+        idk:showAsAction="always|withText"
+        android:title="Itinerary"/>
 
 </menu>

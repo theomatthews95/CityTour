@@ -14,6 +14,7 @@
         android:layout_marginRight="0dp"
         android:layout_marginTop="0dp"
         card_view:cardBackgroundColor="@android:color/transparent"
+        android:clickable="false"
         android:id="@+id/cv"
         android:foreground="?android:attr/selectableItemBackground"
         >
@@ -46,12 +47,10 @@
                 android:id="@+id/distance"
                 android:text="2.5km"/>
             <TextView
-                android:layout_width="100dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/listText"
-                android:textSize="15sp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
+                android:textSize="0sp"
                 />
 
         </LinearLayout>

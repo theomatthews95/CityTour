@@ -2,35 +2,28 @@ package com.example.admin123.citytour.Fragments.Favourites;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.admin123.citytour.DbBitmapUtility;
-import com.example.admin123.citytour.Fragments.HomepageFragment;
 import com.example.admin123.citytour.Fragments.Itinerary.GoogleDirections;
-import com.example.admin123.citytour.Fragments.Itinerary.ItineraryFragment;
 import com.example.admin123.citytour.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * Created by theom on 15/03/2017.
@@ -53,8 +46,6 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
 
         //Create database to store favourite locations
         favouritesDB = new FavouritesDBHelper(getActivity());
-
-
 
         recyclerView = (RecyclerView) v.findViewById(R.id.favouritesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -133,7 +124,9 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate (R.menu.menu_delete, menu);
+
+            mode.getMenuInflater().inflate (R.menu.menu_itinerary, menu);
+
             return true;
         }
 
@@ -145,20 +138,24 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.menu_delete:
+                case R.id.menu_itinerary:
                     ArrayList<FavouriteListItem> itineraryList = adapter.getItemsDetails(adapter.getSelectedItems());
 
-                    mode.finish();
+                    if (itineraryList.size() >= 2) {
+                        mode.finish();
 
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("itineraryList", itineraryList);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("itineraryList", itineraryList);
 
-                    Fragment fragment = new GoogleDirections();
-                    fragment.setArguments(bundle);
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.relativeLayout, fragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                        Fragment fragment = new GoogleDirections();
+                        fragment.setArguments(bundle);
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.relativeLayout, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }else{
+                        Toast.makeText(getContext(),"You must select a minimum of 2 items for an itinerary.", Toast.LENGTH_SHORT).show();
+                    }
 
                     return true;
 

@@ -44,6 +44,7 @@ public class FavouriteItemFragment extends Fragment {
     private ViewPager viewPager;
     private String placeReference;
     private Boolean isFavourited=false;
+    private Boolean isVisited=false;
     private FavouritesDBHelper favouritesDB;
     private Double locationLat;
     private Double locationLong;
@@ -96,6 +97,10 @@ public class FavouriteItemFragment extends Fragment {
             //the bytearray image sent from the favouritelist
             placeImage = getArguments().getByteArray("placeImage");
             isFavourited = getArguments().getBoolean("isFavourited");
+        }
+
+        if (isFavourited == true){
+            isVisited = favouritesDB.isLocationVisited(locationTitle);
         }
 
         //Reference used to query google places for more location information
@@ -185,9 +190,14 @@ public class FavouriteItemFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.favourite_menu_items, menu);
-        MenuItem item = menu.findItem(R.id.favourite_menu_button);
-        item.expandActionView();
-        changeIcon(item);
+        MenuItem favouriteMenu = menu.findItem(R.id.favourite_menu_button);
+        MenuItem visitedMenu = menu.findItem(R.id.visited);
+
+        favouriteMenu.expandActionView();
+        visitedMenu.expandActionView();
+
+        changeIcon(favouriteMenu);
+        changeIcon(visitedMenu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -203,6 +213,11 @@ public class FavouriteItemFragment extends Fragment {
                 Fragment fragment = new PostcardFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.relativeLayout, fragment).commit();
+                return true;
+            case R.id.visited:
+                isVisited=!isVisited;
+                changeIcon(item);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -211,13 +226,30 @@ public class FavouriteItemFragment extends Fragment {
 
     public void changeIcon(MenuItem item) {
         // Toggle location icon
-        if (isFavourited == true) {
-            item.setIcon(R.drawable.ic_like_true);
-            InsertFavouriteDatabase();
-        } else {
-            item.setIcon(R.drawable.ic_like_false);
-            deleteLocation();
+        switch (item.getItemId()){
+            case R.id.favourite_menu_button:
+                if (isFavourited == true) {
+                    item.setIcon(R.drawable.ic_like_true);
+                    InsertFavouriteDatabase();
+                } else {
+                    item.setIcon(R.drawable.ic_like_false);
+                    deleteLocation();
+                }
+                return;
+            case R.id.visited:
+                if (isVisited == true){
+                    item.setIcon(R.drawable.ic_remove_circle_outline_black_24px);
+                    updateIsVisited();
+                } else {
+                    item.setIcon(R.drawable.ic_done_black_24px);
+                    updateIsVisited();
+                }
+                return;
+            default:
         }
+
+
+
     }
 
     private void InsertFavouriteDatabase(){
@@ -227,10 +259,10 @@ public class FavouriteItemFragment extends Fragment {
              placeImage = bitmapUtility.getBytes(bm);
         }
 
-        boolean isInserted = favouritesDB.insertData(locationTitle, locationLat, locationLong, placeReference, "DEFAULT TEXT", placeImage);
+        boolean isInserted = favouritesDB.insertData(locationTitle, locationLat, locationLong, placeReference, "DEFAULT TEXT", placeImage, isVisited, "");
 
         if (isInserted == true) {
-            Log.i("DB_Helper", "Inserted " + locationTitle + " " + locationLat + ", " + locationLong + ", " + placeReference + " into database.");
+            Log.i("DB_Helper", "Inserted " + locationTitle + " " + locationLat + ", " + locationLong + ", " + placeReference + ", "+ isVisited + " into database.");
             Toast.makeText(getActivity(), "Favourited", Toast.LENGTH_SHORT).show();
             //getDb();
         }else {
@@ -252,7 +284,7 @@ public class FavouriteItemFragment extends Fragment {
         }
     }
 
-    private void getDb(){
+   /* private void getDb(){
         Cursor res = favouritesDB.getAllData();
         StringBuffer dbContents = new StringBuffer();
         while (res.moveToNext()){
@@ -279,6 +311,18 @@ public class FavouriteItemFragment extends Fragment {
             Log.i(TAG, "Inserted photo");
         }
 
+    }*/
+
+    private Integer updateIsVisited(){
+        Integer updateIsVisitedResults = favouritesDB.updateIsVisited(locationTitle, isVisited);
+        Log.i("DB_Helper", "The database was updated with the text: "+isVisited+ " Result: "+updateIsVisitedResults);
+        if (isVisited == false){
+            Toast.makeText(getActivity(), "Not visited", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getActivity(), "Visited", Toast.LENGTH_SHORT).show();
+        }
+
+        return updateIsVisitedResults;
     }
 
     private Drawable getLocationPhoto(String photoReference){

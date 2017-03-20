@@ -13,4 +13,11 @@
         android:icon="@drawable/ic_like_false"
         android:title="Favourite"
         app:showAsAction="ifRoom|withText"/>
+
+    <item
+        android:id="@+id/visited"
+        android:icon="@drawable/ic_done_black_24px"
+        android:title="Visited"
+        app:showAsAction="ifRoom"/>
+
 </menu>

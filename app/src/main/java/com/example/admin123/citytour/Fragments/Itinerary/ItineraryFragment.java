@@ -73,13 +73,11 @@ public class ItineraryFragment extends Fragment implements FavouriteListAdapter.
             Log.i(TAG, "Leg duration "+timeToNext);
             Log.i(TAG, "Long "+itineraryList.get(0).getLong());
 
-            FavouriteListItem fi = new FavouriteListItem("Distances", "", itineraryList.get(0).getLat(), itineraryList.get(0).getLong(),image,distanceToNext, timeToNext);
+            FavouriteListItem fi = new FavouriteListItem("Not a favourite", "", itineraryList.get(0).getLat(), itineraryList.get(0).getLong(),image,distanceToNext, timeToNext);
             timingCards.add(fi);
         }
 
         ArrayList<FavouriteListItem> finalOrder = merge(newOrder, timingCards);
-
-
 
         recyclerView = (RecyclerView) v.findViewById(R.id.favouritesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

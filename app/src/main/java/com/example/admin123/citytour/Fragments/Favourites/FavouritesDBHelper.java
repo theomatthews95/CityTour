@@ -24,6 +24,8 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
     public static final String COL_5 = "REFERENCE";
     public static final String COL_6 = "USERNOTES";
     public static final String COL_7 = "PHOTO";
+    public static final String COL_8 = "ISVISITED";
+    public static final String COL_9 = "TYPE";
 
     public FavouritesDBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -32,7 +34,8 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //Create table with appropriate column headers
-        db.execSQL("create table "+ TABLE_NAME + "("+COL_1+" TEXT PRIMARY KEY,"+COL_2+" REAL,"+COL_3+" REAL,"+COL_4+" DATETIME DEFAULT CURRENT_TIMESTAMP,"+COL_5+" TEXT,"+COL_6+" TEXT,"+COL_7+" BLOB)");
+        db.execSQL("create table "+ TABLE_NAME + "("+COL_1+" TEXT PRIMARY KEY,"+COL_2+" REAL,"+COL_3+" REAL,"+COL_4
+                +" DATETIME DEFAULT CURRENT_TIMESTAMP,"+COL_5+" TEXT,"+COL_6+" TEXT,"+COL_7+" BLOB,"+COL_8+" INTEGER,"+COL_9+" TEXT)");
 
     }
 
@@ -44,7 +47,7 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
     }
 
     //Function to insert data into the DB
-    public boolean insertData(String name, Double latitude, Double longitude, String reference, String userNotes, byte[] photo){
+    public boolean insertData(String name, Double latitude, Double longitude, String reference, String userNotes, byte[] photo, boolean isVisited, String type){
         SQLiteDatabase db = this.getWritableDatabase();
 
         try{
@@ -56,6 +59,8 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
             contentValues.put(COL_5, reference);
             contentValues.put(COL_6, userNotes);
             contentValues.put(COL_7, photo);
+            contentValues.put(COL_8, isVisited);
+            contentValues.put(COL_9, type);
 
             //If insert failed, return false, else true
             long result = db.insertOrThrow(TABLE_NAME, null, contentValues);
@@ -77,9 +82,9 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
     }
 
     //Return all data from the DB
-    public Cursor getLocationData(String locationName){
+    public Cursor getLocationData(String locationTitle){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from "+TABLE_NAME+ " WHERE "+COL_1+"=\""+locationName+"\"", null);
+        Cursor res = db.rawQuery("select * from "+TABLE_NAME+ " WHERE "+COL_1+"=\""+locationTitle+"\"", null);
         return res;
     }
 
@@ -100,6 +105,35 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
         Log.i("DB_Helper", "Update query: "+locationTitle+ " notes "+userNotes);
         Integer result = db.update(TABLE_NAME, cv, "NAME = ?", new String[]{locationTitle});
         return result;
+    }
+
+    //Update user notes
+    public Integer updateIsVisited(String locationTitle, Boolean isVisited){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_1, locationTitle);
+        cv.put(COL_8, isVisited);
+
+        Log.i("DB_Helper", "Update query: "+locationTitle+ " isVisted: "+isVisited);
+        Integer result = db.update(TABLE_NAME, cv, "NAME = ?", new String[]{locationTitle});
+        return result;
+    }
+
+    public boolean isLocationVisited(String locationTitle) throws SQLException {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("select "+ COL_8 +" from "+TABLE_NAME+ " WHERE "+COL_1+"=\""+locationTitle+"\"", null);
+        StringBuffer dbContents = new StringBuffer();
+        while (res.moveToNext()){
+            dbContents.append(res.getString(0));
+        }
+
+        boolean isVisited;
+        if (dbContents.toString().equals("0")){
+            isVisited = false;
+        }else{
+            isVisited = true;
+        }
+        return isVisited;
     }
 
     public Integer addLocationPhoto(String locationTitle, byte[] image) throws SQLiteException {

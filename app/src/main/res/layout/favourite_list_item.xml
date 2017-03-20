@@ -60,6 +60,15 @@
 
             android:visibility="invisible" />
 
+        <View
+            android:id="@+id/visited_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/selectedItem"
+
+            android:visibility="invisible" />
+
+
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

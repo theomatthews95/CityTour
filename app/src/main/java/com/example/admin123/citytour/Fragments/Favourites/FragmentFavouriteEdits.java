@@ -49,7 +49,7 @@ public class FragmentFavouriteEdits extends Fragment {
                 /*OnSetUserNotesListener callback = (OnSetUserNotesListener) getTargetFragment();
                 callback.setUserNotes(userNotesEditText.getText().toString());*/
 
-                Integer isUpdate = updateDB(locationTitle, locationLat, locationLong, placeReference, userNotesEditText.getText().toString());
+                Integer isUpdate = updateDB(locationTitle, userNotesEditText.getText().toString());
                 if (isUpdate == 1){
                     Toast.makeText(getContext(), "Saved notes", Toast.LENGTH_SHORT).show();
                 }else{
@@ -107,7 +107,7 @@ public class FragmentFavouriteEdits extends Fragment {
         Log.i("DB_Helper", dbContents.toString());
     }
 
-    private Integer updateDB(String locationName, Double locationLat, Double locationLong, String placeReference, String userNotes){
+    private Integer updateDB(String locationName, String userNotes){
         Integer updateNotesResults = favouritesDB.updateUserNotes(locationName, userNotes);
         Log.i("DB_Helper", "The database was updated with the text: "+userNotes+ " Result: "+updateNotesResults);
         return updateNotesResults;
