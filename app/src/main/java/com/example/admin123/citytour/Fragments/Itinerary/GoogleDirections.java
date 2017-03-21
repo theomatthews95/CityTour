@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import static com.google.android.gms.plus.PlusOneDummyView.TAG;
 
 /**
  * Created by theom on 18/03/2017.
@@ -33,6 +32,7 @@ public class GoogleDirections extends Fragment {
     private String placesKey;
     private ItineraryList googleDirectionResults;
     private  ArrayList<FavouriteListItem> initialItinList;
+    private static final String TAG = "GoogleDirections";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

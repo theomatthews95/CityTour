@@ -28,9 +28,6 @@ import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragmen
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * Created by theom on 10/02/2017.
@@ -49,6 +46,7 @@ public class SearchAreaDialogFragment extends DialogFragment
     private String searchAreaName;
     private RecentLocationsDBHelper locationsDB;
     private ArrayList<SearchAreaItem> recentLocationsArrayList;
+    private static final String TAG = "SearchAreaDialog";
     SearchAreaListAdapter listAdapter;
     ListView listView;
 

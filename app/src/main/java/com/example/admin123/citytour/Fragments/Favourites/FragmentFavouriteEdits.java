@@ -27,16 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin123.citytour.DbBitmapUtility;
-import com.example.admin123.citytour.Fragments.Currency.ChooseCurrencyDialog;
-import com.example.admin123.citytour.Fragments.SeeSights.SearchArea.SearchAreaItem;
 import com.example.admin123.citytour.R;
-import com.google.android.gms.maps.model.LatLng;
-
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * Created by theom on 13/03/2017.
@@ -50,6 +44,7 @@ public class FragmentFavouriteEdits extends Fragment {
     private Button addImageButton2;
     private Button currentImageButton;
     private String currentPhotoCol;
+    private static final String TAG = "EditFavourites";
 
     @Nullable
     @Override

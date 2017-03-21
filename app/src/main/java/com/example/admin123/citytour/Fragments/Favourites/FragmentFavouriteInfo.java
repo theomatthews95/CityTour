@@ -29,10 +29,6 @@ import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacesList;
 import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 import com.example.admin123.citytour.Map.GmapFragment;
 import com.example.admin123.citytour.R;
-import com.google.android.gms.ads.formats.NativeAd;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.PlacePhotoMetadataResult;
-import com.google.android.gms.location.places.Places;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayInputStream;

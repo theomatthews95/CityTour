@@ -13,17 +13,29 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 import java.util.*;
 
+import com.example.admin123.citytour.Fragments.Currency.CurrencyExchangeFragment;
 import com.example.admin123.citytour.Fragments.Favourites.FavouriteItemFragment;
 import com.example.admin123.citytour.Fragments.Favourites.FavouriteListItem;
+import com.example.admin123.citytour.Fragments.Favourites.FavouritesListFragment;
+import com.example.admin123.citytour.Fragments.HomepageFragment;
+import com.example.admin123.citytour.Fragments.PostcardFragment;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
+import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
 import com.example.admin123.citytour.MainActivity;
 import com.example.admin123.citytour.R;
 import com.google.android.gms.maps.CameraUpdate;
@@ -31,6 +43,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
@@ -45,7 +58,6 @@ import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 
 public class GmapFragment extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>{
@@ -58,8 +70,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
     private ArrayList<Circle> drawnCircles = new ArrayList<Circle>();
     private ClusterRenderer renderer;
     private ArrayList<GooglePlace> places;
-
-
+    private static final String TAG = "MapFragment";
     MultiListener ml = new MultiListener();
 
     @Nullable
@@ -77,9 +88,6 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
         SupportMapFragment fragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         fragment.getMapAsync(this);
         ViewGroup.LayoutParams params = fragment.getView().getLayoutParams();
-        params.height = 1525;
-
-        fragment.getView().setLayoutParams(params);
 
     }
 

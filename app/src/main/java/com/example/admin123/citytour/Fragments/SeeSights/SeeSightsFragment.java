@@ -32,13 +32,9 @@ import com.example.admin123.citytour.Fragments.SeeSights.SearchType.SearchTypeIt
 import com.example.admin123.citytour.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-//import com.google.android.gms.location.LocationListener;
 import android.location.LocationListener;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
-
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class SeeSightsFragment extends Fragment implements View.OnClickListener,
         SearchTypeDialogFragment.OnSetSearchLocationTypeFromListener,
@@ -60,6 +56,7 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
     private LocationListener locationListener;
     private double userLocationLat;
     private double userLocationLong;
+    private static final String TAG = "SeeSights";
 
     boolean toastGPSShown = false;
 

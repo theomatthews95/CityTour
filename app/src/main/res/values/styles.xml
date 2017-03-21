@@ -13,5 +13,16 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <!--&lt;!&ndash; ActionBar styles &ndash;&gt;
+    <style name="MyActionBar"
+        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:titleTextStyle">@style/Theme.YourTheme.Styled.ActionBar.TitleTextStyle</item>
+        &lt;!&ndash; Support library compatibility &ndash;&gt;
+        <item name="background">@color/transparent</item>
+        <item name="titleTextStyle">@style/Theme.YourTheme.Styled.ActionBar.TitleTextStyle</item>
+
+    </style>-->
+
 
 </resources>

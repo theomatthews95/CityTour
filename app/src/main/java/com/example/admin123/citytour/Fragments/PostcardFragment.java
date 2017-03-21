@@ -33,16 +33,9 @@ import android.widget.Toast;
 
 import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.R;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import static android.R.attr.x;
-import static android.R.attr.y;
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class PostcardFragment extends Fragment {
 

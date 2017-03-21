@@ -6,9 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * Created by theom on 05/03/2017.

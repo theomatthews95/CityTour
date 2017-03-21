@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static com.example.admin123.citytour.R.id.progressBar;
 
 /**
  * Created by theom on 20/02/2017.

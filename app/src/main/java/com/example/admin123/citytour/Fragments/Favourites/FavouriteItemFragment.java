@@ -32,7 +32,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * Created by theom on 13/03/2017.
@@ -51,6 +50,7 @@ public class FavouriteItemFragment extends Fragment {
     private String locationTitle;
     private Drawable locationPhoto;
     static DbBitmapUtility bitmapUtility = new DbBitmapUtility();
+    private static final String TAG = "FavouriteItem";
     byte [] placeImage;
     private ArrayList<GooglePlace> places;
 

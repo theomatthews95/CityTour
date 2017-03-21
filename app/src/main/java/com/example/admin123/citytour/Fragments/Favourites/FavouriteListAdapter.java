@@ -4,6 +4,7 @@ import android.content.Context;
 import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -25,15 +26,9 @@ import android.widget.Toast;
 
 import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.R;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.vision.text.Text;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static android.support.v7.widget.helper.ItemTouchHelper.Callback.makeMovementFlags;
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
  * Created by theom on 15/03/2017.
@@ -45,6 +40,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
     private SparseBooleanArray selectedItems;
     private MyViewHolder.OnItemClickListener clickListener;
     private boolean isItinerary;
+    private static final String TAG = "ListAdapter";
 
     public FavouriteListAdapter(List<FavouriteListItem> data, MyViewHolder.OnItemClickListener clickListener, boolean isItinerary){
         this.data=data;
