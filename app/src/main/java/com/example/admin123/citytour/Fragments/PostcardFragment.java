@@ -137,16 +137,18 @@ public class PostcardFragment extends Fragment {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                 }, 10);
             } else {
+                if (inImage != null) {
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), inImage, "Title", null);
 
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), inImage, "Title", null);
-
-
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("image/*");
-                share.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
-                startActivity(Intent.createChooser(share,"Share via"));
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("image/*");
+                    share.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
+                    startActivity(Intent.createChooser(share, "Share via"));
+                }else{
+                    Toast.makeText(getActivity(), "Upload an image", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
