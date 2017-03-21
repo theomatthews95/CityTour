@@ -2,6 +2,7 @@ package com.example.admin123.citytour.Fragments.Favourites;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,12 +17,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.Fragments.Itinerary.GoogleDirections;
+import com.example.admin123.citytour.Map.GmapFragment;
 import com.example.admin123.citytour.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +54,24 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
         recyclerView = (RecyclerView) v.findViewById(R.id.favouritesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        Button showOnMap = (Button) v.findViewById(R.id.show_on_map);
+        showOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("itineraryList", getDB());
+                bundle.putDouble("searchAreaLat", getDB().get(0).getLat());
+                bundle.putDouble("searchAreaLong", getDB().get(0).getLong());
+
+                Fragment fragment = new GmapFragment();
+                fragment.setArguments(bundle);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.relativeLayout, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
         adapter = new FavouriteListAdapter(getDB(), this, false);
 
         recyclerView.setAdapter(adapter);
@@ -58,14 +80,17 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
         return v;
     }
 
-    private List<FavouriteListItem> getDB(){
-        List<FavouriteListItem> data = new ArrayList<>();
+    private ArrayList<FavouriteListItem> getDB(){
+        ArrayList<FavouriteListItem> data = new ArrayList<>();
         Cursor res = favouritesDB.getAllData();
         StringBuffer dbContents = new StringBuffer();
 
         if (res.getCount() == 0){
+            Drawable drawable = getActivity().getDrawable(R.drawable.no_image_available);
+            DbBitmapUtility dbBitmapUtility = new DbBitmapUtility();
+            byte[] image = dbBitmapUtility.getBytes(dbBitmapUtility.drawableToBitmap(drawable));
             String titleText="There are no favourites to display";
-            FavouriteListItem current=new FavouriteListItem(titleText, "", 0.0, 0.0, null, "", "");
+            FavouriteListItem current=new FavouriteListItem(titleText, "", 0.0, 0.0, image, "", "", false);
             data.add(current);
         }else {
             while (res.moveToNext()) {
@@ -78,7 +103,9 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
                 DbBitmapUtility bitmapUtility = new DbBitmapUtility();
                 Bitmap locationPhoto = bitmapUtility.getImage(placeImage);
 
-                FavouriteListItem current = new FavouriteListItem(titleText, reference, latitude, longitude, placeImage, "", "");
+                Boolean isVisited = favouritesDB.isLocationVisited(titleText);
+
+                FavouriteListItem current = new FavouriteListItem(titleText, reference, latitude, longitude, placeImage, "", "", isVisited);
 
                 data.add(current);
             }

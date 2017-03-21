@@ -41,7 +41,7 @@ public class GoogleDirections extends Fragment {
 
         placesKey = getResources().getString(R.string.google_maps_key);
         if (placesKey.equals("PUT YOUR KEY HERE")) {
-            Toast.makeText(getActivity(), "You haven't entered your Google Places Key into the strings file.  Dont forget to set a referer too.", Toast.LENGTH_LONG).show();
+            Log.i("Google Directions", "API key issues");
         } else {
 
             initialItinList = (ArrayList<FavouriteListItem>) getArguments().getSerializable("itineraryList");
@@ -118,19 +118,24 @@ public class GoogleDirections extends Fragment {
         } else {
             //this.itineraryList.getStatus().addAll(itineraryList.getStatus());
         }
-        Log.i("TGS", "Distance "+ googleDirectionResults.getRoutes().get(0).getLegs().get(0).getDistance().getText());
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("initialItinList", initialItinList);
-        bundle.putSerializable("googleDirectionResults", googleDirectionResults);
+        if (googleDirectionResults.getRoutes().size() != 0) {
+            Log.i("TGS", "Distance " + googleDirectionResults.getRoutes().get(0).getLegs().get(0).getDistance().getText());
 
-        String polyline = googleDirectionResults.getRoutes().get(0).getOverview_polyline().getPoints();
-        bundle.putString("polyline", polyline);
-        Fragment fragment = new ItineraryFragment();
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.relativeLayout, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("initialItinList", initialItinList);
+            bundle.putSerializable("googleDirectionResults", googleDirectionResults);
+
+            String polyline = googleDirectionResults.getRoutes().get(0).getOverview_polyline().getPoints();
+            bundle.putString("polyline", polyline);
+            Fragment fragment = new ItineraryFragment();
+            fragment.setArguments(bundle);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.relativeLayout, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }else{
+            Toast.makeText(getActivity(), "Couldn't create an itinerary. Route may be impossible.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

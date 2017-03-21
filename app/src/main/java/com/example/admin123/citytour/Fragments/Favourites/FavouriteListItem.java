@@ -22,8 +22,9 @@ public class FavouriteListItem implements Serializable
     byte[] locationPhoto;
     String distanceToNext;
     String timeToNext;
+    Boolean isVisited;
 
-    public FavouriteListItem(String title, String reference, Double latitude, Double longitude, byte[] locationPhoto, String distanceToNext, String timeToNext){
+    public FavouriteListItem(String title, String reference, Double latitude, Double longitude, byte[] locationPhoto, String distanceToNext, String timeToNext, Boolean isVisited){
         this.title=title;
         this.reference=reference;
         this.longitude=longitude;
@@ -31,6 +32,7 @@ public class FavouriteListItem implements Serializable
         this.locationPhoto=locationPhoto;
         this.distanceToNext=distanceToNext;
         this.timeToNext=timeToNext;
+        this.isVisited=isVisited;
     }
 
     public Double getLat(){
@@ -42,4 +44,9 @@ public class FavouriteListItem implements Serializable
     }
 
     public String getTitle(){return title;}
+
+    public FavouriteListItem updateVisited(boolean isVisited){
+        FavouriteListItem item = new FavouriteListItem(title, reference, latitude, longitude, locationPhoto, distanceToNext, timeToNext, isVisited);
+        return item;
+    }
 }

@@ -20,54 +20,51 @@
             android:id="@+id/seeSightsButton"
             android:layout_width="match_parent"
             android:layout_height="120dp"
+            android:layout_marginBottom="15dp"
             android:text="@string/see_sights"
-            android:drawableLeft="@drawable/show_me_sights"
+            android:background="@drawable/custom_button_grey"
+            android:drawableLeft="@drawable/ic_place_black_60px"
             android:onClick="seeSights"
             />
 
         <Button
             android:id="@+id/launchFavouritesButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="15dp"
             android:text="@string/favourites"
             android:drawableLeft="@drawable/ic_like_false"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:padding="20dp"
+            android:background="@drawable/custom_button_grey"
             android:scaleType="fitCenter"/>
 
-        <Button
-            android:id="@+id/launchItineraryButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/itinerary"
-            android:drawableLeft="@drawable/ic_checklist"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:padding="20dp"
-            android:scaleType="fitCenter"/>
 
         <Button
             android:id="@+id/launchPostcardButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_height="100dp"
             android:text="@string/postcard"
             android:drawableLeft="@drawable/postcard"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:padding="20dp"
+            android:background="@drawable/custom_button_grey"
             android:scaleType="fitCenter"
             android:onClick="launchPostcard"/>
 
         <Button
             android:id="@+id/launchCurrency"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:text="@string/currency_exchange"
             android:drawableLeft="@drawable/currency_exchange"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:padding="20dp"
+            android:background="@drawable/custom_button_grey"
             android:scaleType="fitCenter"
             android:onClick="launchCurrency"/>
     </LinearLayout>

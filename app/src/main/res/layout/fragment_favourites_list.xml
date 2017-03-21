@@ -5,10 +5,39 @@
     android:orientation="vertical"
     android:paddingTop="?attr/actionBarSize">
 
+    <TextView
+        android:id="@+id/favourite_list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favourites"
+        android:textSize="30sp"
+        android:layout_gravity="left"
+        android:paddingTop="7dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="50dp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/show_on_map"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@+id/favourite_list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show on map"
+        android:drawableRight="@drawable/ic_place_black_24px"
+        android:background="@drawable/custom_button"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:clickable="true"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/favouritesList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="55dp"
         >
     </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

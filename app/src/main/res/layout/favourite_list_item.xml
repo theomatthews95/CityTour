@@ -60,12 +60,17 @@
 
             android:visibility="invisible" />
 
-        <View
+        <TextView
             android:id="@+id/visited_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/selectedItem"
-
+            android:background="@color/visited"
+            android:text="Visited"
+            android:textAlignment="viewEnd"
+            android:gravity="center"
+            android:paddingEnd="5dp"
+            android:textStyle="bold"
+            android:textSize="40dp"
             android:visibility="invisible" />
 
 

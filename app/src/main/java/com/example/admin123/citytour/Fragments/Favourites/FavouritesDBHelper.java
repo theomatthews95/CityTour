@@ -26,6 +26,8 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
     public static final String COL_7 = "PHOTO";
     public static final String COL_8 = "ISVISITED";
     public static final String COL_9 = "TYPE";
+    public static final String COL_10 = "USERPHOTO1";
+    public static final String COL_11 = "USERPHOTO2";
 
     public FavouritesDBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -35,7 +37,7 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         //Create table with appropriate column headers
         db.execSQL("create table "+ TABLE_NAME + "("+COL_1+" TEXT PRIMARY KEY,"+COL_2+" REAL,"+COL_3+" REAL,"+COL_4
-                +" DATETIME DEFAULT CURRENT_TIMESTAMP,"+COL_5+" TEXT,"+COL_6+" TEXT,"+COL_7+" BLOB,"+COL_8+" INTEGER,"+COL_9+" TEXT)");
+                +" DATETIME DEFAULT CURRENT_TIMESTAMP,"+COL_5+" TEXT,"+COL_6+" TEXT,"+COL_7+" BLOB,"+COL_8+" INTEGER,"+COL_9+" TEXT,"+COL_10+" BLOB,"+COL_11+" BLOB)");
 
     }
 
@@ -140,6 +142,14 @@ public class FavouritesDBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new  ContentValues();
         cv.put(COL_7,   image);
+        Integer result = db.update(TABLE_NAME, cv, "NAME = ?", new String[]{locationTitle});
+        return result;
+    }
+
+    public Integer addUserPhoto(String locationTitle, byte[] image, String whichCol) throws SQLiteException {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new  ContentValues();
+        cv.put(whichCol,   image);
         Integer result = db.update(TABLE_NAME, cv, "NAME = ?", new String[]{locationTitle});
         return result;
     }

@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlacesUtil
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlaceDetail;
 import com.example.admin123.citytour.Fragments.SeeSights.Places.PlacesList;
 import com.example.admin123.citytour.Fragments.SeeSights.SeeSightsFragment;
+import com.example.admin123.citytour.Map.GmapFragment;
 import com.example.admin123.citytour.R;
 import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,6 +41,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -66,7 +70,7 @@ public class FragmentFavouriteInfo extends Fragment {
 
         String placesKey = getResources().getString(R.string.google_maps_key);
         if (placesKey.equals("PUT YOUR KEY HERE")) {
-            Toast.makeText(getActivity(), "You haven't entered your Google Places Key into the strings file.  Dont forget to set a referer too.", Toast.LENGTH_LONG).show();
+            Log.i("Favourite info", "Problems with your API key");
         } else {
             PlacesDetailReadFeed process = new PlacesDetailReadFeed();
             String placeDetailRequest = "https://maps.googleapis.com/maps/api/place/details/json?" +
@@ -74,6 +78,26 @@ public class FragmentFavouriteInfo extends Fragment {
 
             process.execute(new String[] {placeDetailRequest});
         }
+
+        Button showOnMap = (Button) v.findViewById(R.id.show_on_map);
+        showOnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (place != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("searchAreaLat", place.getGeometry().getLocation().getLat());
+                    bundle.putDouble("searchAreaLong", place.getGeometry().getLocation().getLng());
+                    Fragment fragment = new GmapFragment();
+                    fragment.setArguments(bundle);
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.relativeLayout, fragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }else{
+                    Toast.makeText(getActivity(), "Hold on a sec there bud :P", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         favouritesDB.close();
         return v;

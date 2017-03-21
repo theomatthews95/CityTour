@@ -115,7 +115,7 @@ public class CurrencyExchangeFragment extends Fragment implements ChooseCurrency
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
                 }else{
-                    Toast toast = Toast.makeText(getContext(), "Please enter in an amount to convert", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity(), "Please enter in an amount to convert", Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }

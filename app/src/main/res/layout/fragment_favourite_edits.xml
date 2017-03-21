@@ -36,7 +36,7 @@
     <EditText
         android:id="@+id/user_notes"
         android:layout_width="fill_parent"
-        android:layout_height="300dp"
+        android:layout_height="225dp"
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
         android:gravity="top|left"
@@ -44,6 +44,39 @@
         android:inputType="textCapSentences|textMultiLine"
         android:background="@drawable/text_box_style"/>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="25dp"
+        android:paddingBottom="10dp"
+        android:layout_gravity="center">
 
+
+            <Button
+                android:id="@+id/image1"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight=".5"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:background="@drawable/add_image_button"
+                android:clickable="true"
+                />
+
+            <Button
+                android:id="@+id/image2"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight=".5"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:background="@drawable/add_image_button"
+                android:clickable="true"
+                />
+
+
+
+    </LinearLayout>
 
 </LinearLayout>

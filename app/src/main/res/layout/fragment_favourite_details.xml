@@ -36,22 +36,32 @@
                     android:textStyle="bold"
                     />
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Address"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:paddingTop="5dp"/>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Address"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:paddingTop="5dp"/>
+                <TextView
+                    android:id="@+id/address_text_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:paddingBottom="5dp"
+                    android:textSize="25dp">
+                 </TextView>
 
-            <TextView
-                android:id="@+id/address_text_view"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:paddingBottom="5dp"
-                android:textSize="25dp">
-            </TextView>
+                <Button
+                    android:id="@+id/show_on_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_button"
+                    android:paddingRight="5dp"
+                    android:paddingLeft="5dp"
+                    android:drawableRight="@drawable/ic_place_black_24px"
+                    android:layout_gravity="center"
+                    android:text="Show on map"/>
 
             <TextView
                 android:layout_width="fill_parent"

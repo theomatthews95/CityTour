@@ -78,6 +78,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
         holder.locationPhoto.setImageBitmap(new DbBitmapUtility().getImage(current.locationPhoto));
         holder.setParams(current.reference, current.latitude, current.longitude);
         holder.selectedOverlay.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
+        holder.visitedOverlay.setVisibility(current.isVisited  ? View.VISIBLE : View.INVISIBLE);
         holder.timeToNext.setText(current.timeToNext);
         holder.distanceToNext.setText(current.distanceToNext);
     }
@@ -116,7 +117,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
         Double latitude;
         Double longitude;
         View selectedOverlay;
-        View visitedOverlay;
+        TextView visitedOverlay;
         TextView distanceToNext;
         TextView timeToNext;
 
@@ -128,7 +129,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
             title = (TextView) itemView.findViewById(R.id.listText);
             locationPhoto = (ImageView) itemView.findViewById(R.id.listIcon);
             selectedOverlay = itemView.findViewById(R.id.selected_overlay);
-            visitedOverlay = itemView.findViewById(R.id.visited_overlay);
+            visitedOverlay = (TextView) itemView.findViewById(R.id.visited_overlay);
             distanceToNext = (TextView) itemView.findViewById(R.id.distance);
             timeToNext = (TextView) itemView.findViewById(R.id.timing);
 
@@ -139,7 +140,7 @@ public class FavouriteListAdapter extends SelectableAdapter<FavouriteListAdapter
 
         @Override
         public void onClick(View v) {
-           if (!title.getText().toString().equals("Not a favourite")) {
+           if (!title.getText().toString().equals("There are no favourites to display"))  {
                 AppCompatActivity activity = (AppCompatActivity) v.getContext();
                 Bundle bundle = new Bundle();
                 bundle.putString("placeReference", reference);

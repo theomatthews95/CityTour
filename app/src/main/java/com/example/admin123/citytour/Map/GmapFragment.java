@@ -158,7 +158,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
                 for(FavouriteListItem item : itineraryList){
                     LatLng marker = new LatLng(item.getLat(), item.getLong());
                     markers.add(marker);
-                    MyItem mapItem = new MyItem(item.getLat(), item.getLong(),item.getTitle(), getBitmapDescriptor(R.drawable.ic_map_pin), 0);
+                    MyItem mapItem = new MyItem(item.getLat(), item.getLong(),item.getTitle(), getBitmapDescriptor(R.drawable.ic_heart_pin), 0);
                     mClusterManager.addItem(mapItem);
                 }
 
@@ -189,7 +189,15 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
         int padding = 15; // offset from edges of the map in pixels
 
         LatLngBounds bounds = builder.build();
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        CameraUpdate cu;
+
+        if (markers.size() == 1){
+            //cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            LatLng latLng = new LatLng(markers.get(0).latitude, markers.get(0).longitude);
+            cu = CameraUpdateFactory.newLatLngZoom(latLng , 14.0f);
+        }else {
+            cu = CameraUpdateFactory.newLatLngBounds(bounds , padding);
+        }
 
         if(polyline!=null) {
             List<LatLng> points = (PolyUtil.decode(polyline));

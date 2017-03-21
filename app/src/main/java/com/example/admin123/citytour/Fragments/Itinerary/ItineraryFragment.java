@@ -1,17 +1,12 @@
 package com.example.admin123.citytour.Fragments.Itinerary;
 
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +16,11 @@ import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.Fragments.Favourites.FavouriteListAdapter;
 import com.example.admin123.citytour.Fragments.Favourites.FavouriteListItem;
 import com.example.admin123.citytour.Fragments.Favourites.FavouritesDBHelper;
-import com.example.admin123.citytour.Fragments.Favourites.FavouritesListFragment;
+import com.example.admin123.citytour.Fragments.PostcardFragment;
 import com.example.admin123.citytour.Map.GmapFragment;
 import com.example.admin123.citytour.R;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.android.gms.plus.PlusOneDummyView.TAG;
 
 /**
  * Created by theom on 18/03/2017.
@@ -39,27 +31,32 @@ public class ItineraryFragment extends Fragment implements FavouriteListAdapter.
     private RecyclerView recyclerView;
     private FavouriteListAdapter adapter;
     private String polyline;
+    private FavouritesDBHelper favouritesDB;
+    private ArrayList<FavouriteListItem> itineraryList;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_confirm_itinerary, container, false);
-        final ArrayList<FavouriteListItem> itineraryList = (ArrayList<FavouriteListItem>) getArguments().getSerializable("initialItinList");
+        View v = inflater.inflate(R.layout.fragment_itinerary_list, container, false);
+        itineraryList = (ArrayList<FavouriteListItem>) getArguments().getSerializable("initialItinList");
         final ItineraryList googleDirectionResults = (ItineraryList) getArguments().getSerializable("googleDirectionResults");
         ArrayList<Integer> waypointOrder = googleDirectionResults.getRoutes().get(0).getWaypoint_order();
         polyline = getArguments().getString("polyline");
 
+        //Create database to check if visited
+        favouritesDB = new FavouritesDBHelper(getActivity());
+
         //Create a new list that holds the optimized order of the waypoints
         ArrayList<FavouriteListItem> newOrder = new ArrayList<FavouriteListItem>();
-        newOrder.add(itineraryList.get(0));
+        newOrder.add(updateIsVisited(itineraryList.get(0)));
         for (int i = 0; i<waypointOrder.size(); i++){
             //Itinerary item position in array
-           newOrder.add(itineraryList.get(2+waypointOrder.get(i)));
-
+            FavouriteListItem item = updateIsVisited(itineraryList.get(2+waypointOrder.get(i)));
+            newOrder.add(item);
         }
-        newOrder.add(itineraryList.get(1));
+        newOrder.add(updateIsVisited(itineraryList.get(1)));
 
         //Icon to display on the side of itinerary cards
         DbBitmapUtility bitmapUtility = new DbBitmapUtility();
@@ -69,11 +66,8 @@ public class ItineraryFragment extends Fragment implements FavouriteListAdapter.
         for(int j = 0; j<googleDirectionResults.getRoutes().get(0).getLegs().size(); j++){
             String distanceToNext = googleDirectionResults.getRoutes().get(0).getLegs().get(j).getDistance().getText();
             String timeToNext = googleDirectionResults.getRoutes().get(0).getLegs().get(j).getDuration().getText();
-            Log.i(TAG, "Leg distance "+distanceToNext);
-            Log.i(TAG, "Leg duration "+timeToNext);
-            Log.i(TAG, "Long "+itineraryList.get(0).getLong());
 
-            FavouriteListItem fi = new FavouriteListItem("Not a favourite", "", itineraryList.get(0).getLat(), itineraryList.get(0).getLong(),image,distanceToNext, timeToNext);
+            FavouriteListItem fi = new FavouriteListItem("There are no favourites to display", "", itineraryList.get(0).getLat(), itineraryList.get(0).getLong(),image,distanceToNext, timeToNext, false);
             timingCards.add(fi);
         }
 
@@ -82,7 +76,7 @@ public class ItineraryFragment extends Fragment implements FavouriteListAdapter.
         recyclerView = (RecyclerView) v.findViewById(R.id.favouritesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        Button confirmItinerary = (Button) v.findViewById(R.id.confirm_itinerary);
+        Button confirmItinerary = (Button) v.findViewById(R.id.show_on_map);
         confirmItinerary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,6 +95,8 @@ public class ItineraryFragment extends Fragment implements FavouriteListAdapter.
             }
         });
 
+        favouritesDB.close();
+
         adapter = new FavouriteListAdapter(finalOrder, this, true);
         recyclerView.setAdapter(adapter);
         return v;
@@ -117,6 +113,15 @@ public class ItineraryFragment extends Fragment implements FavouriteListAdapter.
                 res.add((FavouriteListItem) b.get(c2++));
         }
         return res;
+    }
+
+
+    //Check if the item has been visited since creating the itinerary list
+    private FavouriteListItem updateIsVisited(FavouriteListItem current){
+        String titleText = current.getTitle();
+        boolean isVisited = favouritesDB.isLocationVisited(titleText);
+        FavouriteListItem item = current.updateVisited(isVisited);
+        return item;
     }
 
 

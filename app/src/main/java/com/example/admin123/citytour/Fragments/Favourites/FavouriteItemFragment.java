@@ -75,6 +75,8 @@ public class FavouriteItemFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_favourite_item, container, false);
+
+        //Display menu items
         setHasOptionsMenu(true);
 
         //Create database to store favourite locations
@@ -211,6 +213,11 @@ public class FavouriteItemFragment extends Fragment {
                 return true;
             case R.id.create_postcard:
                 Fragment fragment = new PostcardFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putByteArray("photo",placeImage);
+                fragment.setArguments(bundle);
+
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.relativeLayout, fragment).commit();
                 return true;
@@ -283,35 +290,6 @@ public class FavouriteItemFragment extends Fragment {
             Log.i("DB_Helper", "Failed to delete "+locationTitle);
         }
     }
-
-   /* private void getDb(){
-        Cursor res = favouritesDB.getAllData();
-        StringBuffer dbContents = new StringBuffer();
-        while (res.moveToNext()){
-            dbContents.append("Name :"+res.getString(0));
-            dbContents.append(", Lat :"+res.getDouble(1));
-            dbContents.append(", Long :"+res.getDouble(2));
-            dbContents.append(", 3 :"+res.getDouble(3));
-            dbContents.append(", 4 :"+res.getString(4));
-            dbContents.append(", 5 :"+res.getString(5));
-            dbContents.append(", Bitmap :"+res.getBlob(6) + "\n");
-        }
-        Log.i("DB_Helper", dbContents.toString());
-    }
-
-    private void setLocationPhotoDB(Drawable locationPhoto){
-
-        //Convert drawable to bitmap, then bitmap to byte array
-        byte[] locationPhotobitmap = bitmapUtility.getBytes(bitmapUtility.drawableToBitmap(locationPhoto));
-
-        Integer result = favouritesDB.addLocationPhoto(locationTitle, locationPhotobitmap);
-        if(result!=1){
-            Log.i(TAG, "Failed to insert photo");
-        }else{
-            Log.i(TAG, "Inserted photo");
-        }
-
-    }*/
 
     private Integer updateIsVisited(){
         Integer updateIsVisitedResults = favouritesDB.updateIsVisited(locationTitle, isVisited);

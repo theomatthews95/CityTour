@@ -60,8 +60,8 @@ public class HomepageFragment extends Fragment implements View.OnClickListener {
                 transaction.commit();
             }
         });
-        Button mLaunchItineraryButton = (Button) v.findViewById(R.id.launchItineraryButton);
-        mLaunchItineraryButton.setOnClickListener(this);
+        Button mLaunchPostCard = (Button) v.findViewById(R.id.launchPostcardButton);
+        mLaunchPostCard.setOnClickListener(this);
         Button mLaunchPostcardButton = (Button) v.findViewById(R.id.launchPostcardButton);
         mLaunchPostcardButton.setOnClickListener(new View.OnClickListener(){
             @Override

@@ -46,7 +46,7 @@ public class PlacesList extends Fragment{
             if(searchAreaLat == 0.0 && searchAreaLong == 0.0){
                 searchAreaLong = -1.89028791;
                 searchAreaLat = 52.48549062;
-                Toast.makeText(getContext(), "Couldn't establish user location so searching Birmingham", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Couldn't establish user location so searching Birmingham", Toast.LENGTH_LONG).show();
             }
 
             String searchRadius = getArguments().getString("searchRadius");

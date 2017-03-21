@@ -98,7 +98,7 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             @Override
             public void onClick(View arg0) {
                 if (toastGPSShown == false) {
-                    Toast.makeText(getContext(), "GPS is currently not functioning", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "GPS is currently not functioning", Toast.LENGTH_SHORT).show();
                 }
                 showLocationAreaDialog();
             }
@@ -130,7 +130,7 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
                 if (locationType != null)
                     bundle.putString("locationType", locationType);
                 else {
-                    Toast.makeText(getContext(), "You've not entered a location type", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "You've not entered a location type", Toast.LENGTH_SHORT).show();
                     bundle.putString("locationType", "");
                 }
                 if (searchLong == 0.0 && searchLat == 0.0){
@@ -278,10 +278,9 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
             @Override
             public void onLocationChanged(Location location) {
                 //Log.i(TAG, "Your location is "+location.getLatitude()+", "+location.getLongitude());
-                /*while (toastGPSShown == false) {
-                    Toast.makeText(getContext(), "GPS is functioning", Toast.LENGTH_SHORT).show();
+                while (toastGPSShown == false) {
                     toastGPSShown = true;
-                }*/
+                }
                 userLocationLat = location.getLatitude();
                 userLocationLong = location.getLongitude();
             }
@@ -311,9 +310,10 @@ public class SeeSightsFragment extends Fragment implements View.OnClickListener,
                         Manifest.permission.INTERNET
                 }, 10);
             } else {
-                getUserLocation();
+                locationManager.requestLocationUpdates("gps", 500, 0, locationListener);
             }
         }
+
     }
 
     @Override

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements
 
     ListView listView;
     ArrayAdapter<String> listAdapter;
-    String fragmentArray[] = {"Homepage", "See the Sights", "Favourite", "Itinerary", "Postcard", "Currency Exchange"};
+    String fragmentArray[] = {"Homepage", "See the Sights", "Favourite", "Postcard", "Currency Exchange"};
     DrawerLayout drawerLayout;
 
     @Override
@@ -81,12 +81,9 @@ public class MainActivity extends AppCompatActivity implements
                         fragment = new FavouritesListFragment();
                         break;
                     case 3:
-                        fragment = new HomepageFragment();
-                        break;
-                    case 4:
                         fragment = new PostcardFragment();
                         break;
-                    case 5:
+                    case 4:
                         fragment = new CurrencyExchangeFragment();
                         break;
                     default:
