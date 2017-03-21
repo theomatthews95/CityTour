@@ -55,6 +55,7 @@ public class FragmentFavouriteInfo extends Fragment {
     private FavouritesDBHelper favouritesDB;
     private String placeTitle = "";
     private Bitmap locationPhoto;
+    private ArrayList<GooglePlace> places;
 
     @Nullable
     @Override
@@ -63,6 +64,9 @@ public class FragmentFavouriteInfo extends Fragment {
 
         placeReference = getArguments().getString("placeReference");
         byte [] placeImage = getArguments().getByteArray("placeImage");
+
+        places = (ArrayList<GooglePlace>) getArguments().getSerializable("places");
+
         DbBitmapUtility bitmapUtility = new DbBitmapUtility();
         locationPhoto = bitmapUtility.getImage(placeImage);
 
@@ -87,6 +91,8 @@ public class FragmentFavouriteInfo extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putDouble("searchAreaLat", place.getGeometry().getLocation().getLat());
                     bundle.putDouble("searchAreaLong", place.getGeometry().getLocation().getLng());
+                    bundle.putSerializable("googlePlaceList", places);
+
                     Fragment fragment = new GmapFragment();
                     fragment.setArguments(bundle);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

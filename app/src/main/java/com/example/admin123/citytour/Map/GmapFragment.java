@@ -57,6 +57,7 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
     private ArrayList<String> placePhotoReferences = new ArrayList<>();
     private ArrayList<Circle> drawnCircles = new ArrayList<Circle>();
     private ClusterRenderer renderer;
+    private ArrayList<GooglePlace> places;
 
 
     MultiListener ml = new MultiListener();
@@ -86,8 +87,15 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        final ArrayList<GooglePlace> places =  (ArrayList<GooglePlace>) getArguments().getSerializable("googlePlaceList");
-        Integer numberOfPlaces = (Integer) getArguments().getInt("numberOfPlaces");
+        places =  (ArrayList<GooglePlace>) getArguments().getSerializable("googlePlaceList");
+
+        Integer numberOfPlaces;
+        if(places!= null) {
+            numberOfPlaces = places.size();
+        }else {
+            numberOfPlaces = (Integer) getArguments().getInt("numberOfPlaces");
+        }
+
         Double searchAreaLat = (Double) getArguments().getDouble("searchAreaLat");
         Double searchAreaLong = (Double) getArguments().getDouble("searchAreaLong");
         HashMap<String, Integer> placePins = MainActivity.returnPlacePins().PlacePins();
@@ -399,6 +407,8 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
         Bundle bundle = new Bundle();
         bundle.putString("placeReference",placeReferences.get(mapItem.getPlaceArrayPosition()));
         bundle.putString("photoReference", placePhotoReferences.get(mapItem.getPlaceArrayPosition()));
+
+        bundle.putSerializable("resultsFromMap", places);
         bundle.putString("title", mapItem.getTitle());
         bundle.putDouble("lat", mapItem.getPosition().latitude);
         bundle.putDouble("long", mapItem.getPosition().longitude);

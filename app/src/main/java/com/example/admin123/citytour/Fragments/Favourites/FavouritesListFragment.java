@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.Fragments.Itinerary.GoogleDirections;
+import com.example.admin123.citytour.Fragments.PostcardFragment;
 import com.example.admin123.citytour.Map.GmapFragment;
 import com.example.admin123.citytour.R;
 
@@ -51,6 +54,7 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
         //Create database to store favourite locations
         favouritesDB = new FavouritesDBHelper(getActivity());
 
+        setHasOptionsMenu(true);
         recyclerView = (RecyclerView) v.findViewById(R.id.favouritesList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -142,6 +146,28 @@ public class FavouritesListFragment extends Fragment implements FavouriteListAda
         } else {
             actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
+        }
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.favourite_list_menu, menu);
+        MenuItem giveInfo = menu.findItem(R.id.menu_show_hint);
+        giveInfo.expandActionView();
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_show_hint:
+                InfoDialog infoDialog = InfoDialog.newInstance("Did you know?");
+                infoDialog.setTargetFragment(this, 0);
+                infoDialog.show(getActivity().getSupportFragmentManager(), "fragmentDialog");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

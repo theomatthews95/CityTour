@@ -1,11 +1,9 @@
 package com.example.admin123.citytour.Fragments.Favourites;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.TabLayout;
@@ -25,12 +23,14 @@ import android.widget.Toast;
 
 import com.example.admin123.citytour.DbBitmapUtility;
 import com.example.admin123.citytour.Fragments.PostcardFragment;
+import com.example.admin123.citytour.Fragments.SeeSights.Places.GooglePlace;
 import com.example.admin123.citytour.R;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import static com.google.android.gms.wearable.DataMap.TAG;
 
@@ -52,6 +52,7 @@ public class FavouriteItemFragment extends Fragment {
     private Drawable locationPhoto;
     static DbBitmapUtility bitmapUtility = new DbBitmapUtility();
     byte [] placeImage;
+    private ArrayList<GooglePlace> places;
 
     // TODO: Rename and change types and number of parameters
     public static FavouriteItemFragment newInstance() {
@@ -86,6 +87,7 @@ public class FavouriteItemFragment extends Fragment {
         locationLat = getArguments().getDouble("lat");
         locationLong = getArguments().getDouble("long");
         locationTitle = getArguments().getString("title");
+        places = (ArrayList<GooglePlace>) getArguments().getSerializable("resultsFromMap");
 
         String launchedFrom = getArguments().getString("launchedFrom");
 
@@ -155,6 +157,7 @@ public class FavouriteItemFragment extends Fragment {
                     }*/
                     Fragment fragment = new FragmentFavouriteInfo();
                     Bundle bundle = new Bundle();
+                    bundle.putSerializable("places", places);
                     bundle.putString("placeReference",placeReference);
                     bundle.putByteArray("placeImage", placeImage);
                     fragment.setArguments(bundle);
@@ -191,7 +194,7 @@ public class FavouriteItemFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.favourite_menu_items, menu);
+        inflater.inflate(R.menu.favourite_item_menu, menu);
         MenuItem favouriteMenu = menu.findItem(R.id.favourite_menu_button);
         MenuItem visitedMenu = menu.findItem(R.id.visited);
 
