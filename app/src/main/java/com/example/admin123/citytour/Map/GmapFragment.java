@@ -405,9 +405,13 @@ public class GmapFragment extends Fragment implements OnMapReadyCallback, Cluste
     public void onClusterItemInfoWindowClick(MyItem mapItem) {
 
         Bundle bundle = new Bundle();
-        bundle.putString("placeReference",placeReferences.get(mapItem.getPlaceArrayPosition()));
-        bundle.putString("photoReference", placePhotoReferences.get(mapItem.getPlaceArrayPosition()));
+        if (mapItem.getPlaceArrayPosition() >= placePhotoReferences.size()) {
+            bundle.putString("photoReference", placePhotoReferences.get(placePhotoReferences.size() - 1));
+        }else{
+            bundle.putString("photoReference", placePhotoReferences.get(mapItem.getPlaceArrayPosition()));
+        }
 
+        bundle.putString("placeReference", placeReferences.get(mapItem.getPlaceArrayPosition()));
         bundle.putSerializable("resultsFromMap", places);
         bundle.putString("title", mapItem.getTitle());
         bundle.putDouble("lat", mapItem.getPosition().latitude);
